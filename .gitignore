@@ -1,0 +1,36 @@
+#This is my git ignore file for Unity Projects
+#Note that ! negates an ignore. I ignore everything in Library then
+#un-ignore the metadata folder and some specific files
+ 
+
+#NOTE: this will cause any collaborators to re-import assets periodically
+[Tt]emp/
+[Ll]ibrary/
+
+#Un-ignore these specific files - not currently using
+#!Library/*.asset
+#!Library/AssetImportState
+#!Library/AssetVersioning.db
+#!Library/BuildPlayer.prefs
+#!Library/ScriptMapper
+#!Library/assetservercachev3
+#!Library/expandedItems
+#!Library/guidmapper
+#!Library/unity default resources
+#!Library/unity editor resources
+#!Library/metadata/
+ 
+
+#ignoring pidb, they are just code completion caching data according to:
+# http://stackoverflow.com/questions/1022111/what-are-monodevelops-pidb-files
+*.pidb
+
+*.userprefs
+*.orig
+.DS_Store
+
+#For now, I need the code files (.dll, etc.) in CodeLibrary in the
+#repository. Without them, all manual drag and drop links to GameObjects are
+#lost because the code files aren't there. Interestingly, the links are 
+#retained when the files are cleaned and rebuilt during a BuildServer build.
+#Assets/[Cc]ode[Ll]ibrary/	- not used for now
