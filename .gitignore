@@ -25,7 +25,8 @@
 # http://stackoverflow.com/questions/1022111/what-are-monodevelops-pidb-files
 *.pidb
 
-*.userprefs
+#I'm going to keep userprefs for now in git to see if it helps sync my MonoDevelop Debugger options
+#*.userprefs
 *.orig
 .DS_Store
 
