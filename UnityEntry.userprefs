@@ -1,15 +1,65 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Game\BillboardManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Generic\IO\CameraControl.cs">
     <Files>
-      <File FileName="Assets\Scripts\Game\BillboardManager.cs" Line="70" Column="128" />
+      <File FileName="Assets\Scripts\Game\GUI\GameClockGuiManager.cs" Line="94" Column="2" />
+      <File FileName="Assets\Scripts\Generic\IO\CameraControl.cs" Line="385" Column="130" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Option id="ShowVersionControlOverlays" value="True" />
+          <Option id="ShowAllFiles" value="True" />
+          <Node name="Assets" expanded="True">
+            <Node name="Scripts" expanded="True">
+              <Node name="Game" expanded="True">
+                <Node name="GUI" expanded="True" />
+              </Node>
+              <Node name="Generic" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="CodeLibrarySource" expanded="True">
+            <Node name="CodeEnv.Master.Common" expanded="True">
+              <Node name="ThirdParty" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Scripts" expanded="True">
+                <Node name="Game" expanded="True">
+                  <Node name="Graphics" expanded="True" />
+                </Node>
+                <Node name="Generic" expanded="True">
+                  <Node name="IO" expanded="True">
+                    <Node name="CameraControl.cs" selected="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>speeds </Value>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Users\Jim\GameDev\UnityEnv\UnityEntry\Assets\Scripts\Game\BillboardManager.cs" line="65" />
-      <Breakpoint file="C:\Users\Jim\GameDev\UnityEnv\UnityEntry\Assets\Scripts\Game\BillboardManager.cs" line="63" />
+      <Breakpoint hitAction="PrintExpression" traceExpression="{speeds}" file="C:\Users\Jim\GameDev\UnityEnv\UnityEntry\Assets\Scripts\Game\GUI\GameClockGuiManager.cs" line="90" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="Assets\Scripts\Generic\GuiManager.cs" line="95" offsetX="68" offsetY="1312" expression="speedsOrderedByRisingValue" liveUpdate="False" />
+    <Watch file="Assets\Scripts\Generic\GuiManager.cs" line="64" offsetX="427" offsetY="698" expression="sortedSpeeds " liveUpdate="False" />
+    <Watch file="Assets\Scripts\Generic\GuiManager.cs" line="68" offsetX="157" offsetY="887" expression="sliderStepValuesOrderedLeftToRight" liveUpdate="False" />
+    <Watch file="Assets\Scripts\Generic\GuiManager.cs" line="65" offsetX="538" offsetY="889" expression="speedsOrderedByRisingValue" liveUpdate="False" />
+    <Watch file="Assets\Scripts\Game\GUI\GameClockGuiManager.cs" line="90" offsetX="753" offsetY="1285" expression="speeds" liveUpdate="True" />
+    <Watch file="Assets\Scripts\Game\GUI\GameClockGuiManager.cs" line="93" offsetX="791" offsetY="1273" expression="speeds " liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>
