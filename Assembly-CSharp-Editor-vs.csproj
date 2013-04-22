@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\Generic\NoteEditor.cs" />
-     <Compile Include="Assets\Editor\Generic\ScriptableObjectTrialAsset.cs" />
      <Compile Include="Assets\Editor\ThirdParty\FindMissingScripts.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Editor\InvDatabaseInspector.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Editor\InvFindItem.cs" />
@@ -90,15 +89,20 @@
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (AlphaClip).shader" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
+     <None Include="Assets\DataLibrary\DebugSettings.xml" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (SoftClip).shader" />
+     <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\ReadMe - 2.3.1.txt" />
+     <None Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Shaders\PlanetStandard.shader" />
+     <None Include="Assets\Third Party Assets\NGUI\ReadMe - 2.5.1.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored Overlay.shader" />
+     <None Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Shaders\PlanetAtmosphere.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Other\English.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Other\French.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
@@ -109,6 +113,9 @@
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="CodeEnv.Master.Common">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.Common.dll</HintPath>
  </Reference>
@@ -129,8 +136,12 @@
  </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
+      <Project>{92CF2D4F-BA67-6F63-E4C0-680EBEA54DA5}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp-vs.csproj">
       <Project>{E0A5F682-0A60-91ED-5807-01E4571E991A}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass-vs.csproj">
+      <Project>{1CED711C-6584-8C1E-7D16-A85D8A92B3C7}</Project>      <Name>Assembly-CSharp-Editor-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

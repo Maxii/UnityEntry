@@ -6,24 +6,28 @@
 // </copyright> 
 // <summary> 
 // File: GameDate.cs
-// COMMENT - one line to give a brief idea of what the file does.
+// Data container class that holds the game date.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
+
 namespace CodeEnv.Master.Common.Unity {
 
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using CodeEnv.Master.Common;
-    using CodeEnv.Master.Common.LocalResources;
     using UnityEngine;
+    using System;
 
+    /// <summary>
+    /// Data container class that holds the game date.
+    /// </summary>
     public class GameDate : IGameDate {
-        // IMPROVE StringBuilder?
-        private int daysPerYear = GameValues.DaysPerGameYear;
-        private float gameDaysPerSecond = GameValues.GameDaysPerSecond;
-        private int startingGameYear = GameValues.StartingGameYear;
+        private int daysPerYear = TempGameValues.DaysPerGameYear;
+        private float gameDaysPerSecond = TempGameValues.GameDaysPerSecond;
+        private int startingGameYear = TempGameValues.StartingGameYear;
 
         public int DayOfYear { get; internal set; }
 
@@ -31,7 +35,7 @@ namespace CodeEnv.Master.Common.Unity {
 
         public string FormattedDate {
             get {
-                return "{0}.{1:D3}".Inject(Year, DayOfYear);
+                return Constants.GameDateFormat.Inject(Year, DayOfYear);
             }
         }
 
@@ -39,6 +43,14 @@ namespace CodeEnv.Master.Common.Unity {
             int elapsedDays = Mathf.FloorToInt(gameClock * gameDaysPerSecond);
             Year = startingGameYear + Mathf.FloorToInt(elapsedDays / daysPerYear);
             DayOfYear = 1 + (elapsedDays % daysPerYear);
+        }
+
+        [Obsolete]
+        internal GameDate Clone() {
+            GameDate clone = new GameDate();
+            clone.DayOfYear = this.DayOfYear;
+            clone.Year = this.Year;
+            return clone;
         }
     }
 

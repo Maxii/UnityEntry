@@ -1,26 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Generic\IO\CameraControl.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="c:\Users\Jim\GameDev\CodeEnv\CodeEnv.Master\CodeEnv.Master.Common.Unity\Game\Framework\GameTime.cs">
     <Files>
-      <File FileName="Assets\Scripts\Game\GUI\GameClockGuiManager.cs" Line="94" Column="2" />
-      <File FileName="Assets\Scripts\Generic\IO\CameraControl.cs" Line="385" Column="130" />
+      <File FileName="Assets\Scripts\Game\GUI\GuiDateReadout.cs" Line="66" Column="40" />
+      <File FileName="c:\Users\Jim\GameDev\CodeEnv\CodeEnv.Master\CodeEnv.Master.Common.Unity\Game\Framework\GameTime.cs" Line="248" Column="32" />
+      <File FileName="CodeLibrarySource\CodeEnv.Master.Common.Unity\Game\Framework\GameManager.cs" Line="34" Column="37" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Option id="ShowVersionControlOverlays" value="True" />
           <Option id="ShowAllFiles" value="True" />
-          <Node name="Assets" expanded="True">
-            <Node name="Scripts" expanded="True">
-              <Node name="Game" expanded="True">
-                <Node name="GUI" expanded="True" />
-              </Node>
-              <Node name="Generic" expanded="True" />
-            </Node>
-          </Node>
           <Node name="CodeLibrarySource" expanded="True">
-            <Node name="CodeEnv.Master.Common" expanded="True">
-              <Node name="ThirdParty" expanded="True" />
+            <Node name="CodeEnv.Master.Common.Unity" expanded="True">
+              <Node name="Game" expanded="True">
+                <Node name="Framework" expanded="True" />
+              </Node>
             </Node>
           </Node>
           <Node name="Assembly-CSharp" expanded="True">
@@ -28,11 +23,14 @@
               <Node name="Scripts" expanded="True">
                 <Node name="Game" expanded="True">
                   <Node name="Graphics" expanded="True" />
+                  <Node name="GUI" expanded="True">
+                    <Node name="GuiDateReadout.cs" selected="True" />
+                  </Node>
                 </Node>
                 <Node name="Generic" expanded="True">
-                  <Node name="IO" expanded="True">
-                    <Node name="CameraControl.cs" selected="True" />
-                  </Node>
+                  <Node name="Framework" expanded="True" />
+                  <Node name="Graphics" expanded="True" />
+                  <Node name="IO" expanded="True" />
                 </Node>
               </Node>
             </Node>
@@ -43,15 +41,14 @@
         <State expanded="True" selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State>
-          <Value>speeds </Value>
-        </State>
+        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint hitAction="PrintExpression" traceExpression="{speeds}" file="C:\Users\Jim\GameDev\UnityEnv\UnityEntry\Assets\Scripts\Game\GUI\GameClockGuiManager.cs" line="90" />
+      <Breakpoint file="C:\Users\Jim\GameDev\UnityEnv\UnityEntry\Assets\Scripts\Game\GUI\GuiDateReadout.cs" line="42" />
+      <Breakpoint file="c:\Users\Jim\GameDev\CodeEnv\CodeEnv.Master\CodeEnv.Master.Common.Unity\Game\Framework\GameTime.cs" line="249" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
@@ -61,5 +58,7 @@
     <Watch file="Assets\Scripts\Generic\GuiManager.cs" line="65" offsetX="538" offsetY="889" expression="speedsOrderedByRisingValue" liveUpdate="False" />
     <Watch file="Assets\Scripts\Game\GUI\GameClockGuiManager.cs" line="90" offsetX="753" offsetY="1285" expression="speeds" liveUpdate="True" />
     <Watch file="Assets\Scripts\Game\GUI\GameClockGuiManager.cs" line="93" offsetX="791" offsetY="1273" expression="speeds " liveUpdate="False" />
+    <Watch file="Assets\Scripts\Game\GUI\GuiPrefabLinker.cs" line="62" offsetX="100" offsetY="752" expression="launchButtonGuiVisibilityControl" liveUpdate="False" />
+    <Watch file="Assets\Scripts\Generic\Framework\MonoGameManager.cs" line="78" offsetX="796" offsetY="992" expression="enabled" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
 </Properties>

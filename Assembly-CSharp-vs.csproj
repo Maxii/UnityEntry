@@ -44,30 +44,45 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Game\GUI\GuiCameraRollOption.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiCheckbox.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiDateReadout.cs" />
-     <Compile Include="Assets\Scripts\Game\GUI\GuiGameSpeedOnLoadOption.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiExitButton.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiGamePlayOptionMenuAcceptButton.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiGameSpeedOnLoadPopupList.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiGameSpeedReadout.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiGameSpeedSlider.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiLoadGameMenuLaunchButton.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiManager.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiNewGameMenuLaunchButton.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiPauseButton.cs" />
-     <Compile Include="Assets\Scripts\Game\GUI\GuiPauseOnLoadOption.cs" />
-     <Compile Include="Assets\Scripts\Game\GUI\GuiResetOnFocusOption.cs" />
-     <Compile Include="Assets\Scripts\Game\GUI\GuiUniverseSizeSetting.cs" />
-     <Compile Include="Assets\Scripts\Game\GUI\GuiZoomOutOnCursorOption.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\BillboardManager.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiPlayerPopupList.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiPrefabLinker.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiSaveMenuAcceptButton.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiSavedGamesPopupList.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiUniverseSizePopupList.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\GlobeGlowAnimator.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\GlobeManager.cs" />
-     <Compile Include="Assets\Scripts\Generic\Debug\ScriptableObjectTrial.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\SunBillboardManager.cs" />
+     <Compile Include="Assets\Scripts\Generic\Debug\FpsReadout.cs" />
+     <Compile Include="Assets\Scripts\Generic\Debug\GuiFollowerLabel.cs" />
+     <Compile Include="Assets\Scripts\Generic\Debug\ManagementObjects.cs" />
+     <Compile Include="Assets\Scripts\Generic\Debug\RandomShipMovement.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\Loader.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\MonoGameManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\RequiredPrefabs.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\UsefulPrefabs.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\BillboardManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiButtonBase.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\GuiCheckboxBase.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiEnumPopupListBase.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiEnumSliderBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiLabelReadoutBase.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiMenuAcceptButtonBase.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiMenuCancelButton.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiPauseResumeOnClick.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiPopupListBase.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\GuiSliderBase.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\MyTooltip.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiTooltip.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiVisibilityButton.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiVisibilityChangeEvent.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\CameraControl.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipRandomItem.cs" />
@@ -127,7 +142,6 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIGrid.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIImageButton.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIInputValidator.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIPanelAlpha.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIPopupList.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UISavedOption.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIScrollBar.cs" />
@@ -154,6 +168,8 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\UINode.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\UIWidget.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\UpdateManager.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\AnimatedAlpha.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\AnimatedColor.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\SpringPosition.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\TweenAlpha.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\TweenColor.cs" />
@@ -186,6 +202,15 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UITiledSprite.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UIViewport.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\Scripts\SU_SpaceParticles.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_CameraFollow.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserImpact.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserShot.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Spaceship.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Thruster.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_IntroBackground\Scripts\SU_SpaceSceneCamera.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Scripts\SU_Moon.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Scripts\SU_Planet.cs" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />
@@ -195,15 +220,20 @@
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (AlphaClip).shader" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
+     <None Include="Assets\DataLibrary\DebugSettings.xml" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (SoftClip).shader" />
+     <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\ReadMe - 2.3.1.txt" />
+     <None Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Shaders\PlanetStandard.shader" />
+     <None Include="Assets\Third Party Assets\NGUI\ReadMe - 2.5.1.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored Overlay.shader" />
+     <None Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Shaders\PlanetAtmosphere.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Other\English.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Other\French.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
@@ -214,6 +244,9 @@
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
+ <Reference Include="Assembly-UnityScript-firstpass">
+ <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
  <Reference Include="CodeEnv.Master.Common">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.Common.dll</HintPath>
  </Reference>
@@ -232,6 +265,10 @@
  <Reference Include="CodeEnv.Master.GameLauncherApp.resources">
  <HintPath>Assets\CodeLibrary\en-US\CodeEnv.Master.GameLauncherApp.resources.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
+      <Project>{92CF2D4F-BA67-6F63-E4C0-680EBEA54DA5}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

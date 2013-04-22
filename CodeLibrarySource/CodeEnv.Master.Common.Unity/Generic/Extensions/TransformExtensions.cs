@@ -17,7 +17,6 @@ namespace CodeEnv.Master.Common.Unity {
     using System.Linq;
     using System.Text;
     using UnityEngine;
-    using UnityEditor;
 
     /// <summary>
     /// TODO 
@@ -37,6 +36,20 @@ namespace CodeEnv.Master.Common.Unity {
         public static void SetZ(this Transform transform, float z) {
             Vector3 newPosition = new Vector3(transform.position.x, transform.position.y, z);
             transform.position = newPosition;
+        }
+
+        /// <summary>
+        /// Finds the first child of this Transform that also is a MonoBehaviour of Type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transform">The transform.</param>
+        /// <returns>The child transform or null if no child of Type T exists.</returns>
+        public static Transform FindChild<T>(this Transform transform) where T : MonoBehaviour {
+            T mono = transform.GetComponentInChildren<T>();
+            if (mono == null || mono.transform == transform) {
+                return null;
+            }
+            return mono.transform;
         }
 
     }

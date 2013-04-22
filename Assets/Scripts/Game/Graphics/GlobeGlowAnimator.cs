@@ -10,18 +10,20 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEditor;
-using CodeEnv.Master.Common.Unity;
 using CodeEnv.Master.Common;
+using CodeEnv.Master.Common.Unity;
+using UnityEngine;
 
 /// <summary>
 /// Runs the texture that simulates a 'glow' surrounding a globe.
 /// </summary>
+[Serializable]
 public class GlobeGlowAnimator : MonoBehaviourBase {
     private static Vector2[] materialOrientationChoices = new Vector2[] {
         new Vector2(1, 1),
@@ -35,7 +37,7 @@ public class GlobeGlowAnimator : MonoBehaviourBase {
 
     void Awake() {
         glowPanelTransform = transform;
-        UpdateRate = UpdateFrequency.Normal;
+        UpdateRate = UpdateFrequency.Frequent;
     }
 
     void Start() {

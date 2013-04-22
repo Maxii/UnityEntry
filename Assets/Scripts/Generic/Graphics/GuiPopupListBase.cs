@@ -6,105 +6,68 @@
 // </copyright> 
 // <summary> 
 // File: GuiPopupListBase.cs
-// Base class for  Gui PopupLists that use Enums built with NGUI.
+// COMMENT - one line to give a brief idea of what this file does.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
 // default namespace
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEditor;
-using CodeEnv.Master.Common;
-using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
 
 /// <summary>
-/// Base class for  Gui PopupLists that use Enums built with NGUI. 
+/// GuiPopupListBase class pre-wired with Tooltip functionality.
 /// </summary>
-public abstract class GuiPopupListBase : MonoBehaviourBase, IDisposable {
+public abstract class GuiPopupListBase : GuiTooltip {
 
-    protected PlayerPrefsManager playerPrefsMgr;
     protected UIPopupList popupList;
-    public string tooltip = string.Empty;
 
     void Awake() {
-        playerPrefsMgr = PlayerPrefsManager.Instance;
+        InitializeOnAwake();
     }
 
-    void Start() {
-        Initialize();
-    }
-
-    /// <summary>
-    /// Override to initialize the tooltip message. Remember base.Initialize();
-    /// </summary>
-    protected virtual void Initialize() {
+    protected virtual void InitializeOnAwake() {
         popupList = gameObject.GetSafeMonoBehaviourComponent<UIPopupList>();
+        ConfigurePopupList();
+        InitializeListValues();
+        InitializeSelection();
+        // don't receive events until initializing is complete
         popupList.onSelectionChange += OnPopupListSelectionChange;
     }
 
+    /// <summary>
+    /// Virtual method that does any required configuration of the popupList
+    /// prior to initializing list values or the selection.
+    /// </summary>
+    protected virtual void ConfigurePopupList() {
+        popupList.textLabel = gameObject.GetSafeMonoBehaviourComponentInChildren<UILabel>();
+    }
+
+    /// <summary>
+    /// Abstract method to initialize the values in the popupList.
+    /// </summary>
+    protected abstract void InitializeListValues();
+
+    /// <summary>
+    /// Abstract method for initialiings the PopupList selectionName.
+    /// </summary>
+    /// <remarks>Called in the Awake sequence as UIPopupList will make
+    /// a selectionName change to item[0] in Start() if not already set.
+    /// </remarks>
+    protected abstract void InitializeSelection();
+
+    /// <summary>
+    /// Abstract method called when the popupList selection is changed.
+    /// </summary>
+    /// <param name="item">The name of the selection.</param>
     protected abstract void OnPopupListSelectionChange(string item);
 
-    void OnTooltip(bool toShow) {
-        if (Utility.CheckForContent(tooltip)) {
-            if (toShow) {
-                UITooltip.ShowText(tooltip);
-            }
-            else {
-                UITooltip.ShowText(null);
-            }
-        }
-    }
-
-    protected void WarnOnIncorrectName(string name) {
-        System.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackTrace().GetFrame(1);
-        string callerIdMessage = ". Called by {0}.{1}().".Inject(stackFrame.GetFileName(), stackFrame.GetMethod().Name);
-        Debug.LogWarning("Name used in PopupList not found: " + name + callerIdMessage);
-    }
-
-    #region IDiposable
-    private bool alreadyDisposed = false;
-
-    /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-    /// </summary>
-    public void Dispose() {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    /// Releases unmanaged and - optionally - managed resources. Derived classes that need to perform additional resource cleanup
-    /// should override this Dispose(isDisposing) method, using its own alreadyDisposed flag to do it before calling base.Dispose(isDisposing).
-    /// </summary>
-    /// <param name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-    protected virtual void Dispose(bool isDisposing) {
-        // Allows Dispose(isDisposing) to be called more than once
-        if (alreadyDisposed) {
-            return;
-        }
-
-        if (isDisposing) {
-            // free managed resources here including unhooking events
-            popupList.onSelectionChange -= OnPopupListSelectionChange;
-        }
-        // free unmanaged resources here
-        alreadyDisposed = true;
-    }
-
-    //public void ExampleMethod() {
-    //    // throw Exception if called on object that is already disposed
-    //    if(alreadyDisposed) {
-    //        throw new ObjectDisposedException(ErrorMessages.ObjectDisposed);
-    //    }
-
-    //    // method content here
-    //}
-    #endregion
+    // IDisposable Note: No reason to remove Ngui event currentListeners OnDestroy() as the EventListener or
+    // Delegate to be removed is attached to this same GameObject that is being destroyed. In addition,
+    // execution is problematic as the gameObject may have already been destroyed.
 
 }
 

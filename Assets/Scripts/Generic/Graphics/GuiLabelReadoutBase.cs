@@ -10,43 +10,30 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
 // default namespace
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEditor;
 using CodeEnv.Master.Common;
-using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
 
 /// <summary>
 /// Base class for Dynamic Gui Labels (used as readouts) built with NGUI.
 /// </summary>
-public abstract class GuiLabelReadoutBase : MonoBehaviourBase {
+public abstract class GuiLabelReadoutBase : GuiTooltip {
 
-    public string tooltip = string.Empty;
+    protected GameEventManager eventMgr;
     protected UILabel readoutLabel;
 
-    void Start() {
-        Initialize();
+    void Awake() {
+        InitializeOnAwake();
     }
 
-    protected virtual void Initialize() {
+    protected virtual void InitializeOnAwake() {
+        eventMgr = GameEventManager.Instance;
         readoutLabel = gameObject.GetSafeMonoBehaviourComponent<UILabel>();
-    }
-
-    void OnTooltip(bool toShow) {
-        if (Utility.CheckForContent(tooltip)) {
-            if (toShow) {
-                UITooltip.ShowText(tooltip);
-            }
-            else {
-                UITooltip.ShowText(null);
-            }
-        }
     }
 }
 

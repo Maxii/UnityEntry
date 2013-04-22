@@ -15,7 +15,7 @@ namespace CodeEnv.Master.Common {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Resources;
+    using System.Linq.Expressions;
     using CodeEnv.Master.Common.LocalResources;
 
     /// <summary>
@@ -122,12 +122,24 @@ namespace CodeEnv.Master.Common {
         /// Generates and returns a list of substrings from the provided text, using the specified delimiter.
         /// </summary>
         /// <param name="text">The text to separate.</param>
-        /// <param name="delimiter">The delimiter.</param>
+        /// <param name="delimiter">The delimiter. Default is a space.</param>
         /// <returns></returns>
-        public static IList<String> ConstructListFromString(String text, char delimiter) {
+        public static IList<string> ConstructListFromString(string text, char delimiter = Constants.SpaceDelimiter) {
             Arguments.ValidateForContent(text);
             IList<string> result = text.Split(delimiter);
             return result;
+        }
+
+        /// <summary>
+        /// Gets the string name of the property. Usage syntax:
+        /// <c>var propertyname = GetPropertyName( () => myObject.AProperty);</c>
+        /// returns "AProperty".
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propertyExpression">The property expression.</param>
+        /// <returns></returns>
+        public static string GetPropertyName<T>(Expression<Func<T>> propertyExpression) {
+            return (propertyExpression.Body as MemberExpression).Member.Name;
         }
     }
 }

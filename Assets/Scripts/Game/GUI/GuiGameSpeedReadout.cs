@@ -10,14 +10,13 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
 // default namespace
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEditor;
 using CodeEnv.Master.Common;
 using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
@@ -27,27 +26,32 @@ using CodeEnv.Master.Common.Unity;
 /// </summary>
 public class GuiGameSpeedReadout : GuiLabelReadoutBase, IDisposable {
 
-    private GameEventManager eventMgr;
-    private PlayerPrefsManager playerPrefsMgr;
-
-    void Awake() {
-        eventMgr = GameEventManager.Instance;
-        playerPrefsMgr = PlayerPrefsManager.Instance;
+    protected override void InitializeOnAwake() {
+        base.InitializeOnAwake();
+        AddListeners();
+        tooltip = "The multiple of Normal Speed the game is currently running at.";
+        // don't rely on outside events to initialize
+        RefreshGameSpeedReadout(PlayerPrefsManager.Instance.GameSpeedOnLoad);
     }
 
-    protected override void Initialize() {
-        base.Initialize();
-        RefreshGameSpeedReadout(playerPrefsMgr.GameSpeedOnLoadPref);
-        eventMgr.AddListener<GameSpeedChangeEvent>(OnGameSpeedChange);
-        tooltip = "The multiple of Normal Speed the game is currently running at.";
+    private void AddListeners() {
+        eventMgr.AddListener<GameSpeedChangeEvent>(this, OnGameSpeedChange);
     }
 
     void OnGameSpeedChange(GameSpeedChangeEvent e) {
         RefreshGameSpeedReadout(e.GameSpeed);
     }
 
+    private void RemoveListeners() {
+        eventMgr.RemoveListener<GameSpeedChangeEvent>(this, OnGameSpeedChange);
+    }
+
     private void RefreshGameSpeedReadout(GameClockSpeed clockSpeed) {
         readoutLabel.text = CommonTerms.MultiplySign + clockSpeed.GetSpeedMultiplier().ToString();
+    }
+
+    void OnDestroy() {
+        Dispose();
     }
 
     #region IDisposable
@@ -65,7 +69,7 @@ public class GuiGameSpeedReadout : GuiLabelReadoutBase, IDisposable {
     /// Releases unmanaged and - optionally - managed resources. Derived classes that need to perform additional resource cleanup
     /// should override this Dispose(isDisposing) method, using its own alreadyDisposed flag to do it before calling base.Dispose(isDisposing).
     /// </summary>
-    /// <param name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <param item="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
     protected virtual void Dispose(bool isDisposing) {
         // Allows Dispose(isDisposing) to be called more than once
         if (alreadyDisposed) {
@@ -74,11 +78,12 @@ public class GuiGameSpeedReadout : GuiLabelReadoutBase, IDisposable {
 
         if (isDisposing) {
             // free managed resources here including unhooking events
-            eventMgr.RemoveListener<GameSpeedChangeEvent>(OnGameSpeedChange);
+            RemoveListeners();
         }
         // free unmanaged resources here
         alreadyDisposed = true;
     }
+
 
     // Example method showing check for whether the object has been disposed
     //public void ExampleMethod() {
@@ -90,7 +95,6 @@ public class GuiGameSpeedReadout : GuiLabelReadoutBase, IDisposable {
     //    // method content here
     //}
     #endregion
-
 
     public override string ToString() {
         return new ObjectAnalyzer().ToString(this);

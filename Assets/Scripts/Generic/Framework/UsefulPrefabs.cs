@@ -10,43 +10,64 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+//#define DEBUG_LEVEL_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+//
 // default namespace
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using CodeEnv.Master.Common;
-using CodeEnv.Master.Common.LocalResources;
 using UnityEngine;
-using UnityEditor;
-using CodeEnv.Master.Common.Unity;
 
 /// <summary>
-/// Singleton container that holds prefabs that are likely to be used across scenes. 
+/// Container that holds prefabs that are likely to be used across scenes. 
 /// <remarks>
 /// I think these are a real reference to the prefab in the Project view, not a separate instance
-/// clone of the Prefab in the scene. As such, they must be Instantiated before use.
+/// clone of the Prefab in the startScene. As such, they must be Instantiated before use.
 /// </remarks>
 /// </summary>
-public class UsefulPrefabs : MonoBehaviourBaseSingleton<UsefulPrefabs> {
+public class UsefulPrefabs : MonoBehaviourBase, IInstanceIdentity {
 
+    public static UsefulPrefabs currentInstance;
+
+    //*******************************************************************
+    // Prefabs you want to keep between scenes go here and
+    // can be accessed by UsefulPrefabs.currentInstance.variableName
+    //*******************************************************************
     public Light flareLight;
 
     void Awake() {
-        DontDestroyOnLoad(gameObject);
-        if (isTempGO) {
-            Debug.LogError("This class {0} cannot function with a Temporary GO!".Inject(typeof(UsefulPrefabs).ToString()));
+        IncrementInstanceCounter();
+        TryDestroyExtraCopies();
+    }
+
+    /// <summary>
+    /// Ensures that no matter how many scenes this Object is
+    /// in (having one dedicated to each sscene may be useful for testing) there's only ever one copy
+    /// in memory if you make a scene transition.
+    /// </summary>
+    /// <returns><c>true</c> if this instance is going to be destroyed, <c>false</c> if not.</returns>
+    private bool TryDestroyExtraCopies() {
+        if (currentInstance != null && currentInstance != this) {
+            Debug.Log("Extra {0} found. Now destroying.".Inject(this.name));
+            Destroy(gameObject);
+            return true;
+        }
+        else {
+            DontDestroyOnLoad(gameObject);
+            currentInstance = this;
+            return false;
         }
     }
 
-    protected override void OnApplicationQuit() {
-        instance = null;
+    void OnDestroy() {
+        Debug.Log("A {0} instance is being destroyed.".Inject(this.name));
     }
 
     public override string ToString() {
         return new ObjectAnalyzer().ToString(this);
     }
-
 
 }
 

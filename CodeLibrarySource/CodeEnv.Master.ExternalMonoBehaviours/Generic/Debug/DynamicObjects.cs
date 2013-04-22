@@ -6,21 +6,41 @@
 // </copyright> 
 // <summary> 
 // File: DynamicObjects.cs
-// Singleton for easy access to DynamicObjects folder in scene.
+// Singleton for easy access to DynamicObjects folder in startScene.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LOG
+#define DEBUG_LEVEL_WARN
+#define DEBUG_LEVEL_ERROR
+
+
+
 // default namespace
 
-using System;
 using CodeEnv.Master.Common;
+using CodeEnv.Master.Common.Unity;
 using UnityEngine;
-using UnityEditor;
 
 /// <summary>
-/// Singleton for easy access to DynamicObjects folder in scene.
+/// Singleton for easy access to DynamicObjects folder in startScene.
 /// </summary>
 public class DynamicObjects : MonoBehaviour {
+
+    /// <summary>
+    /// Gets the DynamicObjects folder.
+    /// </summary>
+    /// <value>
+    /// The folder.
+    /// </value>
+    public static Transform Folder {
+        get {
+            if (Instance.gameObject.name != TempGameValues.DynamicObjectsFolderName) {
+                D.Error("Expecting folder {0} but got {1}.", TempGameValues.DynamicObjectsFolderName, Instance.gameObject.name);
+            }
+            return Instance.transform;
+        }
+    }
 
     #region Custom MonoBehaviour Singleton Pattern
     private static DynamicObjects instance = null;
@@ -31,18 +51,18 @@ public class DynamicObjects : MonoBehaviour {
                 instance = GameObject.FindObjectOfType(typeof(DynamicObjects)) as DynamicObjects;
                 if (instance == null) {
                     // no instance created yet, so create one
-                    GameObject dynamicObjectsFolder = GameObject.Find(GameValues.DynamicObjectsFolderName);
+                    GameObject dynamicObjectsFolder = GameObject.Find(TempGameValues.DynamicObjectsFolderName);
                     if (dynamicObjectsFolder != null) {
                         // if our destination folder exists, add our newly created instance to it
                         instance = dynamicObjectsFolder.AddComponent<DynamicObjects>();
                     }
                     else {
-                        // DynamicObjects folder isn't in the scene, so create it
-                        Debug.LogWarning("No DynamicObjects folder found, so creating one.");
-                        dynamicObjectsFolder = new GameObject(GameValues.DynamicObjectsFolderName, typeof(DynamicObjects));
+                        // DynamicObjects folder isn't in the startScene, so create it
+                        D.Warn("No DynamicObjects folder found, so creating one.");
+                        dynamicObjectsFolder = new GameObject(TempGameValues.DynamicObjectsFolderName, typeof(DynamicObjects));
                         instance = dynamicObjectsFolder.GetComponent<DynamicObjects>();
                         if (instance == null) {
-                            Debug.LogError("Problem during the creation of {0}.".Inject(typeof(DynamicObjects).ToString()));
+                            D.Error("Problem during the creation of {0}.", typeof(DynamicObjects).ToString());
                         }
                     }
                 }
@@ -56,7 +76,7 @@ public class DynamicObjects : MonoBehaviour {
         // If no other MonoBehaviour has requested Instance in an Awake() call executing
         // before this one, then we are it. There is no reason to search for an object as we must be attached to it.
         if (instance == null) {
-            instance = this as DynamicObjects;
+            instance = this;
             instance.Initialize();
         }
     }
@@ -69,28 +89,17 @@ public class DynamicObjects : MonoBehaviour {
 
     private void Initialize() {
         // do any required initialization here as you would normally do in Awake()
+        D.Log("A {0} instance is being initialized.", this.name);
     }
 
-    /// <summary>
-    /// Gets the DynamicObjects folder.
-    /// </summary>
-    /// <value>
-    /// The folder.
-    /// </value>
-    public static Transform Folder {
-        get {
-            if (Instance.gameObject.name != GameValues.DynamicObjectsFolderName) {
-                Debug.LogError("Expecting folder {0} but got {1}.".Inject(GameValues.DynamicObjectsFolderName, Instance.gameObject.name));
-            }
-            return Instance.transform;
-        }
+    void OnDestroy() {
+        D.Log("A {0} instance is being destroyed.", this.name);
     }
+
 
     public override string ToString() {
         return new ObjectAnalyzer().ToString(this);
     }
-
-
 }
 
 

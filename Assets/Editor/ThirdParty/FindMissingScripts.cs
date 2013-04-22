@@ -6,7 +6,7 @@
 // </copyright> 
 // <summary> 
 // File: FindMissingScripts.cs
-// Editor extension that adds a MenuItem to search out any missing scripts in the scene.
+// Editor extension that adds a MenuItem to search out any missing scripts in the startScene.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
@@ -23,7 +23,7 @@ using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
 
 /// <summary>
-/// Editor extension that adds a MenuItem to search out any missing scripts in the scene.
+/// Editor extension that adds a MenuItem to search out any missing scripts in the startScene.
 /// </summary>
 public class FindMissingScripts : EditorWindow {
 
@@ -62,7 +62,7 @@ public class FindMissingScripts : EditorWindow {
         }
         // Now recurse through each child GO (if there are any):
         foreach (Transform childT in g.transform) {
-            //Debug.Log("Searching " + childT.name  + " " );
+            //Debug.Log("Searching " + childT.item  + " " );
             FindInGO(childT.gameObject);
         }
     }

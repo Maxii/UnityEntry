@@ -15,9 +15,7 @@ namespace CodeEnv.Master.Common {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
-    using System.Security.Permissions;
     using System.Text;
     using CodeEnv.Master.Common.LocalResources;
 
@@ -118,7 +116,11 @@ namespace CodeEnv.Master.Common {
                         try {
                             Type fieldType = field.FieldType;
                             object fieldValue = field.GetValue(obj);
-                            if (fieldType.IsPrimitive) {
+                            if (fieldType.IsEnum) {
+                                Enum enumValue = (Enum)fieldValue;
+                                objContentMsg.Append(enumValue.GetName());
+                            }
+                            else if (fieldType.IsPrimitive) {
                                 objContentMsg.Append(fieldValue);
                             }
                             else {
