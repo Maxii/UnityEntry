@@ -30,7 +30,7 @@ using UnityEngine;
 ///should be done by GameManager. The purpose of this class is to call GameManager.
 /// </summary>
 //[SerializeAll] This is redundant as this Object already has a StoreInformation script on it. It causes duplication of referenced SIngletons when saving
-public class MonoGameManager : MonoBehaviourBaseSingleton<MonoGameManager>, IDisposable, IInstanceIdentity {
+public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IDisposable, IInstanceIdentity {
 
     private GameManager gameMgr;
     private GameEventManager eventMgr;
@@ -92,6 +92,11 @@ public class MonoGameManager : MonoBehaviourBaseSingleton<MonoGameManager>, IDis
     private void AwakeBasedOnStartScene() {
         SceneLevel startScene = (SceneLevel)Application.loadedLevel;
         switch (startScene) {
+            //  FIXME Deployed WebPlayer starts on SceneLevel.None
+            //case SceneLevel.None:
+            //startScene = SceneLevel.IntroScene;
+            //Application.LoadLevel((int)startScene);
+            //break;
             case SceneLevel.IntroScene:
                 break;
             case SceneLevel.GameScene:
@@ -170,7 +175,7 @@ public class MonoGameManager : MonoBehaviourBaseSingleton<MonoGameManager>, IDis
     /// Releases unmanaged and - optionally - managed resources. Derived classes that need to perform additional resource cleanup
     /// should override this Dispose(isDisposing) method, using its own alreadyDisposed flag to do it before calling base.Dispose(isDisposing).
     /// </summary>
-    /// <param name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <arg name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</arg>
     protected virtual void Dispose(bool isDisposing) {
         // Allows Dispose(isDisposing) to be called more than once
         if (alreadyDisposed) {

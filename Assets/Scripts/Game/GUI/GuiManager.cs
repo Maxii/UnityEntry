@@ -27,7 +27,7 @@ using UnityEngine;
 /// <summary>
 /// Overall GuiManager that handles enabling/disabling Gui elements.
 /// </summary>
-public class GuiManager : MonoBehaviourBaseSingleton<GuiManager>, IDisposable {
+public class GuiManager : AMonoBehaviourBaseSingleton<GuiManager>, IDisposable {
 
     private Stack<IList<UIPanel>> stackedPanelsToRestore = new Stack<IList<UIPanel>>();
     private UIPanel uiRootPanel;
@@ -46,13 +46,14 @@ public class GuiManager : MonoBehaviourBaseSingleton<GuiManager>, IDisposable {
 
     //[System.Diagnostics.Conditional("UNITY_EDITOR")]
     private void CheckDebugSettings() {
-        if (DebugSettings.DisableGui) {
+        DebugSettings debugSettings = DebugSettings.Instance;
+        if (debugSettings.DisableGui) {
             Camera guiCamera = gameObject.GetSafeMonoBehaviourComponentInChildren<UICamera>().camera;
             guiCamera.enabled = false;
         }
-        if (!DebugSettings.EnableFpsReadout) {
+        if (!debugSettings.EnableFpsReadout) {
             GameObject fpsReadoutParentGo = gameObject.GetSafeMonoBehaviourComponentInChildren<FpsReadout>().transform.parent.gameObject;
-            fpsReadoutParentGo.active = false;
+            fpsReadoutParentGo.SetActive(false);
         }
     }
 
@@ -118,7 +119,7 @@ public class GuiManager : MonoBehaviourBaseSingleton<GuiManager>, IDisposable {
     /// Releases unmanaged and - optionally - managed resources. Derived classes that need to perform additional resource cleanup
     /// should override this Dispose(isDisposing) method, using its own alreadyDisposed flag to do it before calling base.Dispose(isDisposing).
     /// </summary>
-    /// <param name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    /// <arg name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</arg>
     protected virtual void Dispose(bool isDisposing) {
         // Allows Dispose(isDisposing) to be called more than once
         if (alreadyDisposed) {

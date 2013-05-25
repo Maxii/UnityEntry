@@ -12,11 +12,15 @@
 
 namespace CodeEnv.Master.Common {
 
-
     public enum SceneLevel {
+        // Having None as the default requires that there is a None scene set to 0
+        // in build settings. When built into a player, None becomes the initial scene
+        // which doesn't work of course
+        //None = 0,
+        //IntroScene = 1,
+        //GameScene = 2
 
         IntroScene = 0,
-
         GameScene = 1
 
     }

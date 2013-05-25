@@ -214,7 +214,7 @@ namespace CodeEnv.Master.Common.Unity {
         }
 
         public void PrepareToBeginNewGame() {
-            D.Log("GameTime.PrepareForWaiting() called.");
+            D.Log("GameTime.PrepareToBeginNewGame() called.");
             EnableClock(false);
             cumTimeInPriorSessions = Constants.ZeroF;
             timeGameBeganInCurrentSession = Constants.ZeroF;
@@ -296,7 +296,7 @@ namespace CodeEnv.Master.Common.Unity {
                 D.Warn("SyncGameClock called while Paused!");   // it keeps adding to currentDateTime
                 return;
             }
-            currentDateTime += GameSpeed.GetSpeedMultiplier() * (RealTime_Game - _gameRealTimeAtLastSync);
+            currentDateTime += GameSpeed.SpeedMultiplier() * (RealTime_Game - _gameRealTimeAtLastSync);
             _gameRealTimeAtLastSync = RealTime_Game;
             D.Log("GameClock synced to {0:0.00}.", currentDateTime);
         }
