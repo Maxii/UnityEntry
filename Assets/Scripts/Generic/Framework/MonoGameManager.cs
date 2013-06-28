@@ -36,7 +36,7 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IDi
     private GameEventManager eventMgr;
 
     void Awake() {
-        //Debug.Log("MonoGameManager Awake() called. Enabled = " + enabled);
+        //Debug.Log("MonoGameManager Awake() called. IsEnabled = " + enabled);
         IncrementInstanceCounter();
         if (TryDestroyExtraCopies()) {
             return;
@@ -92,11 +92,6 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IDi
     private void AwakeBasedOnStartScene() {
         SceneLevel startScene = (SceneLevel)Application.loadedLevel;
         switch (startScene) {
-            //  FIXME Deployed WebPlayer starts on SceneLevel.None
-            //case SceneLevel.None:
-            //startScene = SceneLevel.IntroScene;
-            //Application.LoadLevel((int)startScene);
-            //break;
             case SceneLevel.IntroScene:
                 break;
             case SceneLevel.GameScene:
@@ -122,7 +117,7 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IDi
     #endregion
 
     void OnEnable() {
-        // Reqd due to bug in script execution order. Scripts with an OnEnable() method will always be first
+        // TODO - Fixed as of Unity 4.0. Now to test... Reqd due to bug in script execution order. Scripts with an OnEnable() method will always be first
         // in execution order, effectively ignoring execution order project settings. As _CameraControl uses OnEnable(), it 
         // always was called first. Placing this empty method here makes script execution order settings effective.
     }

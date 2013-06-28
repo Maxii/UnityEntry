@@ -6,7 +6,7 @@
 // </copyright> 
 // <summary> 
 // File: SceneLevel.cs
-// COMMENT - one line to give a brief idea of what the file does.
+// Enum containing both the Unity name and the int value of a scene.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
