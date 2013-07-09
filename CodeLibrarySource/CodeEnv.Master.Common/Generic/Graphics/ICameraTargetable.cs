@@ -6,7 +6,7 @@
 // </copyright> 
 // <summary> 
 // File: ICameraTargetable.cs
-// Interface indicating that the Camera can use this object as a target for camera movement.
+//  Interface containing values needed by a gameobject that is a target for camera movement.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
@@ -18,9 +18,11 @@ namespace CodeEnv.Master.Common {
 
 
     /// <summary>
-    /// Interface indicating that the Camera can use this object as a target for camera movement.
+    /// Interface containing values needed by a gameobject that is a target for camera movement.
     /// </summary>
     public interface ICameraTargetable {
+
+        bool IsTargetable { get; }
 
         float MinimumCameraViewingDistance { get; }
 

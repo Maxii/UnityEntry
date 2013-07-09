@@ -37,11 +37,13 @@ namespace CodeEnv.Master.Common.Unity {
             FleetData data = _data as FleetData;
             switch (key) {
                 case GuiCursorHudDisplayLineKeys.Speed:
-                    // TODO                         // {0:00.0}     float with at least two digits before the one decimal place, rounded
-                    return (data.Speed != Constants.ZeroF) ? new ColoredTextList<float>(data.Speed, "{0:00.0}") : new ColoredTextList<float>();
+                    return new ColoredTextList<float>("{0:0.#}", data.Speed, data.MaxSpeed);  // fleet will always display speed, even if zero
                 case GuiCursorHudDisplayLineKeys.Composition:
                     // TODO                        
-                    return (data.Composition != null) ? new ColoredTextList_String(data.Composition) : new ColoredTextList_String();
+                    return (data.Composition != string.Empty) ? new ColoredTextList_String(data.Composition) : new ColoredTextList();
+                case GuiCursorHudDisplayLineKeys.CompositionDetails:
+                    // TODO
+                    return (data.Composition != string.Empty) ? new ColoredTextList_String(data.Composition) : new ColoredTextList();
                 default:
                     return base.MakeInstance_ColoredTextList(intelLevel, key);
             }
