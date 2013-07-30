@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_1_5;UNITY_4_1;ENABLE_PROFILER;UNITY_EDITOR</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PHYSICS;ENABLE_TERRAIN;ENABLE_CACHING;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_CLOTH;ENABLE_MOVIES;ENABLE_AUDIO;ENABLE_WWW;ENABLE_SHADOWS;ENABLE_DUCK_TYPING;UNITY_4_1_3;UNITY_4_1;ENABLE_PROFILER;UNITY_EDITOR;DEBUG_WARN;DEBUG_ERROR</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -37,13 +37,19 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\Game\Framework\FleetAdmiral.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\FollowableItem.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\OrbitalPlane.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\ShipCaptain.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\Star.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\StationaryItem.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiCheckbox.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiDateReadout.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiExitButton.cs" />
@@ -55,45 +61,46 @@
      <Compile Include="Assets\Scripts\Game\GUI\GuiManager.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiNewGameMenuLaunchButton.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiPauseButton.cs" />
-     <Compile Include="Assets\Scripts\Game\GUI\GuiPlayerPopupList.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiPlayerColorPopupList.cs" />
+     <Compile Include="Assets\Scripts\Game\GUI\GuiPlayerRacePopupList.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiPrefabLinker.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiSaveMenuAcceptButton.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiSavedGamesPopupList.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiUniverseSizePopupList.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\FleetIconManager.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\FleetManager.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\OrbitalPlaneManager.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\ShipManager.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\FleetGraphics.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\ShipGraphics.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarAnimator.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\StarBillboardManager.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarGlowAnimator.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\StarManager.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\SystemManager.cs" />
-     <Compile Include="Assets\Scripts\Generic\Framework\ColliderRelay.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\SystemGraphics.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\Loader.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\MonoGameManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\RequiredPrefabs.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\UsefulPrefabs.cs" />
-     <Compile Include="Assets\Scripts\Generic\Framework\VisibilityRelay.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiButtonBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiEnumPopupListBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiEnumSliderBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiLabelReadoutBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiMenuAcceptButtonBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiPopupListBase.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\BillboardManager.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\Billboard.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiCursorHud.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiMenuCancelButton.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiPauseResumeOnClick.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiTooltip.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiTrackingLabel.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\GuiTrackingLabelFactory.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiVisibilityButton.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\GuiVisibilityChangeEvent.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\Orbit.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\OrbitMoveable.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\ScaleRelativeToCamera.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\StarFlare.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\VisibilityChangedRelay.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\CameraControl.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\NguiEventFallthruHandler.cs" />
      <Compile Include="Assets\Scripts\Generic\_Debug\FpsReadout.cs" />
+     <Compile Include="Assets\Scripts\Generic\_Debug\Logger.cs" />
      <Compile Include="Assets\Scripts\Generic\_Debug\ManagementObjects.cs" />
+     <Compile Include="Assets\Scripts\Generic\_Debug\__UniverseInitializer.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipRandomItem.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\UICursor.cs" />
@@ -212,50 +219,55 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UITiledSprite.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UIViewport.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\Scripts\SU_SpaceParticles.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_CameraFollow.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserImpact.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserShot.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Spaceship.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Thruster.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_IntroBackground\Scripts\SU_SpaceSceneCamera.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Scripts\SU_Moon.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Scripts\SU_Planet.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\Scripts\SU_SpaceParticles.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_CameraFollow.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserImpact.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserShot.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Spaceship.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Thruster.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_IntroBackground\Scripts\SU_SpaceSceneCamera.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Scripts\SU_Asteroid.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Scripts\SU_AsteroidField.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Scripts\SU_SpaceSceneSwitcher.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\_Demo\Scrips\SU_SpaceSceneSwitcherDemoGUI.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Scripts\SU_Moon.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Scripts\SU_Planet.cs" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo14.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\GUI - Text Shader (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
+     <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Shaders\PlanetRings.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo18.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
-     <None Include="Assets\DataLibrary\DebugSettings.xml" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (AlphaClip).shader" />
      <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\GUI - Text Shader (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (SoftClip).shader" />
+     <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Shaders\PlanetSelfIllum.shader" />
      <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font.shader" />
-     <None Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Shaders\PlanetStandard.shader" />
+     <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Shaders\PlanetStandard.shader" />
      <None Include="Assets\Third Party Assets\NGUI\ReadMe - 2.6.3.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored Overlay.shader" />
-     <None Include="Assets\DataLibrary\UniverseSize.xml" />
-     <None Include="Assets\Third Party Assets\SpaceUnity_PlanetMoon\Shaders\PlanetAtmosphere.shader" />
+     <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Shaders\PlanetAtmosphere.shader" />
      <None Include="Assets\_Stevie3D\WorkGrid\Materials\Alpha-DoubleSided_Diffuse.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Other\English.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Other\French.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
-     <None Include="Assets\DataLibrary\GameClockSpeed.xml" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Header.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Shaders\Refractive.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth.shader" />
