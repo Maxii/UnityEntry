@@ -6,7 +6,7 @@
 // </copyright> 
 // <summary> 
 // File: CameraControl.cs
-//  In Game Camera Controller with Mouse, ScreenEdge and ArrowKey controls enabling Freeform, Focus and Follow capabilities.
+// Singleton. Camera Control based on Ngui's Event System.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
@@ -18,27 +18,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using CodeEnv.Master.Common;
 using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
-using UnityEngine;
 
 /// <summary>
-/// In Game Camera Controller with Mouse, ScreenEdge and ArrowKey controls enabling Freeform, Focus and Follow capabilities.
-/// 
-///The nested classes are serializable so that their settings are isTargetVisibleThisFrame in the inspector. Otherwise, they also don't need to be serializable.
+/// Singleton. Camera Control based on Ngui's Event System.
 /// </summary>
-[SerializeAll]
 public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
+
+    #region Camera Control Configurations
 
     // Focused Zooming: When focused, top and bottom Edge zooming and arrow key zooming cause camera movement in and out from the focused object that is centered on the screen. 
     // ScrollWheel zooming normally does the same if the cursor is pointed at the focused object. If the cursor is pointed somewhere else, scrolling IN moves toward the cursor resulting 
     // in a change to Freeform scrolling. By default, Freeform scrolling OUT is directly opposite the camera's facing. However, there is an option to scroll OUT from the cursor instead. 
     // If this is selected, then scrolling OUT while the cursor is not pointed at the focused object will also result in Freeform scrolling.
     public ScreenEdgeConfiguration edgeFocusZoom = new ScreenEdgeConfiguration { sensitivity = 0.03F, activate = false };
-    public MouseScrollWheelConfiguration scrollFocusZoom = new MouseScrollWheelConfiguration { sensitivity = 0.5F, activate = true };
+    public MouseScrollWheelConfiguration scrollFocusZoom = new MouseScrollWheelConfiguration { sensitivity = 0.4F, activate = true };
     public ArrowKeyboardConfiguration keyFocusZoom = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Vertical, sensitivity = .01F, activate = true };
-    public SimultaneousMouseButtonConfiguration dragFocusZoom = new SimultaneousMouseButtonConfiguration { firstMouseButton = MouseButton.Left, secondMouseButton = MouseButton.Right, sensitivity = 0.01F, activate = true };
+    public SimultaneousMouseButtonConfiguration dragFocusZoom = new SimultaneousMouseButtonConfiguration { firstMouseButton = NguiMouseButton.Left, secondMouseButton = NguiMouseButton.Right, sensitivity = 0.003F, activate = true };
 
     // Freeform Zooming: When not focused, top and bottom Edge zooming and arrow key zooming cause camera movement forward or backward along the camera's facing.
     // ScrollWheel zooming on the other hand always moves toward the cursor when scrolling IN. By default, scrolling OUT is directly opposite
@@ -46,7 +45,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     public ScreenEdgeConfiguration edgeFreeZoom = new ScreenEdgeConfiguration { sensitivity = 10F, activate = false };
     public ArrowKeyboardConfiguration keyFreeZoom = new ArrowKeyboardConfiguration { sensitivity = 10F, keyboardAxis = KeyboardAxis.Vertical, activate = true };
     public MouseScrollWheelConfiguration scrollFreeZoom = new MouseScrollWheelConfiguration { activate = true };
-    public SimultaneousMouseButtonConfiguration dragFreeZoom = new SimultaneousMouseButtonConfiguration { firstMouseButton = MouseButton.Left, secondMouseButton = MouseButton.Right, sensitivity = 2F, activate = true };
+    public SimultaneousMouseButtonConfiguration dragFreeZoom = new SimultaneousMouseButtonConfiguration { firstMouseButton = NguiMouseButton.Left, secondMouseButton = NguiMouseButton.Right, sensitivity = 0.3F, activate = true };
 
     // Panning, Tilting and Orbiting: When focused, edge actuation, arrow key pan and tilting and mouse button/movement results in orbiting of the focused object that is centered on the screen. 
     // When not focused the same arrow keys, edge actuation and mouse button/movement results in the camera panning (looking left or right) and tilting (looking up or down) in place.
@@ -59,32 +58,35 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     public ArrowKeyboardConfiguration keyFocusPan = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Horizontal, sensitivity = 0.5F, activate = true };
     public ArrowKeyboardConfiguration keyFocusTilt = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Vertical, modifiers = new Modifiers { ctrlKeyReqd = true, shiftKeyReqd = true }, sensitivity = 0.5F, activate = true };
 
-    public MouseButtonConfiguration dragFocusOrbit = new MouseButtonConfiguration { mouseButton = MouseButton.Right, sensitivity = 40.0F, activate = true };
-    public MouseButtonConfiguration dragFreePanTilt = new MouseButtonConfiguration { mouseButton = MouseButton.Right, sensitivity = 28.0F, activate = true };
+    public MouseButtonConfiguration dragFocusOrbit = new MouseButtonConfiguration { mouseButton = NguiMouseButton.Right, sensitivity = 3.0F, activate = true };
+    public MouseButtonConfiguration dragFreePanTilt = new MouseButtonConfiguration { mouseButton = NguiMouseButton.Right, sensitivity = 3.0F, activate = true };
 
     // Truck and Pedestal: Trucking (moving left and right) and Pedestalling (moving up and down) occurs only in Freeform space, repositioning the camera along it's current horizontal and vertical axis'.
-    public MouseButtonConfiguration dragFreeTruck = new MouseButtonConfiguration { mouseButton = MouseButton.Middle, modifiers = new Modifiers { altKeyReqd = true }, sensitivity = 0.2F, activate = true };
-    public MouseButtonConfiguration dragFreePedestal = new MouseButtonConfiguration { mouseButton = MouseButton.Middle, modifiers = new Modifiers { shiftKeyReqd = true }, sensitivity = 0.2F, activate = true };
+    public MouseButtonConfiguration dragFreeTruck = new MouseButtonConfiguration { mouseButton = NguiMouseButton.Middle, modifiers = new Modifiers { altKeyReqd = true }, sensitivity = 0.02F, activate = true };
+    public MouseButtonConfiguration dragFreePedestal = new MouseButtonConfiguration { mouseButton = NguiMouseButton.Middle, modifiers = new Modifiers { shiftKeyReqd = true }, sensitivity = 0.02F, activate = true };
     public ArrowKeyboardConfiguration keyFreePedestal = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Vertical, modifiers = new Modifiers { ctrlKeyReqd = true }, activate = true };
     public ArrowKeyboardConfiguration keyFreeTruck = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Horizontal, modifiers = new Modifiers { ctrlKeyReqd = true }, activate = true };
 
     // Rolling: Focused and freeform rolling results in the same behaviour, rolling around the camera's current forward axis.
-    public MouseButtonConfiguration dragFocusRoll = new MouseButtonConfiguration { mouseButton = MouseButton.Right, modifiers = new Modifiers { altKeyReqd = true }, sensitivity = 40.0F, activate = true };
-    public MouseButtonConfiguration dragFreeRoll = new MouseButtonConfiguration { mouseButton = MouseButton.Right, modifiers = new Modifiers { altKeyReqd = true }, sensitivity = 40.0F, activate = true };
+    public MouseButtonConfiguration dragFocusRoll = new MouseButtonConfiguration { mouseButton = NguiMouseButton.Right, modifiers = new Modifiers { altKeyReqd = true }, sensitivity = 10.0F, activate = true };
+    public MouseButtonConfiguration dragFreeRoll = new MouseButtonConfiguration { mouseButton = NguiMouseButton.Right, modifiers = new Modifiers { altKeyReqd = true }, sensitivity = 100.0F, activate = true };
     public ArrowKeyboardConfiguration keyFreeRoll = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Horizontal, modifiers = new Modifiers { ctrlKeyReqd = true, shiftKeyReqd = true }, activate = true };
     public ArrowKeyboardConfiguration keyFocusRoll = new ArrowKeyboardConfiguration { keyboardAxis = KeyboardAxis.Horizontal, modifiers = new Modifiers { ctrlKeyReqd = true, shiftKeyReqd = true }, activate = true };
 
+    #endregion
 
     // LEARNINGS
-    // Edge-based requested tValues need to be normalized for framerate using timeSinceLastUpdate as the change per second is the framerate * sensitivity.
-    // Key-based requested tValues DONOT need to be normalized for framerate using timeSinceLastUpdate as Input.GetAxis() is not framerate dependant.
+    // Edge-based requested values need to be normalized for framerate using timeSinceLastUpdate as the change per second is the framerate * sensitivity.
+    // Key-based requested values DONOT need to be normalized for framerate using timeSinceLastUpdate as Input.GetAxis() is not framerate dependant.
     // Using +/- Mathf.Abs(requestedDistanceToTarget) accelerates/decelerates movement over time.
 
     // IMPROVE
     // Should Tilt/EdgePan have some Pedastal/Truck added like Star Ruler?
-    // Need more elegant rotation and translation functions when selecting a focusTarget - aka Slerp, Mathf.SmoothDamp/Angle, etc. see my Mathfx
+    // Need more elegant rotation and translation functions when selecting a focusTarget - aka Slerp, Mathf.SmoothDamp/Angle, etc. see my Mathfx, Radical's Easing
     // Dragging the mouse with any button held down works offscreen OK, but upon release offscreen, immediately enables edge scrolling and panning
     // Implement Camera controls such as clip planes, FieldOfView, RenderSettings.[flareStrength, haloStrength, ambientLight]
+
+    #region Fields
 
     private bool _isResetOnFocusEnabled;
     private bool _isZoomOutOnCursorEnabled;    // ScrollWheel always zooms IN on cursor, zooming OUT with the ScrollWheel is directly backwards by default
@@ -95,8 +97,11 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         focusedRotationDampener = 2.0F, freeformPositionDampener = 3.0F, freeformRotationDampener = 2.0F
     };
 
+    private CtxPickHandler _contextMenuPickHandler;
+
     // static so it is available to nested classes
     public static float universeRadius;
+    public static GameInput gameInput;
 
     // Cached references
     [DoNotSerialize]    // Serializing this creates duplicates of this object on Save
@@ -133,34 +138,53 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     private float _cameraPositionDampener;
     private float _cameraRotationDampener;
 
-    // State
-    private enum CameraState {
-        None = 0,
-        /// <summary>
-        /// Transitional state preceeding Focused allowing the camera's approach to the selected focus 
-        /// game object to complete before the input controls are enabled in Focused
-        /// </summary>
-        Focusing = 1,
-        /// <summary>
-        /// The focused
-        /// </summary>
-        Focused = 2,
-        Freeform = 3,
-        Follow = 4
-    }
     private CameraState cameraState;
 
     public enum CameraUpdateMode { LateUpdate = 0, FixedUpdate = 1, Update = 2 }
     public CameraUpdateMode updateMode = CameraUpdateMode.LateUpdate;
 
+    #endregion
+
+    #region Temporary InEditor Edge Movement Controls
+    // Temporary workaround that keeps the edge movement controls
+    // from operating when I'm in the Editor but outside the game screen
+
+    private bool __debugEdgeFocusOrbitPanEnabled;
+    private bool __debugEdgeFocusOrbitTiltEnabled;
+    private bool __debugEdgeFreePanEnabled;
+    private bool __debugEdgeFreeTiltEnabled;
+
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    private void __InitializeDebugEdgeMovementSettings() {
+        __debugEdgeFocusOrbitPanEnabled = edgeFocusOrbitPan.activate;
+        __debugEdgeFocusOrbitTiltEnabled = edgeFocusOrbitTilt.activate;
+        __debugEdgeFreePanEnabled = edgeFreePan.activate;
+        __debugEdgeFreeTiltEnabled = edgeFreeTilt.activate;
+    }
+
+    // called by OnApplicationFocus()
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    private void __EnableEdgePanTiltInEditor(bool toEnable) {
+        edgeFocusOrbitPan.activate = __debugEdgeFocusOrbitPanEnabled && toEnable;
+        edgeFocusOrbitTilt.activate = __debugEdgeFocusOrbitTiltEnabled && toEnable;
+        edgeFreePan.activate = __debugEdgeFreePanEnabled && toEnable;
+        edgeFreeTilt.activate = __debugEdgeFreeTiltEnabled && toEnable;
+    }
+
+    #endregion
+
+    #region Initialization
+
     /// <summary>
     /// The 1st method called when the script instance is being loaded. Called once and only once in the lifetime of the script
     /// instance. All game objects have already been initialized so references to other scripts may be established here.
     /// </summary>
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         UnityUtility.ValidateComponentPresence<Camera>(gameObject);
         //Logger.Log("CameraControl.Awake() called.");
         InitializeReferences();
+        __InitializeDebugEdgeMovementSettings();
     }
 
     private void InitializeReferences() {
@@ -169,6 +193,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         _eventMgr = GameEventManager.Instance;
         _playerPrefsMgr = PlayerPrefsManager.Instance;
         _transform = transform;    // cache it!transformis actually GetComponent<Transform>()
+        gameInput = new GameInput();
         Subscribe();
         ValidateActiveConfigurations();
         // need to raise this event in Awake as Start can be too late, since the true version of this event is called
@@ -177,34 +202,145 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         _eventMgr.Raise<ElementReadyEvent>(new ElementReadyEvent(this, isReady: false));
     }
 
+    private void ValidateActiveConfigurations() {
+        bool isValid = true;
+        if ((edgeFocusOrbitTilt.activate && edgeFocusZoom.activate) || (edgeFreeTilt.activate && edgeFreeZoom.activate)) {
+            isValid = false;
+        }
+        D.Assert(isValid, "Incompatable Camera Configuration.", pauseOnFail: true);
+    }
+
+    private void InitializeMainCamera() {
+        //Logger.Log("Camera initializing.");
+        SetCameraSettings();
+        InitializeCameraPreferences();
+        PositionCameraForGame();
+        InitializeContextMenuSettings();
+    }
+
+    private void SetCameraSettings() {
+        universeRadius = GameManager.Settings.UniverseSize.Radius();
+        Camera.main.farClipPlane = universeRadius * 2;
+
+        // This camera will see all layers except for the GUI and DeepSpace layers. If I want to add exclusions, I can still do it from the outside
+        camera.cullingMask = LayerMaskExtensions.CreateExclusiveMask(Layers.Gui, Layers.DeepSpace);
+        UpdateRate = UpdateFrequency.Continuous;
+    }
+
+    private void InitializeCameraPreferences() {
+        // the initial Camera preference changed events occur earlier than we can subscribe so do it manually
+        OnResetOnFocusEnabledChanged();
+        OnCameraRollEnabledChanged();
+        OnZoomOutOnCursorEnabledChanged();
+    }
+
+    private void EnableCameraRoll(bool toEnable) {
+        dragFocusRoll.activate = toEnable;
+        dragFreeRoll.activate = toEnable;
+        keyFreeRoll.activate = toEnable;
+    }
+
+    private void PositionCameraForGame() {
+        CreateUniverseEdge();
+        CreateDummyTarget();
+        ResetAtCurrentLocation();
+        // UNDONE whether starting or continuing saved game, camera position should be focused on the player's starting planet, no rotation
+        //ResetToWorldspace();
+    }
+
+    private void CreateUniverseEdge() {
+        SphereCollider universeEdge = null;
+        SphereCollider universeEdgePrefab = RequiredPrefabs.Instance.UniverseEdgePrefab;
+        if (universeEdgePrefab == null) {
+            D.Warn("UniverseEdgePrefab on RequiredPrefabs is null.");
+            string universeEdgeName = Layers.UniverseEdge.GetName();
+            universeEdge = new GameObject(universeEdgeName).AddComponent<SphereCollider>();
+            universeEdge.gameObject.layer = (int)Layers.UniverseEdge;
+            universeEdge.gameObject.isStatic = true;
+        }
+        else {
+            universeEdge = Instantiate<SphereCollider>(universeEdgePrefab);
+        }
+        universeEdge.radius = universeRadius;
+        universeEdge.transform.parent = DynamicObjects.Folder;
+    }
+
+    private void CreateDummyTarget() {
+        Transform dummyTargetPrefab = RequiredPrefabs.Instance.CameraDummyTargetPrefab;
+        if (dummyTargetPrefab == null) {
+            D.Warn("DummyTargetPrefab on RequiredPrefabs is null.");
+            string dummyTargetName = Layers.DummyTarget.GetName();
+            _dummyTarget = new GameObject(dummyTargetName).transform;
+            _dummyTarget.gameObject.layer = (int)Layers.DummyTarget;
+            _dummyTarget.gameObject.AddComponent<SphereCollider>();
+            _dummyTarget.gameObject.AddComponent<DummyTargetManager>();
+        }
+        else {
+            _dummyTarget = Instantiate<Transform>(dummyTargetPrefab);
+        }
+        _dummyTarget.parent = DynamicObjects.Folder;
+    }
+
+    /// <summary>
+    /// Resets the camera to its base state without changing its location
+    /// or facing. Base state is Freeform with its target set as the
+    /// DummyTarget positioned directly ahead. 
+    /// </summary>
+    private void ResetAtCurrentLocation() {
+        _dummyTarget.collider.enabled = false;
+        // the collider is disabled so the placement algorithm doesn't accidently find it already in front of the camera
+        TryPlaceDummyTargetAtUniverseEdgeInDirection(_transform.forward);
+        _dummyTarget.collider.enabled = true;
+        SyncRotation();
+        ChangeState(CameraState.Freeform);
+    }
+
+    private void SyncRotation() {
+        Quaternion startingRotation = _transform.rotation;
+        Vector3 startingEulerRotation = startingRotation.eulerAngles;
+        // don't understand why y and x are reversed
+        _xRotation = startingEulerRotation.y;
+        _yRotation = startingEulerRotation.x;
+        _zRotation = startingEulerRotation.z;
+    }
+
+    private void InitializeContextMenuSettings() {
+        _contextMenuPickHandler = gameObject.GetSafeMonoBehaviourComponent<CtxPickHandler>();
+        _contextMenuPickHandler.dontUseFallThrough = true;
+        if (_contextMenuPickHandler.menuButton != NguiMouseButton.Right.ToUnityMouseButton()) {
+            D.Warn("Context Menu actuator button not set to Right Mouse Button.");
+        }
+        // IMPROVE I should be able to use UIEventListener to subscribe to all objects with a CtxObject
+        // using FindObjectsOfType<CtxObject>(), but I can't figure out how to assign ContextMenuPickHandler.OnPress
+        // (a method on a different object) to the UIEventListener delegate. For now, I'm just implementing
+        // OnPress(isPressed) in each object implementing ISelectable, ie. all ISelectable by definition will be able
+        // to receive manual orders and therefore should support context menus.
+    }
+
+    #endregion
+
+    #region Event Handlers
+
     private void Subscribe() {
         if (_subscribers == null) {
             _subscribers = new List<IDisposable>();
         }
         _eventMgr.AddListener<FocusSelectedEvent>(this, OnFocusSelected);
         _subscribers.Add(GameManager.Instance.SubscribeToPropertyChanged<GameManager, GameState>(gm => gm.GameState, OnGameStateChanged));
-        _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, bool>(pm => pm.IsCameraRollEnabled, OnCameraRollPrefChanged));
-        _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, bool>(pm => pm.IsResetOnFocusEnabled, OnResetOnFocusPrefChanged));
-        _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, bool>(pm => pm.IsZoomOutOnCursorEnabled, OnZoomOutOnCursorPrefChanged));
+        _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, bool>(pm => pm.IsCameraRollEnabled, OnCameraRollEnabledChanged));
+        _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, bool>(pm => pm.IsResetOnFocusEnabled, OnResetOnFocusEnabledChanged));
+        _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, bool>(pm => pm.IsZoomOutOnCursorEnabled, OnZoomOutOnCursorEnabledChanged));
     }
 
-    private void ValidateActiveConfigurations() {
-        bool isValid = true;
-        if ((edgeFocusOrbitTilt.IsActivated() && edgeFocusZoom.IsActivated()) || (edgeFreeTilt.IsActivated() && edgeFreeZoom.IsActivated())) {
-            isValid = false;
-        }
-        D.Assert(isValid, "Incompatable Camera Configuration.", pauseOnFail: true);
-    }
-
-    private void OnZoomOutOnCursorPrefChanged() {
+    private void OnZoomOutOnCursorEnabledChanged() {
         _isZoomOutOnCursorEnabled = _playerPrefsMgr.IsZoomOutOnCursorEnabled;
     }
 
-    private void OnResetOnFocusPrefChanged() {
+    private void OnResetOnFocusEnabledChanged() {
         _isResetOnFocusEnabled = _playerPrefsMgr.IsResetOnFocusEnabled;
     }
 
-    private void OnCameraRollPrefChanged() {
+    private void OnCameraRollEnabledChanged() {
         EnableCameraRoll(_playerPrefsMgr.IsCameraRollEnabled);
     }
 
@@ -227,9 +363,12 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                 }
                 _eventMgr.Raise<ElementReadyEvent>(new ElementReadyEvent(this, isReady: true));
                 break;
-            case GameState.Running:
             case GameState.Building:
             case GameState.Loading:
+            case GameState.RunningCountdown_3:
+            case GameState.RunningCountdown_2:
+            case GameState.RunningCountdown_1:
+            case GameState.Running:
                 // do nothing
                 break;
             case GameState.None:
@@ -238,59 +377,30 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
     }
 
-    #region Little used Unity Events
-
-    void Start() {
-        //Logger.Log("CameraControl.Start() called.");
-        //CheckScriptCompilerSettings();
-        //InitializeMainCamera();
+    private void OnFocusSelected(FocusSelectedEvent e) {
+        Logger.Log("FocusSelectedEvent received. Focus is {0}.".Inject(e.FocusTransform.name));
+        SetFocus(e.FocusTransform);
     }
 
-    private void CheckScriptCompilerSettings() {
-        Logger.Log("Compiler Preprocessor Settings in {0} follow:".Inject(Instance.GetType().Name) + Constants.NewLine);
-#if DEBUG
-        Logger.Log("DEBUG, ");
-#endif
-
-#if UNITY_EDITOR
-            Logger.Log("UNITY_EDITOR, ");
-#endif
-
-#if DEBUG_WARN
-        Logger.Log("DEBUG_WARN, ");
-#endif
-
-#if DEBUG_ERROR
-        Logger.Log("DEBUG_ERROR, ");
-#endif
-
-#if DEBUG_LOG
-        Logger.Log("DEBUG_LOG, ");
-#endif
+    private void Unsubscribe() {
+        _eventMgr.RemoveListener<FocusSelectedEvent>(this, OnFocusSelected);
+        _subscribers.ForAll<IDisposable>(s => s.Dispose());
+        _subscribers.Clear();
     }
+
+    #endregion
+
+    #region Standard MonoBehaviour Events
 
     /// <summary>
-    /// Called when enabled set to true after the script has been loaded, including after DeSerialization.
-    /// </summary>
-    void OnEnable() {
-        //Logger.Log("Camera OnEnable() called. IsEnabled = " + enabled);
-    }
-
-    // temp workaround for funny behaviour with application focusTarget starting GameScene
-    private bool _ignore = true;
-    /// <summary>
-    /// Called when application goes in/out of focusTarget, this method controls the
-    /// enabled state of the camera so it doesn't move when I use the mouse outside of 
-    /// the editor window.
+    /// Called when application goes in/out of focus, this method controls the
+    /// enabled state of edge pan and tilt so the camera doesn't respond to edge 
+    /// movement commands when the mouse is clicked outside the editor game window.
     /// </summary>
     /// <arg item="isFocus">if set to <c>true</c> [is focusTarget].</arg>
     void OnApplicationFocus(bool isFocus) {
-        //Logger.Log("Camera OnApplicationFocus(" + isFocus + ") called.");
-        if (_ignore) {
-            _ignore = false;
-            return;
-        }
-        enabled = isFocus;
+        Logger.Log("Camera OnApplicationFocus({0}) called.", isFocus);
+        __EnableEdgePanTiltInEditor(isFocus);
     }
 
     /// <summary>
@@ -303,112 +413,14 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         enabled = !isPaused;
     }
 
-    /// <summary>
-    /// Called when enabled set to false. It is also called when the object is destroyed and when
-    /// scripts are reloaded after compilation has finished.
-    /// </summary>
-    void OnDisable() {
-        // Logger.Log("Camera OnDisable() called.");
-    }
-
-    protected override void OnApplicationQuit() {
-        _instance = null;
+    protected override void OnDestroy() {
+        base.OnDestroy();
+        Dispose();
     }
 
     #endregion
 
-    private void InitializeMainCamera() {
-        //Logger.Log("Camera initializing.");
-        SetCameraSettings();
-        SetPlayerPrefs();
-        PositionCameraForGame();
-    }
-
-    private void SetCameraSettings() {
-        universeRadius = GameManager.Settings.UniverseSize.Radius();
-        Camera.main.farClipPlane = universeRadius * 2;
-
-        // This camera will see all layers except for the GUI and DeepSpace layers. If I want to add exclusions, I can still do it from the outside
-        camera.cullingMask = LayerMaskExtensions.CreateExclusiveMask(Layers.Gui, Layers.DeepSpace);
-        UpdateRate = UpdateFrequency.Continuous;
-    }
-
-    private void SetPlayerPrefs() {
-        _isResetOnFocusEnabled = _playerPrefsMgr.IsResetOnFocusEnabled;
-        EnableCameraRoll(_playerPrefsMgr.IsCameraRollEnabled);
-        _isZoomOutOnCursorEnabled = _playerPrefsMgr.IsZoomOutOnCursorEnabled;
-    }
-
-    private void EnableCameraRoll(bool toEnable) {
-        dragFocusRoll.activate = toEnable;
-        dragFreeRoll.activate = toEnable;
-        keyFreeRoll.activate = toEnable;
-    }
-
-    private void PositionCameraForGame() {
-        CreateUniverseEdge();
-        CreateAndPositionDummyTarget();    // do it here as the camera is the only user of the object
-
-        // UNDONE whether starting or continuing saved game, camera position should be focused on the player's starting planet, no rotation
-        __AcquireStartingRotation();
-        //ResetToWorldspace();
-        ChangeState(CameraState.Freeform);
-    }
-
-    private void __AcquireStartingRotation() {
-        Quaternion startingRotation = _transform.rotation;
-        Vector3 startingEulerRotation = startingRotation.eulerAngles;
-        // don't understand why y and x are reversed
-        _xRotation = startingEulerRotation.y;
-        _yRotation = startingEulerRotation.x;
-        _zRotation = startingEulerRotation.z;
-    }
-
-    private void CreateUniverseEdge() {
-        SphereCollider universeEdge = null;
-        SphereCollider universeEdgePrefab = RequiredPrefabs.Instance.UniverseEdgePrefab;
-        if (universeEdgePrefab == null) {
-            D.Warn("UniverseEdgePrefab on RequiredPrefabs is null.");
-            string universeEdgeName = Layers.UniverseEdge.GetName();
-            universeEdge = new GameObject(universeEdgeName).AddComponent<SphereCollider>();
-            universeEdge.gameObject.layer = (int)Layers.UniverseEdge;
-            universeEdge.gameObject.isStatic = true;
-        }
-        else {
-            universeEdge = Instantiate<SphereCollider>(universeEdgePrefab);
-        }
-        universeEdge.radius = universeRadius;
-        universeEdge.transform.parent = DynamicObjects.Folder;
-    }
-
-    private void CreateAndPositionDummyTarget() {
-        Transform dummyTargetPrefab = RequiredPrefabs.Instance.CameraDummyTargetPrefab;
-        if (dummyTargetPrefab == null) {
-            D.Warn("DummyTargetPrefab on RequiredPrefabs is null.");
-            string dummyTargetName = Layers.DummyTarget.GetName();
-            _dummyTarget = new GameObject(dummyTargetName).transform;
-            _dummyTarget.gameObject.layer = (int)Layers.DummyTarget;
-            _dummyTarget.gameObject.AddComponent<SphereCollider>();
-            _dummyTarget.gameObject.AddComponent<DummyTargetManager>();
-        }
-        else {
-            _dummyTarget = Instantiate<Transform>(dummyTargetPrefab);
-        }
-        _dummyTarget.collider.enabled = false;
-        // the collider is disabled so the placement algorithm doesn't accidently find it already in front of the camera
-        TryPlaceDummyTargetAtUniverseEdgeInDirection(_transform.forward);
-        _dummyTarget.parent = DynamicObjects.Folder;
-        _dummyTarget.collider.enabled = true;
-    }
-
-    void OnDeserialized() {
-        //Logger.Log("Camera.OnDeserialized() called.");
-    }
-
-    private void OnFocusSelected(FocusSelectedEvent e) {
-        Logger.Log("FocusSelectedEvent received. Focus is {0}.".Inject(e.FocusTransform.name));
-        SetFocus(e.FocusTransform);
-    }
+    #region State
 
     /// <summary>
     /// Assign the focus object to be the Target and changes the CameraState based on
@@ -482,7 +494,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
 
         Transform previousTarget = _target;
         if (previousTarget != null) {  // _target is null the first time around
-            // if the previous target is IFocusable it might have been in focus so be safe and tell it it is not the focus
+            // if the previous target is IFocusable play it safe and tell it it is not the focus
             ICameraFocusable previousTargetIsFocusable = previousTarget.GetInterface<ICameraFocusable>();
             if (previousTargetIsFocusable != null) {
                 previousTargetIsFocusable.IsFocus = false;
@@ -550,7 +562,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
             default:
                 throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(newState));
         }
-        Logger.Log("CameraState changed to " + cameraState);
+        _UpdateDebugHud(DebugHudLineKeys.CameraMode, cameraState.GetName());
     }
 
     /// <summary>
@@ -566,6 +578,29 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         _zRotation = zeroRotationVector.z;
         //Logger.Log("ResetToWorldSpace called. Worldspace Camera Rotation = {0}.".Inject(new Vector3(_xRotation, _yRotation, _zRotation)));
     }
+
+    #endregion
+
+    /// <summary>
+    /// Tries to show the context menu. 
+    /// NOTE: This is a preprocess method for
+    /// ContextMenuPickHandler.OnPress(isDown) which is designed to show
+    /// the context menu if the method is called both times from the same object.
+    /// Unfortunately, that also means the context menu will show if a drag
+    /// starts and ends over the same ISelectable object. Therefore, this 
+    /// preprocess method is here to detect whether a drag is occuring before 
+    /// passing it on to show the context menu.
+    /// FIXME unfortunately, UICamera.isDragging = false when OnPress(false)
+    /// occurs at the end of a drag that started and ended over the same object.
+    /// </summary>
+    /// <param name="isDown">if set to <c>true</c> [is down].</param>
+    public void TryShowContextMenuOnPress(bool isDown) {
+        //if (!UICamera.isDragging) {
+        _contextMenuPickHandler.OnPress(isDown);
+        //}
+    }
+
+    #region Update Camera
 
     void Update() {
         if (updateMode == CameraUpdateMode.Update) { UpdateCamera(); }
@@ -587,6 +622,10 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
             float mouseInputValue = 0F;
             bool showDistanceDebugLog = false;
             Vector3 lookAt = Vector3.zero;
+
+            if (_target == null || _targetPoint == null) {
+                ResetAtCurrentLocation();
+            }
 
             switch (cameraState) {
                 case CameraState.Focusing:
@@ -616,13 +655,11 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                         return;
                     }
                     if (dragFocusOrbit.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsHorizontalMouseMovement(out mouseInputValue)) {
-                            _xRotation += mouseInputValue * dragFocusOrbit.sensitivity * timeSinceLastUpdate;
-                        }
-                        if (GameInput.IsVerticalMouseMovement(out mouseInputValue)) {
-                            _yRotation -= mouseInputValue * dragFocusOrbit.sensitivity * timeSinceLastUpdate;
-                        }
+                        Vector2 dragDelta = gameInput.GetDragDelta();
+                        mouseInputValue = dragDelta.x;
+                        _xRotation += mouseInputValue * dragFocusOrbit.sensitivity * timeSinceLastUpdate;
+                        mouseInputValue = dragDelta.y;
+                        _yRotation -= mouseInputValue * dragFocusOrbit.sensitivity * timeSinceLastUpdate;
                     }
                     if (edgeFocusOrbitPan.IsActivated()) {
                         float xMousePosition = Input.mousePosition.x;
@@ -643,25 +680,22 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                         }
                     }
                     if (dragFocusRoll.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsHorizontalMouseMovement(out mouseInputValue)) {
-                            _zRotation += mouseInputValue * dragFocusRoll.sensitivity * timeSinceLastUpdate;
-                        }
+                        mouseInputValue = gameInput.GetDragDelta().x;
+                        _zRotation += mouseInputValue * dragFocusRoll.sensitivity * timeSinceLastUpdate;
                     }
                     if (scrollFocusZoom.IsActivated()) {
-                        if (GameInput.IsScrollWheelMovement(out mouseInputValue)) {
-                            if (mouseInputValue > 0 || (mouseInputValue < 0 && _isZoomOutOnCursorEnabled)) {
-                                if (TrySetTargetAtScreenPoint(Input.mousePosition)) {
-                                    // there is a new Target so it can't be the old focus Target
-                                    ChangeState(CameraState.Freeform);
-                                    return;
-                                }
+                        mouseInputValue = gameInput.GetScrollWheelMovement();
+                        if (mouseInputValue > 0 || (mouseInputValue < 0 && _isZoomOutOnCursorEnabled)) {
+                            if (TrySetTargetAtScreenPoint(Input.mousePosition)) {
+                                // there is a new Target so it can't be the old focus Target
+                                ChangeState(CameraState.Freeform);
+                                return;
                             }
-                            float translationSpeedGoverner = Mathf.Clamp(Mathf.Abs(_requestedDistanceFromTarget), 0F, settings.MaxSpeedGovernor);
-                            _requestedDistanceFromTarget -= mouseInputValue * translationSpeedGoverner * scrollFocusZoom.sensitivity * scrollFocusZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
-                            //Logger.Log("MaxSpeedGovernor = {0}, mouseInputValue = {1}".Inject(settings.MaxSpeedGovernor, mouseInputValue));
-                            //Logger.Log("ScrollFocusZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
                         }
+                        float translationSpeedGoverner = Mathf.Clamp(Mathf.Abs(_requestedDistanceFromTarget), 0F, settings.MaxSpeedGovernor);
+                        _requestedDistanceFromTarget -= mouseInputValue * translationSpeedGoverner * scrollFocusZoom.sensitivity * scrollFocusZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
+                        //Logger.Log("MaxSpeedGovernor = {0}, mouseInputValue = {1}".Inject(settings.MaxSpeedGovernor, mouseInputValue));
+                        //Logger.Log("ScrollFocusZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
                     }
                     if (edgeFocusZoom.IsActivated()) {
                         float yMousePosition = Input.mousePosition.y;
@@ -682,13 +716,11 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                         //Logger.Log("keyFocusZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
                     }
                     if (dragFocusZoom.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsVerticalMouseMovement(out mouseInputValue)) {
-                            //Logger.Log("MouseFocusZoom Vertical Mouse Movement detected.");
-                            float translationSpeedGoverner = Mathf.Clamp(Mathf.Abs(_requestedDistanceFromTarget), 0F, settings.MaxSpeedGovernor);
-                            _requestedDistanceFromTarget -= mouseInputValue * translationSpeedGoverner * dragFocusZoom.sensitivity * dragFocusZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
-                            //Logger.Log("dragFocusZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
-                        }
+                        mouseInputValue = gameInput.GetDragDelta().y;
+                        //Logger.Log("MouseFocusZoom Vertical Mouse Movement detected.");
+                        float translationSpeedGoverner = Mathf.Clamp(Mathf.Abs(_requestedDistanceFromTarget), 0F, settings.MaxSpeedGovernor);
+                        _requestedDistanceFromTarget -= mouseInputValue * translationSpeedGoverner * dragFocusZoom.sensitivity * dragFocusZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
+                        //Logger.Log("dragFocusZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
                     }
                     if (keyFocusPan.IsActivated()) {
                         _xRotation += Input.GetAxis(keyboardAxesNames[(int)keyFreePan.keyboardAxis]) * keyFreePan.sensitivity;
@@ -728,64 +760,54 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                         }
                     }
                     if (dragFreeTruck.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsHorizontalMouseMovement(out mouseInputValue)) {
-                            TryPlaceDummyTargetAtUniverseEdgeInDirection(_transform.right);
-                            _requestedDistanceFromTarget += mouseInputValue * dragFreeTruck.sensitivity * dragFreeTruck.InputControlSpeedNormalizer * timeSinceLastUpdate;
-                        }
+                        mouseInputValue = gameInput.GetDragDelta().x;
+                        TryPlaceDummyTargetAtUniverseEdgeInDirection(_transform.right);
+                        _requestedDistanceFromTarget += mouseInputValue * dragFreeTruck.sensitivity * dragFreeTruck.InputControlSpeedNormalizer * timeSinceLastUpdate;
                     }
                     if (dragFreePedestal.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsVerticalMouseMovement(out mouseInputValue)) {
-                            TryPlaceDummyTargetAtUniverseEdgeInDirection(_transform.up);
-                            _requestedDistanceFromTarget += mouseInputValue * dragFreePedestal.sensitivity * dragFreePedestal.InputControlSpeedNormalizer * timeSinceLastUpdate;
-                        }
+                        mouseInputValue = gameInput.GetDragDelta().y;
+                        TryPlaceDummyTargetAtUniverseEdgeInDirection(_transform.up);
+                        _requestedDistanceFromTarget += mouseInputValue * dragFreePedestal.sensitivity * dragFreePedestal.InputControlSpeedNormalizer * timeSinceLastUpdate;
                     }
                     if (dragFreeRoll.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsHorizontalMouseMovement(out mouseInputValue)) {
-                            _zRotation += mouseInputValue * dragFreeRoll.sensitivity * timeSinceLastUpdate;
-                        }
+                        mouseInputValue = gameInput.GetDragDelta().y;
+                        _zRotation += mouseInputValue * dragFreeRoll.sensitivity * timeSinceLastUpdate;
                     }
                     if (dragFreePanTilt.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsHorizontalMouseMovement(out mouseInputValue)) {
-                            _xRotation -= mouseInputValue * dragFreePanTilt.sensitivity * timeSinceLastUpdate;
-                        }
-                        if (GameInput.IsVerticalMouseMovement(out mouseInputValue)) {
-                            _yRotation += mouseInputValue * dragFreePanTilt.sensitivity * timeSinceLastUpdate;
-                        }
+                        Vector2 dragDelta = gameInput.GetDragDelta();
+                        mouseInputValue = dragDelta.x;
+                        _xRotation -= mouseInputValue * dragFreePanTilt.sensitivity * timeSinceLastUpdate;
+                        mouseInputValue = dragDelta.y;
+                        _yRotation += mouseInputValue * dragFreePanTilt.sensitivity * timeSinceLastUpdate;
                     }
                     if (scrollFreeZoom.IsActivated()) {
-                        if (GameInput.IsScrollWheelMovement(out mouseInputValue)) {
-                            // D.Warn("Mouse ScrollWheel is non-zero at {0:0.000000}.".Inject(mouseInputValue));
-                            if (mouseInputValue > 0) {
-                                // Scroll ZoomIN command
+                        mouseInputValue = gameInput.GetScrollWheelMovement();
+                        if (mouseInputValue > 0) {
+                            // Scroll ZoomIN command
+                            if (TrySetTargetAtScreenPoint(Input.mousePosition)) {
+                                // Target was changed so reset requested distance to actual distance
+                                _requestedDistanceFromTarget = _distanceFromTarget;
+                            }
+                        }
+                        if (mouseInputValue < 0) {
+                            // Scroll ZoomOUT command
+                            if (_isZoomOutOnCursorEnabled) {
                                 if (TrySetTargetAtScreenPoint(Input.mousePosition)) {
                                     // Target was changed so reset requested distance to actual distance
                                     _requestedDistanceFromTarget = _distanceFromTarget;
                                 }
                             }
-                            if (mouseInputValue < 0) {
-                                // Scroll ZoomOUT command
-                                if (_isZoomOutOnCursorEnabled) {
-                                    if (TrySetTargetAtScreenPoint(Input.mousePosition)) {
-                                        // Target was changed so reset requested distance to actual distance
-                                        _requestedDistanceFromTarget = _distanceFromTarget;
-                                    }
-                                }
-                                else {
-                                    if (TrySetTargetAtScreenPoint(_screenCenter)) {
-                                        // Target was changed so reset requested distance to actual distance
-                                        _requestedDistanceFromTarget = _distanceFromTarget;
-                                    }
+                            else {
+                                if (TrySetTargetAtScreenPoint(_screenCenter)) {
+                                    // Target was changed so reset requested distance to actual distance
+                                    _requestedDistanceFromTarget = _distanceFromTarget;
                                 }
                             }
-                            float translationSpeedGoverner = Mathf.Clamp(Mathf.Abs(_requestedDistanceFromTarget), 0F, settings.MaxSpeedGovernor);
-                            _requestedDistanceFromTarget -= mouseInputValue * translationSpeedGoverner * scrollFreeZoom.sensitivity * scrollFreeZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
-                            //Logger.Log("ScrollFreeZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
-                            //showDistanceDebugLog = true;
                         }
+                        float translationSpeedGoverner = Mathf.Clamp(Mathf.Abs(_requestedDistanceFromTarget), 0F, settings.MaxSpeedGovernor);
+                        _requestedDistanceFromTarget -= mouseInputValue * translationSpeedGoverner * scrollFreeZoom.sensitivity * scrollFreeZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
+                        //Logger.Log("ScrollFreeZoom translationSpeedGoverner = {0}, _requestedDistanceFromTarget = {1}".Inject(translationSpeedGoverner, _requestedDistanceFromTarget));
+                        //showDistanceDebugLog = true;
                     }
                     if (edgeFreeZoom.IsActivated()) {
                         float yMousePosition = Input.mousePosition.y;
@@ -810,13 +832,11 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                         }
                     }
                     if (dragFreeZoom.IsActivated()) {
-                        _toLockCursor = true;
-                        if (GameInput.IsVerticalMouseMovement(out mouseInputValue)) {
-                            if (TrySetTargetAtScreenPoint(_screenCenter)) {
-                                _requestedDistanceFromTarget = _distanceFromTarget;
-                            }
-                            _requestedDistanceFromTarget -= mouseInputValue * dragFreeZoom.sensitivity * dragFreeZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
+                        mouseInputValue = gameInput.GetDragDelta().y;
+                        if (TrySetTargetAtScreenPoint(_screenCenter)) {
+                            _requestedDistanceFromTarget = _distanceFromTarget;
                         }
+                        _requestedDistanceFromTarget -= mouseInputValue * dragFreeZoom.sensitivity * dragFreeZoom.InputControlSpeedNormalizer * timeSinceLastUpdate;
                         //showDistanceDebugLog = true;
                     }
 
@@ -914,7 +934,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     private bool CheckExitConditions() {
         switch (cameraState) {
             case CameraState.Focusing:
-                if (Mathfx.Approx(_targetDirection, _transform.forward, .001F)) {
+                if (Mathfx.Approx(_targetDirection, _transform.forward, .01F)) {
                     return true;
                 }
                 return false;
@@ -928,19 +948,11 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
                 if (Input.GetKey(UnityConstants.Key_Escape)) {
                     return true;
                 }
-                float mouseInputValue;
                 if (dragFreePanTilt.IsActivated()) {
-                    if (GameInput.IsHorizontalMouseMovement(out mouseInputValue)) {
-                        return true;
-                    }
-                    if (GameInput.IsVerticalMouseMovement(out mouseInputValue)) {
-                        return true;
-                    }
+                    return true;
                 }
                 if (scrollFreeZoom.IsActivated()) {
-                    if (GameInput.IsScrollWheelMovement(out mouseInputValue)) {
-                        return true;
-                    }
+                    return true;
                 }
                 return false;
             case CameraState.Freeform:
@@ -959,12 +971,6 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     private Vector3 ValidatePosition(Vector3 newPosition) {
         float magnitude = (newPosition - GameConstants.UniverseOrigin).magnitude;
         if (magnitude > universeRadius) {
-            //D.Warn("Camera proposed new position not valid at {0}, Distance to Origin is {1}.".Inject(_proposedPosition, magnitude));
-            //float currentPositionMagnitude = (_transform.position - TempGameValues.UniverseOrigin).magnitude;
-            //D.Warn("Current position is {0}, Distance to Origin is {1}.".Inject(_transform.position, currentPositionMagnitude));
-            //float targetPositionMagnitude = (Target.position - TempGameValues.UniverseOrigin).magnitude;
-            //D.Warn("Target position is {0}, Distance to Origin is {1}.".Inject(Target.position, targetPositionMagnitude));
-            //D.Warn("_distanceFromTarget is {0}.".Inject(_distanceFromTarget));
             return _transform.position;
         }
         return newPosition;
@@ -973,13 +979,13 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     /// <summary>
     /// Manages the display of the cursor during certain movement actions.
     /// </summary>
-    /// <arg item="_toLockCursor">if set to <c>true</c> [to lock cursor].</arg>
+    /// <param name="toLockCursor">if set to <c>true</c> [automatic lock cursor].</param>
     private void ManageCursorDisplay(bool toLockCursor) {
         if (toLockCursor && !Screen.lockCursor) {
-            Screen.lockCursor = true;
+            Screen.lockCursor = true;   // cursor disappears
         }
         else if (Screen.lockCursor && !toLockCursor) {
-            Screen.lockCursor = false;
+            Screen.lockCursor = false;  // cursor reappears in the center of the screen
         }
     }
 
@@ -1028,30 +1034,6 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
             proposedZoomTarget = furthestHit.transform;
             proposedZoomPoint = furthestHit.point;
             return TryChangeTarget(proposedZoomTarget, proposedZoomPoint);
-
-
-            //var zoomToClosestHits = from h in hits where h.transform.GetInterface<IZoomToClosest>() != null select h;
-            //if (!zoomToClosestHits.IsNullOrEmpty()) {
-            //    //Logger.Log("GetInterface finding {0} IZoomToClosest hits.".Inject(zoomToClosestHits.ToArray<RaycastHit>().Length));
-            //    var closestHit = zoomToClosestHits.OrderBy(ifh => (ifh.transform.position - _transform.position).magnitude).First();
-            //    proposedZoomTarget = closestHit.transform;
-            //    proposedZoomPoint = proposedZoomTarget.position;
-            //    return TryChangeTarget(proposedZoomTarget, proposedZoomPoint);
-            //}
-
-            //// no IZoomToClosest game objects under the cursor, so check for IZoomToFurthest now
-            //var zoomToFurthestHits = from h in hits where h.transform.GetInterface<IZoomToFurthest>() != null select h;
-            //if (!zoomToFurthestHits.IsNullOrEmpty()) {
-            //    //Logger.Log("GetInterface finding {0} IZoomToFurthest hits.".Inject(zoomToFurthestHits.ToArray<RaycastHit>().Length));
-            //    var furthestHit = zoomToFurthestHits.OrderBy(ich => (ich.transform.position - _transform.position).magnitude).Last();
-            //    proposedZoomTarget = furthestHit.transform;
-            //    proposedZoomPoint = furthestHit.point;
-            //    return TryChangeTarget(proposedZoomTarget, proposedZoomPoint);
-            //}
-
-            //// no DummyTarget, IZoomToClosest or IZoomToFurthest game objects under the cursor, yet there are at least 2 hits, so something is wrong
-            //D.Error("Found {0} colliders, but none qualified as a camera Target.".Inject(hits.Length));
-            //return true;
         }
 
         // no game object encountered under cursor so move the dummy to the edge of the universe and designate it as the Target
@@ -1146,14 +1128,44 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         return resultingRotation;
     }
 
-    private void Unsubscribe() {
-        _eventMgr.RemoveListener<FocusSelectedEvent>(this, OnFocusSelected);
-        _subscribers.ForAll<IDisposable>(s => s.Dispose());
-        _subscribers.Clear();
+    #endregion
+
+    #region Debug
+
+    private void CheckScriptCompilerSettings() {
+        Logger.Log("Compiler Preprocessor Settings in {0} follow:".Inject(Instance.GetType().Name) + Constants.NewLine);
+#if DEBUG
+        Logger.Log("DEBUG, ");
+#endif
+
+#if UNITY_EDITOR
+            Logger.Log("UNITY_EDITOR, ");
+#endif
+
+#if DEBUG_WARN
+        Logger.Log("DEBUG_WARN, ");
+#endif
+
+#if DEBUG_ERROR
+        Logger.Log("DEBUG_ERROR, ");
+#endif
+
+#if DEBUG_LOG
+        Logger.Log("DEBUG_LOG, ");
+#endif
     }
 
-    void OnDestroy() {
-        Dispose();
+
+    [System.Diagnostics.Conditional("UNITY_EDITOR")]
+    private void _UpdateDebugHud(DebugHudLineKeys key, string text) {
+        Logger.Log("CameraState changed to " + cameraState);
+        DebugHud.Instance.Publish(key, text);
+    }
+
+    #endregion
+
+    public override string ToString() {
+        return new ObjectAnalyzer().ToString(this);
     }
 
     #region IDisposable
@@ -1198,6 +1210,30 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     //}
     #endregion
 
+    #region Nested Classes
+
+    // State
+    private enum CameraState {
+        None = 0,
+        /// <summary>
+        /// Transitional state preceeding Focused allowing the camera's approach to the selected focus 
+        /// game object to complete before the input controls are enabled in Focused
+        /// </summary>
+        Focusing = 1,
+        Focused = 2,
+        Freeform = 3,
+        Follow = 4
+    }
+
+    /// <summary>
+    /// Keyboard Axis values as defined in Unity.
+    /// </summary>
+    public enum KeyboardAxis {
+        Horizontal = 0,
+        Vertical = 1,
+        None = 3
+    }
+
     [Serializable]
     // Settings isTargetVisibleThisFrame in the Inspector so they can be tweaked
     public class Settings {
@@ -1237,7 +1273,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
     [Serializable]
     // Defines Camera Controls using 1Mouse Button
     public class MouseButtonConfiguration : ConfigurationBase {
-        public MouseButton mouseButton;
+        public NguiMouseButton mouseButton;
 
         internal override float InputControlSpeedNormalizer {
             get { return 4.0F * universeRadius; }
@@ -1245,15 +1281,15 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
 
         internal override bool IsActivated() {
-            return base.IsActivated() && GameInput.IsMouseButtonDown(mouseButton) && !GameInput.IsAnyMouseButtonDownBesides(mouseButton);
+            return base.IsActivated() && gameInput.isDragging && GameInputHelper.IsMouseButtonDown(mouseButton) && !GameInputHelper.IsAnyMouseButtonDownBesides(mouseButton);
         }
     }
 
     [Serializable]
     // Defines Camera Controls using 2 simultaneous Mouse Buttons
     public class SimultaneousMouseButtonConfiguration : ConfigurationBase {
-        public MouseButton firstMouseButton;
-        public MouseButton secondMouseButton;
+        public NguiMouseButton firstMouseButton;
+        public NguiMouseButton secondMouseButton;
 
         internal override float InputControlSpeedNormalizer {
             get { return 0.4F * universeRadius; }
@@ -1261,7 +1297,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
 
         internal override bool IsActivated() {
-            return base.IsActivated() && GameInput.IsMouseButtonDown(firstMouseButton) && GameInput.IsMouseButtonDown(secondMouseButton);
+            return base.IsActivated() && gameInput.isDragging && GameInputHelper.IsMouseButtonDown(firstMouseButton) && GameInputHelper.IsMouseButtonDown(secondMouseButton);
         }
     }
 
@@ -1275,7 +1311,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
 
         internal override bool IsActivated() {
-            return base.IsActivated() && !GameInput.IsAnyKeyOrMouseButtonDown();
+            return base.IsActivated() && !GameInputHelper.IsAnyKeyOrMouseButtonDown();
         }
     }
 
@@ -1289,7 +1325,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
 
         internal override bool IsActivated() {
-            return base.IsActivated() && !GameInput.IsAnyKeyOrMouseButtonDown();
+            return base.IsActivated() && gameInput.isScrolling && !GameInputHelper.IsAnyKeyOrMouseButtonDown();
         }
     }
 
@@ -1303,11 +1339,12 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
 
         private bool IsAxisKeyInUse() {
+            KeyCode arrowKey = gameInput.GetArrowKey();
             switch (keyboardAxis) {
                 case KeyboardAxis.Horizontal:
-                    return Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow);
+                    return arrowKey == KeyCode.LeftArrow || arrowKey == KeyCode.RightArrow;
                 case KeyboardAxis.Vertical:
-                    return Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow);
+                    return arrowKey == KeyCode.UpArrow || arrowKey == KeyCode.DownArrow;
                 case KeyboardAxis.None:
                 default:
                     throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(keyboardAxis));
@@ -1315,7 +1352,7 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
         }
 
         internal override bool IsActivated() {
-            return base.IsActivated() && !GameInput.IsAnyMouseButtonDown() && IsAxisKeyInUse();
+            return base.IsActivated() && gameInput.isArrowKeyPressed && IsAxisKeyInUse();
         }
     }
 
@@ -1337,12 +1374,8 @@ public class CameraControl : AMonoBehaviourBaseSingleton<CameraControl> {
             return activate && modifiers.confirmModifierKeyState();
         }
     }
-
-    public override string ToString() {
-        return new ObjectAnalyzer().ToString(this);
-    }
+    #endregion
 
 
 }
-
 

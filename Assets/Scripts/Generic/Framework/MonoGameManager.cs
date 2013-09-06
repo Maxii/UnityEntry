@@ -10,7 +10,6 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
-#define DEBUG_LOG
 #define DEBUG_WARN
 #define DEBUG_ERROR
 
@@ -29,12 +28,13 @@ using UnityEngine;
 ///should be done by GameManager. The purpose of this class is to call GameManager.
 /// </summary>
 //[SerializeAll] This is redundant as this Object already has a StoreInformation script on it. It causes duplication of referenced SIngletons when saving
-public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IInstanceIdentity {
+public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager> {
 
     private GameManager _gameMgr;
     private bool _isInitialized;
 
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         //Logger.Log("MonoGameManager Awake() called. IsEnabled = " + enabled);
         IncrementInstanceCounter();
         if (TryDestroyExtraCopies()) {
@@ -45,6 +45,7 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IIn
         //string language = "fr-FR";
         // ChangeLanguage(language);
         _gameMgr = GameManager.Instance;
+        _gameMgr.DebugHud = DebugHud.Instance;
         _gameMgr.CompleteInitialization();
 
         _isInitialized = true;
@@ -58,7 +59,7 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IIn
     /// </summary>
     /// <returns><c>true</c> if this instance is going to be destroyed, <c>false</c> if not.</returns>
     private bool TryDestroyExtraCopies() {
-        if (_instance != null && _instance != this) {
+        if (_instance && _instance != this) {
             Logger.Log("{0}_{1} found as extra. Initiating destruction sequence.".Inject(this.name, InstanceID));
             Destroy(gameObject);
             return true;
@@ -78,7 +79,8 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IIn
         Logger.Log("Current OS Language of Unity is {0}.".Inject(Application.systemLanguage.GetName()));
     }
 
-    void Start() {
+    protected override void Start() {
+        base.Start();
         __StartBasedOnStartScene();
     }
 
@@ -110,12 +112,6 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IIn
     }
     #endregion
 
-    void OnEnable() {
-        // TODO - Fixed as of Unity 4.0. Now to test... Reqd due to bug in script execution order. Scripts with an OnEnable() method will always be first
-        // in execution order, effectively ignoring execution order project settings. As _CameraControl uses OnEnable(), it 
-        // always was called first. Placing this empty method here makes script execution order settings effective.
-    }
-
     // This simply substitutes my own Event for OnLevelWasLoaded so I don't have to use OnLevelWasLoaded anywhere else
     // Wiki: OnLevelWasLoaded is NOT guaranteed to run before all of the Awake calls. In most cases it will, but in some 
     // might produce some unexpected bugs. If you need some code to be executed before Awake calls, use OnDisable instead.
@@ -126,21 +122,13 @@ public class MonoGameManager : AMonoBehaviourBaseSingleton<MonoGameManager>, IIn
         }
     }
 
-    void OnDeserialized() {
+    protected override void OnDeserialized() {
         _gameMgr.OnDeserialized();
     }
 
-    void OnDestroy() {
-        if (_isInitialized) {
-            // no reason to cleanup if this object was immediately destroyed before it was initialized
-            // UNDONE this is the original object so what to do with GameManager, if anything, when this object is destroyed?
-        }
-    }
-
     protected override void OnApplicationQuit() {
-        Debug.Log("ApplicationQuit called.");
+        base.OnApplicationQuit();
         _gameMgr.Dispose();
-        _instance = null;
     }
 
     public override string ToString() {

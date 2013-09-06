@@ -26,14 +26,11 @@ using UnityEngine;
 /// attaching any Management folder child objects in the new startScene to this incoming folder, then destroys
 /// the Management folder that was already present in the new startScene.
 /// </summary>
-public class ManagementObjects : AMonoBehaviourBaseSingleton<ManagementObjects>, IDisposable, IInstanceIdentity {
+public class ManagementObjects : AMonoBehaviourBaseSingleton<ManagementObjects>, IDisposable {
 
     /// <summary>
-    /// Gets the ManagementObjects folder.
+    /// Gets the ManagementObjects folder transform.
     /// </summary>
-    /// <tPrefsValue>
-    /// The folder's Transform.
-    /// </tPrefsValue>
     public static Transform Folder { get { return Instance.transform; } }
 
     private Transform[] _children;
@@ -42,7 +39,8 @@ public class ManagementObjects : AMonoBehaviourBaseSingleton<ManagementObjects>,
     private Transform _transform;
     private bool _isInitialized;
 
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         if (TryDestroyExtraCopies()) {
             return;
         }
@@ -59,7 +57,7 @@ public class ManagementObjects : AMonoBehaviourBaseSingleton<ManagementObjects>,
     /// </summary>
     /// <returns><c>true</c> if this instance is going to be destroyed, <c>false</c> if not.</returns>
     private bool TryDestroyExtraCopies() {
-        if (_instance != null && _instance != this) {
+        if (_instance && _instance != this) {
             Logger.Log("{0}_{1} found as extra. Initiating destruction sequence.".Inject(this.name, InstanceID));
             TransferChildrenThenDestroy();
             return true;
@@ -106,21 +104,21 @@ public class ManagementObjects : AMonoBehaviourBaseSingleton<ManagementObjects>,
         childrenToReattach.ForAll<Transform>(t => t.parent = _transform);
     }
 
-    void OnDestroy() {
+    protected override void OnDestroy() {
+        base.OnDestroy();
         if (_isInitialized) {
             // no reason to cleanup if this object was destroyed before it was initialized.
-            Debug.Log("{0}_{1} instance is disposing.".Inject(this.name, InstanceID));
             Dispose();
         }
-    }
-
-    protected override void OnApplicationQuit() {
-        _instance = null;
     }
 
     private void Unsubscribe() {
         _eventMgr.RemoveListener<SceneChangingEvent>(this, OnSceneChanging);
         _eventMgr.RemoveListener<SceneChangedEvent>(this, OnSceneChanged);
+    }
+
+    public override string ToString() {
+        return new ObjectAnalyzer().ToString(this);
     }
 
     #region IDisposable
@@ -166,9 +164,6 @@ public class ManagementObjects : AMonoBehaviourBaseSingleton<ManagementObjects>,
     //}
     #endregion
 
-    public override string ToString() {
-        return new ObjectAnalyzer().ToString(this);
-    }
 
 }
 

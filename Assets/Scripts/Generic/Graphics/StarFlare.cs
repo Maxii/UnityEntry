@@ -30,13 +30,15 @@ public class StarFlare : AMonoBehaviourBase {
     private Transform _transform;
     private Transform _mainCamera;
 
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         _transform = transform;
         _mainCamera = Camera.main.transform;
         UpdateRate = UpdateFrequency.Seldom;
     }
 
-    void Start() {
+    protected override void Start() {
+        base.Start();
         if (Utility.CheckForContent<Flare>(flares)) {
             // if flares doesn't contain any flares, it means I don't want to use any right now
             CreateFlare();
@@ -51,7 +53,7 @@ public class StarFlare : AMonoBehaviourBase {
         if (lightCount == 1) {
             // there is only the primary light attached, so I need to create another for the flare
             // avoid getting the flareLight prefab with Resources.Load("Lights/FlareLight")
-            _flareLight = Instantiate<Light>(UsefulPrefabs.currentInstance.flareLight);
+            _flareLight = Instantiate<Light>(UsefulPrefabs.Instance.flareLight);
             _flareLight.transform.parent = _transform;
             float radiusOfStar = (gameObject.GetSafeMonoBehaviourComponentInParents<Star>().collider as SphereCollider).radius;
             Vector3 flareLightLocationBehindStar = Vector3.forward * (radiusOfStar + 2F);

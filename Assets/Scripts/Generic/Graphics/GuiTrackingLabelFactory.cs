@@ -6,13 +6,12 @@
 // </copyright> 
 // <summary> 
 // File: GuiTrackingLabelFactory.cs
-// Factory that creates preconfigured GuiTrackingLabels.
+// Singleton Factory that creates preconfigured GuiTrackingLabels.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
-#define DEBUG_LOG
-#define DEBUG_LEVEL_WARN
-#define DEBUG_LEVEL_ERROR
+#define DEBUG_WARN
+#define DEBUG_ERROR
 
 // default namespace
 
@@ -22,7 +21,7 @@ using CodeEnv.Master.Common.Unity;
 using UnityEngine;
 
 /// <summary>
-/// Factory that creates preconfigured GuiTrackingLabels.
+/// Singleton Factory that creates preconfigured GuiTrackingLabels.
 /// </summary>
 public class GuiTrackingLabelFactory : AMonoBehaviourBaseSingleton<GuiTrackingLabelFactory> {
 
@@ -38,7 +37,7 @@ public class GuiTrackingLabelFactory : AMonoBehaviourBaseSingleton<GuiTrackingLa
     /// <summary>
     /// Creates the GUI tracking label.
     /// </summary>
-    /// <param name="target">The target.</param>
+    /// <param name="target">The target to track.</param>
     /// <param name="pivotOffset">The pivot point offset from the target in Worldspace coordinates.</param>
     /// <param name="offsetFromPivot">The offset from pivot point in Viewport coordinates.</param>
     /// <returns></returns>
@@ -59,12 +58,12 @@ public class GuiTrackingLabelFactory : AMonoBehaviourBaseSingleton<GuiTrackingLa
         trackingLabel.OffsetFromPivot = offsetFromPivot;
         trackingLabel.Set(target.name);
         NGUITools.SetActive(guiTrackingLabelCloneGO, true);
-        Logger.Log("A new {0} for {1} has been created.".Inject(typeof(GuiTrackingLabel), target.name));
+        //Logger.Log("A new {0} for {1} has been created.".Inject(typeof(GuiTrackingLabel), target.name));
         return trackingLabel;
     }
 
-    protected override void OnApplicationQuit() {
-        _instance = null;
+    public override string ToString() {
+        return new ObjectAnalyzer().ToString(this);
     }
 
 }

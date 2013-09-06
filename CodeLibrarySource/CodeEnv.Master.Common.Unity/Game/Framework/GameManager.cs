@@ -10,10 +10,9 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+#define DEBUG_LOG
 #define DEBUG_WARN
 #define DEBUG_ERROR
-#define DEBUG_LOG
-
 
 namespace CodeEnv.Master.Common.Unity {
 
@@ -38,7 +37,7 @@ namespace CodeEnv.Master.Common.Unity {
         private GameState _gameState;
         public GameState GameState {
             get { return _gameState; }
-            private set { SetProperty<GameState>(ref _gameState, value, "GameState", InitializeOnGameStateChanged, ValidateConditionsForChangeInGameState); }
+            private set { SetProperty<GameState>(ref _gameState, value, "GameState", OnGameStateChanged, OnGameStateChanging); }
         }
 
         public static GameSettings Settings { get; private set; }
@@ -49,21 +48,46 @@ namespace CodeEnv.Master.Common.Unity {
             private set { SetProperty<bool>(ref _isGameRunning, value, "IsGameRunning"); }
         }
 
+        private PauseState _pauseState;
         /// <summary>
-        /// To set use ProcessPauseRequest().
+        /// Gets the PauseState of the game. Warning: IsPaused changes AFTER
+        /// PauseState completes its changes and notifications.
         /// </summary>
-        /// <sb>
-        /// <c>true</c> if the game is paused; otherwise, <c>false</c>.
-        /// </sb>
-        private bool _isGamePaused;
-        public bool IsGamePaused {
-            get {
-                return _isGamePaused;
-            }
-            private set {
-                SetProperty<bool>(ref _isGamePaused, value, "IsGamePaused");
+        public PauseState PauseState {
+            get { return _pauseState; }
+            private set {   // to set use ProcessPauseRequest
+                SetProperty<PauseState>(ref _pauseState, value, "PauseState", OnPauseStateChanged);
             }
         }
+
+        private void OnPauseStateChanged() {
+            switch (PauseState) {
+                case Common.PauseState.NotPaused:
+                    IsPaused = false;
+                    break;
+                case Common.PauseState.GuiAutoPaused:
+                case Common.PauseState.Paused:
+                    IsPaused = true;
+                    break;
+                case Common.PauseState.None:
+                default:
+                    throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(PauseState));
+            }
+            DebugHud.Publish(DebugHudLineKeys.PauseState, PauseState.GetName());
+        }
+
+        private bool _isPaused;
+        /// <summary>
+        /// Convenience Property indicating whether the game is paused. Automatically set
+        /// as a result of OnPauseStateChanged. Warning: This means OnIsPausedChanging actually
+        /// occurs AFTER the PauseState changes, but always before OnIsPausedChanged.
+        /// </summary>
+        public bool IsPaused {
+            get { return _isPaused; }
+            private set { SetProperty<bool>(ref _isPaused, value, "IsPaused"); }
+        }
+
+        public IDebugHud DebugHud { get; set; }
 
         private GameEventManager _eventMgr;
         private GameTime _gameTime;
@@ -107,6 +131,11 @@ namespace CodeEnv.Master.Common.Unity {
         public void CompleteInitialization() {
             Subscribe();    // delay until Instance is initialized
             _gameTime = GameTime.Instance;   // delay until Instance is initialized
+
+            // initialize values without initiating change events
+            _pauseState = PauseState.NotPaused;
+            _isPaused = false;
+            DebugHud.Publish(DebugHudLineKeys.PauseState, PauseState.GetName());
         }
 
         #region Startup Simulation
@@ -164,6 +193,8 @@ namespace CodeEnv.Master.Common.Unity {
             _eventMgr.AddListener<GuiPauseRequestEvent>(this, OnGuiPauseChangeRequest);
             _eventMgr.AddListener<SaveGameEvent>(this, OnSaveGame);
             _eventMgr.AddListener<LoadSavedGameEvent>(this, OnLoadSavedGame);
+            _eventMgr.AddListener<SelectionEvent>(this, OnNewSelection);
+            _eventMgr.AddListener<GameItemDestroyedEvent>(this, OnGameItemDestroyed);
         }
 
         private void OnBuildNewGame(BuildNewGameEvent e) {
@@ -256,60 +287,83 @@ namespace CodeEnv.Master.Common.Unity {
             ProcessPauseRequest(e.NewValue);
         }
 
-        // flag indicating whether the current pause was requested directly by the user or program
-        private bool _isPriorityPause;
         private void ProcessPauseRequest(PauseRequest request) {
-            bool toPause = false;
             switch (request) {
                 case PauseRequest.GuiAutoPause:
-                    if (_isPriorityPause) { return; }
-                    if (!IsGamePaused) {
-                        toPause = true;
-                    }
-                    else {
+                    if (PauseState == PauseState.Paused) { return; }
+                    if (PauseState == PauseState.GuiAutoPaused) {
                         D.Warn("Attempt to GuiAutoPause when already paused.");
+                        return;
                     }
+                    PauseState = PauseState.GuiAutoPaused;
                     break;
                 case PauseRequest.GuiAutoResume:
-                    if (_isPriorityPause) { return; }
-                    if (IsGamePaused) {
-                        toPause = false;
-                    }
-                    else {
+                    if (PauseState == PauseState.Paused) { return; }
+                    if (PauseState == PauseState.NotPaused) {
                         D.Warn("Attempt to GuiAutoResume when not paused.");
+                        return;
                     }
+                    PauseState = Common.PauseState.NotPaused;
                     break;
                 case PauseRequest.PriorityPause:
-                    if (!IsGamePaused) {
-                        toPause = true;
-                        _isPriorityPause = true;
-                    }
-                    else {
+                    if (PauseState == PauseState.Paused) {
                         D.Warn("Attempt to PriorityPause when already paused.");
+                        return;
                     }
+                    PauseState = PauseState.Paused;
                     break;
                 case PauseRequest.PriorityResume:
-                    if (IsGamePaused) {
-                        toPause = false;
-                        _isPriorityPause = false;
-                    }
-                    else {
+                    if (PauseState == PauseState.NotPaused) {
                         D.Warn("Atttempt to PriorityResume when not paused.");
+                        return;
                     }
+                    PauseState = PauseState.NotPaused;
                     break;
                 case PauseRequest.None:
                 default:
                     throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(request));
             }
-            IsGamePaused = toPause;
+        }
+
+        private ISelectable _currentSelection;
+        private void OnNewSelection(SelectionEvent e) {
+            ISelectable newSelection = e.Source as ISelectable;
+            D.Assert(newSelection != null, "{0} received from {1} that is not {2}.".Inject(typeof(SelectionEvent).Name, e.Source.GetType().Name, typeof(ISelectable).Name));
+            if (_currentSelection != null) {
+                _currentSelection.IsSelected = false;
+            }
+            _currentSelection = newSelection;
+        }
+
+        private void OnGameItemDestroyed(GameItemDestroyedEvent e) {
+            ISelectable selectable = e.Source as ISelectable;
+            if (selectable != null) {
+                if (selectable == _currentSelection) {
+                    // the current selection is being destroyed
+                    D.Assert(selectable.IsSelected, "{0} should be selected!".Inject(e.Source.GetType().Name));
+                    selectable.IsSelected = false;
+                    _currentSelection = null;
+                }
+            }
+        }
+
+        private void OnGameStateChanging(GameState newState) {
+            ValidateConditionsForChangeInGameState(newState);
+        }
+
+        private void OnGameStateChanged() {
+            InitializeOnGameStateChanged();
         }
 
         /// <summary>
-        /// Called from Loader when all conditions are met to run.
+        /// Called from Loader when all conditions are met to begin the progression to Running.
         /// Conditions include GameState.Waiting, no UnreadyElements and Update()
         /// has started.
         /// </summary>
-        public void Run() {
+        public void BeginCountdownToRunning() {
+            GameState = GameState.RunningCountdown_3;
+            GameState = GameState.RunningCountdown_2;
+            GameState = GameState.RunningCountdown_1;
             GameState = GameState.Running;
         }
 
@@ -333,6 +387,15 @@ namespace CodeEnv.Master.Common.Unity {
                     if (proposedNewState != GameState.Waiting) { isError = true; }
                     break;
                 case GameState.Waiting:
+                    if (proposedNewState != GameState.RunningCountdown_3) { isError = true; }
+                    break;
+                case GameState.RunningCountdown_3:
+                    if (proposedNewState != GameState.RunningCountdown_2) { isError = true; }
+                    break;
+                case GameState.RunningCountdown_2:
+                    if (proposedNewState != GameState.RunningCountdown_1) { isError = true; }
+                    break;
+                case GameState.RunningCountdown_1:
                     if (proposedNewState != GameState.Running) { isError = true; }
                     break;
                 case GameState.Running:
@@ -353,6 +416,9 @@ namespace CodeEnv.Master.Common.Unity {
                 case GameState.Loading:
                 case GameState.Restoring:
                 case GameState.Waiting:
+                case GameState.RunningCountdown_3:
+                case GameState.RunningCountdown_2:
+                case GameState.RunningCountdown_1:
                     IsGameRunning = false;
                     break;
                 case GameState.Running:
@@ -370,16 +436,15 @@ namespace CodeEnv.Master.Common.Unity {
         }
 
         /// <summary>
-        /// Resets any conditions required for normal game startup. For instance, IsGamePaused
-        /// is normally false while setting up the first game. This may or maynot be the
-        /// current state of IsgamePaused given the numerous ways one can initiate the startup
+        /// Resets any conditions required for normal game startup. For instance, PauseState
+        /// is normally NotPaused while setting up the first game. This may or maynot be the
+        /// current state of PauseState given the numerous ways one can initiate the startup
         /// of a game instance.
         /// </summary>
         private void ResetConditionsForGameStartup() {
-            if (IsGamePaused) {
+            if (IsPaused) {
                 ProcessPauseRequest(PauseRequest.PriorityResume);
             }
-            _isPriorityPause = false;
         }
 
         private void OnExitGame(ExitGameEvent e) {
@@ -405,6 +470,8 @@ namespace CodeEnv.Master.Common.Unity {
             _eventMgr.RemoveListener<GuiPauseRequestEvent>(this, OnGuiPauseChangeRequest);
             _eventMgr.RemoveListener<SaveGameEvent>(this, OnSaveGame);
             _eventMgr.RemoveListener<LoadSavedGameEvent>(this, OnLoadSavedGame);
+            _eventMgr.RemoveListener<SelectionEvent>(this, OnNewSelection);
+            _eventMgr.RemoveListener<GameItemDestroyedEvent>(this, OnGameItemDestroyed);
         }
 
         public override string ToString() {
@@ -456,7 +523,7 @@ namespace CodeEnv.Master.Common.Unity {
         #region IInstanceIdentity Members
 
         private static int instanceCounter = 0;
-        public int InstanceID { get; set; }
+        public int InstanceID { get; protected set; }
 
         protected void IncrementInstanceCounter() {
             InstanceID = System.Threading.Interlocked.Increment(ref instanceCounter);

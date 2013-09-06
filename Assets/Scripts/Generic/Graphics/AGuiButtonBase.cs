@@ -25,29 +25,35 @@ using UnityEngine;
 /// </summary>
 public abstract class AGuiButtonBase : GuiTooltip {
 
-    protected GameEventManager eventMgr;
-    protected PlayerPrefsManager playerPrefsMgr;
-    protected UIButton button;
+    protected GameEventManager _eventMgr;
+    protected PlayerPrefsManager _playerPrefsMgr;
+    protected UIButton _button;
 
-    protected override void InitializeOnAwake() {
-        base.InitializeOnAwake();
-        playerPrefsMgr = PlayerPrefsManager.Instance;
-        eventMgr = GameEventManager.Instance;
+    protected override void Awake() {
+        base.Awake();
+        _playerPrefsMgr = PlayerPrefsManager.Instance;
+        _eventMgr = GameEventManager.Instance;
     }
 
-    void Start() {
-        InitializeOnStart();
+    protected override void Start() {
+        base.Start();
+        _button = gameObject.GetSafeMonoBehaviourComponent<UIButton>();
+        //UIEventListener.Get(gameObject).onClick += OnButtonClick;  // NGUI general event system
     }
 
-    /// <summary>
-    /// Override to initialize the tooltip message. Remember base.InitializeOnAwake();
-    /// </summary>
-    protected virtual void InitializeOnStart() {
-        button = gameObject.GetSafeMonoBehaviourComponent<UIButton>();
-        UIEventListener.Get(gameObject).onClick += OnButtonClick;  // NGUI general event system
+    //private void OnButtonClick(GameObject sender) {
+    //    if (NguiGameInput.IsLeftMouseButtonClick()) {
+    //        OnLeftClick();
+    //    }
+    //}
+
+    void OnClick() {
+        if (GameInputHelper.IsLeftMouseButton()) {
+            OnLeftClick();
+        }
     }
 
-    protected abstract void OnButtonClick(GameObject sender);
+    protected abstract void OnLeftClick();
 
     // IDisposable Note: No reason to remove Ngui event currentListeners OnDestroy() as the EventListener or
     // Delegate to be removed is attached to this same GameObject that is being destroyed. In addition,

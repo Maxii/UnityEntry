@@ -6,7 +6,7 @@
 // </copyright> 
 // <summary> 
 // File: FpsReadout.cs
-// COMMENT - one line to give a brief idea of what this file does.
+// Frames Per Second readout label for debug support.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
@@ -19,54 +19,52 @@ using CodeEnv.Master.Common;
 using UnityEngine;
 
 /// <summary>
-/// COMMENT 
+/// Frames Per Second readout label for debug support.
 /// </summary>
 public class FpsReadout : AGuiLabelReadoutBase {
 
     public float secondsBetweenDisplayRefresh = 0.5F;
 
-    private float accumulatedFpsOverInterval = Constants.ZeroF;
-    private int framesDrawnInInterval = Constants.Zero;
-    private float timeRemainingInInterval;
+    private float _accumulatedFpsOverInterval = Constants.ZeroF;
+    private int _framesDrawnInInterval = Constants.Zero;
+    private float _timeRemainingInInterval;
 
-    protected override void InitializeOnAwake() {
-        base.InitializeOnAwake();
-        timeRemainingInInterval = secondsBetweenDisplayRefresh;
+    protected override void Awake() {
+        base.Awake();
+        _timeRemainingInInterval = secondsBetweenDisplayRefresh;
         tooltip = "Current Frames per Second displayed.";
     }
 
     void Update() {
         // this is a tool, so I'll simply use Unity RealTime_Unity
         float timeSinceLastUpdate = Time.deltaTime;
-        timeRemainingInInterval -= timeSinceLastUpdate;
-        accumulatedFpsOverInterval += Time.timeScale / timeSinceLastUpdate;
-        ++framesDrawnInInterval;
+        _timeRemainingInInterval -= timeSinceLastUpdate;
+        _accumulatedFpsOverInterval += Time.timeScale / timeSinceLastUpdate;
+        ++_framesDrawnInInterval;
 
         // Interval ended - update GUI text and start new interval
-        if (timeRemainingInInterval <= Constants.ZeroF) {
+        if (_timeRemainingInInterval <= Constants.ZeroF) {
             // display two fractional digits (f2 formattedFpsValue)
-            float fps = accumulatedFpsOverInterval / framesDrawnInInterval;
-            RefreshFpsReadout(fps);
-            //	DebugConsole.Log(formattedFpsValue,level);
-            timeRemainingInInterval = secondsBetweenDisplayRefresh;
-            accumulatedFpsOverInterval = Constants.ZeroF;
-            framesDrawnInInterval = Constants.Zero;
+            float fps = _accumulatedFpsOverInterval / _framesDrawnInInterval;
+            RefreshReadout(fps);
+            _timeRemainingInInterval = secondsBetweenDisplayRefresh;
+            _accumulatedFpsOverInterval = Constants.ZeroF;
+            _framesDrawnInInterval = Constants.Zero;
         }
     }
 
-    private void RefreshFpsReadout(float fps) {
+    private void RefreshReadout(float fps) {
         string formattedFpsValue = string.Format("{0:F1} FPS", fps);
 
-        Color color = Color.green;
+        GameColor color = GameColor.Green;
         if (fps < 25) {
-            color = Color.yellow;
+            color = GameColor.Yellow;
         }
-        else if (fps < 10) {
-            color = Color.red;
+        else if (fps < 15) {
+            color = GameColor.Red;
         }
 
-        readoutLabel.text = formattedFpsValue;
-        readoutLabel.color = color;
+        RefreshReadout(formattedFpsValue, color);
     }
 
     public override string ToString() {

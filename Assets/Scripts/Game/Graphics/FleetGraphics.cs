@@ -12,6 +12,7 @@
 
 // default namespace
 
+using System;
 using CodeEnv.Master.Common;
 using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
@@ -25,30 +26,24 @@ public class FleetGraphics : AGraphics {
 
     public bool enableTrackingLabel = false;
 
-    public Vector3 trackingLabelOffsetFromPivot = new Vector3(Constants.ZeroF, 0.02F, Constants.ZeroF);
+    public Vector3 trackingLabelOffsetFromPivot = new Vector3(Constants.ZeroF, 0.05F, Constants.ZeroF);
 
     public int minTrackingLabelShowDistance = TempGameValues.MinFleetTrackingLabelShowDistance;
     public int maxTrackingLabelShowDistance = TempGameValues.MaxFleetTrackingLabelShowDistance;
 
+    private Color __originalFleetIconColor;
+    private UISprite _fleetIcon;
+
     private GuiTrackingLabel _trackingLabel;
+    private FleetCommand _fleetCmd;
+    private FleetManager _fleetMgr;
 
-    private GuiTrackingLabel InitializeTrackingLabel() {
-        Vector3 pivotOffset = new Vector3(Constants.ZeroF, Target.collider.bounds.extents.y, Constants.ZeroF);
-        GuiTrackingLabel trackingLabel = GuiTrackingLabelFactory.CreateGuiTrackingLabel(Target, pivotOffset, trackingLabelOffsetFromPivot);
-        trackingLabel.IsShowing = true;
-        return trackingLabel;
-    }
-
-    protected override void InitializeOnAwake() {
-        base.InitializeOnAwake();
-        Target = gameObject.GetSafeMonoBehaviourComponentInChildren<FleetAdmiral>().transform;
-    }
-
-    protected override void InitializeOnStart() {
-        base.InitializeOnStart();
-        if (enableTrackingLabel) {
-            _trackingLabel = InitializeTrackingLabel();
-        }
+    protected override void Awake() {
+        base.Awake();
+        _fleetMgr = gameObject.GetSafeMonoBehaviourComponent<FleetManager>();
+        _fleetCmd = gameObject.GetSafeMonoBehaviourComponentInChildren<FleetCommand>();
+        Target = _fleetCmd.transform;
+        InitializeHighlighting();
     }
 
     protected override void RegisterComponentsToDisable() {
@@ -59,6 +54,12 @@ public class FleetGraphics : AGraphics {
             gameObject.GetSafeMonoBehaviourComponentInChildren<Billboard>().gameObject
         };
     }
+
+    private void InitializeHighlighting() {
+        _fleetIcon = gameObject.GetSafeMonoBehaviourComponentInChildren<UISprite>();
+        __originalFleetIconColor = _fleetIcon.color;
+    }
+
 
     protected override int EnableBasedOnDistanceToCamera() {
         int distanceToCamera = Constants.Zero;
@@ -76,16 +77,72 @@ public class FleetGraphics : AGraphics {
                     toShowTrackingLabel = true;
                 }
             }
-            Logger.Log("FleetTrackingLabel.IsShowing = {0}.", toShowTrackingLabel);
+            //Logger.Log("FleetTrackingLabel.IsShowing = {0}.", toShowTrackingLabel);
             _trackingLabel.IsShowing = toShowTrackingLabel;
         }
         return distanceToCamera;
+    }
+
+    private GuiTrackingLabel InitializeTrackingLabel() {
+        // use LeadShip collider for the offset rather than the Admiral collider as the Admiral collider changes scale dynamically. FIXME LeadShips die!!!
+        Vector3 pivotOffset = new Vector3(Constants.ZeroF, _fleetMgr.LeadShipCaptain.collider.bounds.extents.y, Constants.ZeroF);
+        GuiTrackingLabel trackingLabel = GuiTrackingLabelFactory.CreateGuiTrackingLabel(Target, pivotOffset, trackingLabelOffsetFromPivot);
+        trackingLabel.IsShowing = true;
+        return trackingLabel;
     }
 
     public void HighlightTrackingLabel(bool toHighlight) {
         if (_trackingLabel != null) {   // can be gap between checking enableTrackingLabel and instantiating it
             _trackingLabel.IsHighlighted = toHighlight;
         }
+    }
+
+    public void ChangeHighlighting() {
+        if (!IsVisible) {
+            Highlight(false);
+            return;
+        }
+        if (_fleetCmd.IsFocus) {
+            if (_fleetMgr.IsSelected) {
+                Highlight(true, Highlights.Both);
+                return;
+            }
+            Highlight(true, Highlights.Focused);
+            return;
+        }
+        if (_fleetMgr.IsSelected) {
+            Highlight(true, Highlights.Selected);
+            return;
+        }
+        Highlight(true, Highlights.None);
+    }
+
+    private void Highlight(bool toShow, Highlights highlight = Highlights.None) {
+        _fleetIcon.gameObject.SetActive(toShow);
+        if (!toShow) {
+            return;
+        }
+        switch (highlight) {
+            case Highlights.Focused:
+                _fleetIcon.color = UnityDebugConstants.IsFocusedColor;
+                break;
+            case Highlights.Selected:
+                _fleetIcon.color = UnityDebugConstants.IsSelectedColor;
+                break;
+            case Highlights.Both:
+                _fleetIcon.color = UnityDebugConstants.IsFocusAndSelectedColor;
+                break;
+            case Highlights.None:
+                _fleetIcon.color = __originalFleetIconColor;
+                break;
+            default:
+                throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(highlight));
+        }
+    }
+
+    protected override void OnIsVisibleChanged() {
+        base.OnIsVisibleChanged();
+        ChangeHighlighting();
     }
 
     public override string ToString() {

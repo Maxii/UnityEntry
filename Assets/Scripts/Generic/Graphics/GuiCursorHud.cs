@@ -10,52 +10,68 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
-#define DEBUG_LOG
 #define DEBUG_WARN
 #define DEBUG_ERROR
 
 // default namespace
 
-using System.Text;
+using System;
+using System.Collections.Generic;
 using CodeEnv.Master.Common;
+using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
 using UnityEngine;
 
 /// <summary>
 /// HUD that follows the Cursor on the screen.
 /// </summary>
-public class GuiCursorHud : AMonoBehaviourBaseSingleton<GuiCursorHud> {
+public class GuiCursorHud : AHud<GuiCursorHud>, IGuiHud, IDisposable {
 
-    // Camera used to draw this HUD
-    public Camera uiCamera;
+    private IList<IDisposable> _subscribers;
+    private GameManager _gameMgr;
 
-    private Transform _transform;
-    private UILabel _label;
-
-    void Awake() {
-        _transform = transform;
-        UpdateRate = UpdateFrequency.Continuous;
+    protected override void Awake() {
+        base.Awake();
+        _gameMgr = GameManager.Instance;
+        Subscribe();
     }
 
-    void Start() {
-        _label = gameObject.GetSafeMonoBehaviourComponentInChildren<UILabel>();
-        _label.depth = 100; // draw on top of other Gui Elements in the same Panel
-        NGUITools.SetActive(_label.gameObject, false);  //begin deactivated so label doesn't show
-        if (uiCamera == null) {
-            uiCamera = NGUITools.FindCameraForLayer(gameObject.layer);
+    private void Subscribe() {
+        if (_subscribers == null) {
+            _subscribers = new List<IDisposable>();
+        }
+        _subscribers.Add(_gameMgr.SubscribeToPropertyChanged<GameManager, PauseState>(gm => gm.PauseState, OnPauseStateChanged));
+    }
+
+    private void OnPauseStateChanged() {
+        switch (_gameMgr.PauseState) {
+            case PauseState.Paused:
+            case PauseState.NotPaused:
+                EnableDisplay(true);
+                break;
+            case PauseState.GuiAutoPaused:
+                EnableDisplay(false);
+                break;
+            case PauseState.None:
+            default:
+                throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(_gameMgr.PauseState));
         }
     }
 
-    void Update() {
-        if (ToUpdate()) {
-            UpdatePosition();
+    private void EnableDisplay(bool toEnable) {
+        if (!toEnable) {
+            Clear();
+            NGUITools.SetActive(_label.gameObject, false);
         }
+        _isDisplayEnabled = toEnable;
     }
+
 
     /// <summary>
     /// Move the HUD to track the cursor.
     /// </summary>
-    private void UpdatePosition() {
+    protected override void UpdatePosition() {
+        base.UpdatePosition();
         if (NGUITools.GetActive(_label.gameObject)) {
             Vector3 cursorPosition = Input.mousePosition;
 
@@ -81,8 +97,14 @@ public class GuiCursorHud : AMonoBehaviourBaseSingleton<GuiCursorHud> {
         }
     }
 
-    protected override void OnApplicationQuit() {
-        _instance = null;
+    private void Unsubscribe() {
+        _subscribers.ForAll<IDisposable>(s => s.Dispose());
+        _subscribers.Clear();
+    }
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+        Dispose();
     }
 
     public override string ToString() {
@@ -91,55 +113,54 @@ public class GuiCursorHud : AMonoBehaviourBaseSingleton<GuiCursorHud> {
 
     #region IGuiCursorHud Members
 
-    /// <summary>
-    /// Populate the HUD with text.
-    /// </summary>
-    /// <param name="text">The text to place in the HUD.</param>
-    public void Set(string text) {
-        if (Instance != null) {
-            if (Utility.CheckForContent(text)) {
-                if (!NGUITools.GetActive(_label.gameObject)) {
-                    NGUITools.SetActive(_label.gameObject, true);
-                }
-                _label.text = text;
-                _label.MakePixelPerfect();
-                UpdatePosition();
-            }
-            else {
-                if (NGUITools.GetActive(_label.gameObject)) {
-                    NGUITools.SetActive(_label.gameObject, false);
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Populate the HUD with text from the StringBuilder.
-    /// </summary>
-    /// <param name="sb">The StringBuilder containing the text.</param>
-    public void Set(StringBuilder sb) {
-        Set(sb.ToString());
-    }
-
-    /// <summary>
-    /// Populate the HUD with text from the GuiCursorHudText.
-    /// </summary>
-    /// <param name="guiCursorHudText">The GUI cursor hud text.</param>
-    public void Set(GuiCursorHudText guiCursorHudText) {
+    public void Set(GuiHudText guiCursorHudText) {
         Set(guiCursorHudText.GetText());
     }
 
-    /// <summary>
-    /// Clear the HUD so only the cursor shows.
-    /// </summary>
-    public void Clear() {
-        Set(string.Empty);
-    }
-
-    public void SetPivot(UIWidget.Pivot pivot) {
-        _label.pivot = pivot;
-    }
-
     #endregion
+
+    #region IDisposable
+    [DoNotSerialize]
+    private bool alreadyDisposed = false;
+
+    /// <summary>
+    /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+    /// </summary>
+    public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases unmanaged and - optionally - managed resources. Derived classes that need to perform additional resource cleanup
+    /// should override this Dispose(isDisposing) method, using its own alreadyDisposed flag to do it before calling base.Dispose(isDisposing).
+    /// </summary>
+    /// <param name="isDisposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+    protected virtual void Dispose(bool isDisposing) {
+        // Allows Dispose(isDisposing) to be called more than once
+        if (alreadyDisposed) {
+            return;
+        }
+
+        if (isDisposing) {
+            // free managed resources here including unhooking events
+            Unsubscribe();
+        }
+        // free unmanaged resources here
+
+        alreadyDisposed = true;
+    }
+
+    // Example method showing check for whether the object has been disposed
+    //public void ExampleMethod() {
+    //    // throw Exception if called on object that is already disposed
+    //    if(alreadyDisposed) {
+    //        throw new ObjectDisposedException(ErrorMessages.ObjectDisposed);
+    //    }
+
+    //    // method content here
+    //}
+    #endregion
+
 }
 

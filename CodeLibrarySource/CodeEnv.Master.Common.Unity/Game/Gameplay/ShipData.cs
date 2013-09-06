@@ -32,7 +32,7 @@ namespace CodeEnv.Master.Common.Unity {
         /// day, normalized for game speed.
         /// </summary>
         public float CurrentSpeed {
-            get { return (_gameMgr.IsGamePaused) ? _currentSpeedOnPause : _rigidbody.velocity.magnitude / _gameSpeedMultiplier; }
+            get { return (_gameMgr.IsPaused) ? _currentSpeedOnPause : _rigidbody.velocity.magnitude / _gameSpeedMultiplier; }
         }
 
         private float _requestedSpeed;
@@ -168,27 +168,26 @@ namespace CodeEnv.Master.Common.Unity {
         private GameTime _gameTime;
         private float _gameSpeedMultiplier;
 
-        public ShipData(Transform t)
-            : base(t) {
-            _rigidbody = t.rigidbody;
+        public ShipData(Transform shipTransform, string shipName)
+            : base(shipTransform, shipName) {
+            _rigidbody = shipTransform.rigidbody;
             _gameMgr = GameManager.Instance;
             _gameTime = GameTime.Instance;
             _gameSpeedMultiplier = _gameTime.GameSpeed.SpeedMultiplier();
             Subscribe();
-            D.Log("ShipData constructor {0} has completed.", t.name);
+            D.Log("ShipData constructor {0} has completed.", shipTransform.name);
         }
 
         private void Subscribe() {
             if (_subscribers == null) {
                 _subscribers = new List<IDisposable>();
             }
-            _subscribers.Add(_gameMgr.SubscribeToPropertyChanging<GameManager, bool>(gm => gm.IsGamePaused, OnPauseStateChanging));
+            _subscribers.Add(_gameMgr.SubscribeToPropertyChanging<GameManager, bool>(gm => gm.IsPaused, OnIsPausedChanging));
             _subscribers.Add(_gameTime.SubscribeToPropertyChanged<GameTime, GameClockSpeed>(gt => gt.GameSpeed, OnGameSpeedChanged));
         }
 
-        private void OnPauseStateChanging() {
-            bool isGamePausedPriorToChange = _gameMgr.IsGamePaused;
-            if (!isGamePausedPriorToChange) {
+        private void OnIsPausedChanging(bool isPausing) {
+            if (isPausing) {
                 // game is about to pause
                 _currentSpeedOnPause = CurrentSpeed;
             }

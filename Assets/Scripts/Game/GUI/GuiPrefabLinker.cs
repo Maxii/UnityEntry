@@ -10,7 +10,6 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
-#define DEBUG_LOG
 #define DEBUG_WARN
 #define DEBUG_ERROR
 
@@ -27,9 +26,10 @@ using UnityEngine;
 public class GuiPrefabLinker : AMonoBehaviourBase {
 
     public GameObject linkedPrefab;
-    public UIButtonPlayAnimation launchButtonAnimation;
+    public NguiButtonPlayAnimation launchButtonAnimation;
 
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         SetupLinkedPrefab();
     }
 
@@ -38,7 +38,7 @@ public class GuiPrefabLinker : AMonoBehaviourBase {
     /// </summary>
     private void SetupLinkedPrefab() {
         if (linkedPrefab == null || launchButtonAnimation == null) {
-            D.Error("One or more GuiPrefabLinker fields are not set. This is typically the lack of a Launch button instance.");
+            D.Error("One or more GuiPrefabLinker fields are not set on {0}. This is typically the lack of a Launch button instance.", gameObject.name);
             return;
         }
         GameObject prefabClone = NGUITools.AddChild(gameObject, linkedPrefab);
@@ -54,12 +54,12 @@ public class GuiPrefabLinker : AMonoBehaviourBase {
         Animation prefabWindowBackAnimation = prefabClone.GetComponentInChildren<Animation>();
         NGUITools.SetActive(prefabClone, true);
 
-        UIButtonPlayAnimation[] allLaunchButtonAnimations = launchButtonAnimation.gameObject.GetSafeMonoBehaviourComponents<UIButtonPlayAnimation>();
-        UIButtonPlayAnimation launchButtonAnimationWithNullTarget = allLaunchButtonAnimations.Single<UIButtonPlayAnimation>(c => c.target == null);
+        NguiButtonPlayAnimation[] allLaunchButtonAnimations = launchButtonAnimation.gameObject.GetSafeMonoBehaviourComponents<NguiButtonPlayAnimation>();
+        NguiButtonPlayAnimation launchButtonAnimationWithNullTarget = allLaunchButtonAnimations.Single<NguiButtonPlayAnimation>(c => c.target == null);
         launchButtonAnimationWithNullTarget.target = prefabWindowBackAnimation;
 
         GuiVisibilityButton launchButton = launchButtonAnimationWithNullTarget.gameObject.GetSafeMonoBehaviourComponent<GuiVisibilityButton>();
-        if (launchButton.guiVisibilityExceptions.Length == 0) {
+        if (!Utility.CheckForContent<UIPanel>(launchButton.guiVisibilityExceptions)) {
             launchButton.guiVisibilityExceptions = new UIPanel[1];
         }
         else {

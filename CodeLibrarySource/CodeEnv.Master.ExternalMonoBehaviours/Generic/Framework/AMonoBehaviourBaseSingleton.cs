@@ -28,6 +28,8 @@ using UnityEngine;
 /// </summary>
 public abstract class AMonoBehaviourBaseSingleton<T> : AMonoBehaviourBase where T : AMonoBehaviourBase {
 
+    #region Singleton Pattern
+
     protected static T _instance;
     public static T Instance {
         get {
@@ -41,7 +43,7 @@ public abstract class AMonoBehaviourBaseSingleton<T> : AMonoBehaviourBase where 
                     GameObject tempGO = new GameObject(thisType.Name, thisType);
                     _instance = tempGO.GetComponent<T>();
                     if (_instance == null) {
-                        D.Error("Problem during the creation of {0}.", thisType.ToString());
+                        D.Error("Problem during the creation of {0}.", thisType.Name);
                     }
                 }
             }
@@ -49,11 +51,16 @@ public abstract class AMonoBehaviourBaseSingleton<T> : AMonoBehaviourBase where 
         }
     }
 
+    #endregion
+
     /// <summary>
     /// Called when [application quit]. Clients must override and set 
     /// _instance to null.
     /// </summary>
-    protected abstract void OnApplicationQuit();
+    protected override void OnApplicationQuit() {
+        base.OnApplicationQuit();
+        _instance = null;
+    }
 }
 
 

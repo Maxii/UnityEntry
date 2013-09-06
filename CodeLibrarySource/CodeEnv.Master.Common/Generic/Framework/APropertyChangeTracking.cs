@@ -51,12 +51,14 @@ namespace CodeEnv.Master.Common {
         /// <param name="onChanging">Optional local method to call before the property is changed. The proposed new value is provided as the parameter.</param>
         protected void SetProperty<T>(ref T backingStore, T value, string propertyName, Action onChanged = null, Action<T> onChanging = null) {
             VerifyCallerIsProperty(propertyName);
-            D.Log("SetProperty called. {0} changed to {1}.", propertyName, value);
             if (EqualityComparer<T>.Default.Equals(backingStore, value)) {
+                TryWarn<T>(backingStore, value, propertyName);
                 return;
             }
+            D.Log("SetProperty called. {0} changing to {1}.", propertyName, value);
+
             if (onChanging != null) { onChanging(value); }
-            OnPropertyChanging(propertyName);
+            OnPropertyChanging(propertyName, value);
 
             backingStore = value;
 
@@ -65,10 +67,17 @@ namespace CodeEnv.Master.Common {
             OnPropertyChanged(propertyName);
         }
 
-        protected void OnPropertyChanging(string propertyName) {
+        [System.Diagnostics.Conditional("DEBUG")]
+        private static void TryWarn<T>(T backingStore, T value, string propertyName) {
+            if (!typeof(T).IsValueType) {
+                D.Warn("{0} BackingStore [{1}] equals [{2}]. Property not changed.", propertyName, backingStore, value);
+            }
+        }
+
+        protected void OnPropertyChanging<T>(string propertyName, T newValue) {
             var handler = PropertyChanging; // threadsafe approach
             if (handler != null) {
-                handler(this, new PropertyChangingEventArgs(propertyName));
+                handler(this, new PropertyChangingValueEventArgs<T>(propertyName, newValue));   // My custom modification to provide the newValue
             }
         }
 

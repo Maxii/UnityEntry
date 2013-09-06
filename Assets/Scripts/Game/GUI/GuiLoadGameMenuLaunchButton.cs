@@ -6,7 +6,7 @@
 // </copyright> 
 // <summary> 
 // File: GuiLoadGameMenuLaunchButton.cs
-// COMMENT - one line to give a brief idea of what this file does.
+// Launch button script for the Load[Saved]GameMenu.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
@@ -17,14 +17,14 @@ using CodeEnv.Master.Common;
 using UnityEngine;
 
 /// <summary>
-/// COMMENT 
+/// Launch button script for the Load[Saved]GameMenu.
 /// </summary>
 public class GuiLoadGameMenuLaunchButton : AGuiMenuAcceptButtonBase {
 
     private string selectedGameCaption = string.Empty;
 
-    protected override void InitializeOnAwake() {
-        base.InitializeOnAwake();
+    protected override void Awake() {
+        base.Awake();
         tooltip = "Load and launch the selected Saved Game.";
     }
 
@@ -33,35 +33,20 @@ public class GuiLoadGameMenuLaunchButton : AGuiMenuAcceptButtonBase {
         ValidateState();
     }
 
-    protected override void RecordCheckboxState(string checkboxName, bool checkedState) {
-        //UNDONE
-    }
-
-    protected override void RecordPopupListState(string selectionName) {
+    protected override void RecordPopupListState(string popupListName, string selectionName) {
+        base.RecordPopupListState(popupListName, selectionName);
         selectedGameCaption = selectionName;
     }
 
-    protected override void RecordSliderState(float sliderValue) {
-        // UNDONE
-    }
-
-    protected override void OnCheckboxStateChange(bool state) {
-        base.OnCheckboxStateChange(state);
-    }
-
-    protected override void OnPopupListSelectionChange(string item) {
-        RecordPopupListState(item);
+    protected override void OnPopupListSelectionChange(string selectionName) {
+        base.OnPopupListSelectionChange(selectionName);
         ValidateState();
     }
 
-    protected override void OnSliderValueChange(float value) {
-        base.OnSliderValueChange(value);
-    }
-
-    protected override void OnButtonClick(GameObject sender) {
+    protected override void OnLeftClick() {
         if (LevelSerializer.SavedGames.Count > 0) {
             Arguments.ValidateForContent(selectedGameCaption);
-            eventMgr.Raise<LoadSavedGameEvent>(new LoadSavedGameEvent(this, selectedGameCaption));
+            _eventMgr.Raise<LoadSavedGameEvent>(new LoadSavedGameEvent(this, selectedGameCaption));
         }
     }
 

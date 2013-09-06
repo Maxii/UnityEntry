@@ -30,11 +30,12 @@ public class VisibilityChangedRelay : AMonoBehaviourBase {
     private INotifyVisibilityChanged[] _iRelayTargets;
     private Transform _transform;
 
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         UnityUtility.ValidateComponentPresence<Renderer>(gameObject);
         _transform = transform;
         if (relayTargets.Length == 0) {
-            Transform relayTarget = _transform.GetTransformWithInterfaceInParents<INotifyVisibilityChanged>();
+            Transform relayTarget = _transform.GetSafeTransformWithInterfaceInParents<INotifyVisibilityChanged>();
             if (relayTarget == null) {
                 D.Warn("No {0} assigned or found for {1}.", typeof(INotifyVisibilityChanged), _transform.name);
                 return;
@@ -59,7 +60,7 @@ public class VisibilityChangedRelay : AMonoBehaviourBase {
         for (int i = 0; i < relayTargets.Length; i++) {
             INotifyVisibilityChanged iNotify = _iRelayTargets[i];
             if (iNotify != null) {
-                Logger.Log("{0} is notifying client {1} of becoming Visible.", _transform.name, relayTargets[i].name);
+                //Logger.Log("{0} is notifying client {1} of becoming Visible.", _transform.name, relayTargets[i].name);
                 iNotify.NotifyVisibilityChanged(_transform, isVisible: true);
             }
         }
@@ -78,7 +79,7 @@ public class VisibilityChangedRelay : AMonoBehaviourBase {
             if (t && t.gameObject.activeInHierarchy) {  // avoids NullReferenceException during Inspector shutdown
                 INotifyVisibilityChanged iNotify = _iRelayTargets[i];
                 if (iNotify != null) {
-                    Logger.Log("{0} is notifying client {1} of becoming Invisible.", _transform.name, t.name);
+                    //Logger.Log("{0} is notifying client {1} of becoming Invisible.", _transform.name, t.name);
                     iNotify.NotifyVisibilityChanged(_transform, isVisible: false);
                 }
             }

@@ -20,7 +20,6 @@ using System.Linq;
 using System.Reflection;
 using CodeEnv.Master.Common;
 using CodeEnv.Master.Common.Unity;
-using UnityEngine;
 
 /// <summary>
 /// Generic base class for Gui Sliders that select enum values built with NGUI.
@@ -33,8 +32,8 @@ public abstract class AGuiEnumSliderBase<T> : GuiTooltip where T : struct {
     private float[] _orderedSliderStepValues;
     private T[] _orderedTValues;
 
-    protected override void InitializeOnAwake() {
-        base.InitializeOnAwake();
+    protected override void Awake() {
+        base.Awake();
         _eventMgr = GameEventManager.Instance;
         _slider = gameObject.GetSafeMonoBehaviourComponent<UISlider>();
         InitializeSlider();

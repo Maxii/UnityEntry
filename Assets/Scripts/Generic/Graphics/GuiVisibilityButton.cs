@@ -46,9 +46,9 @@ public class GuiVisibilityButton : AGuiButtonBase {
         }
     }
 
-
     /// <summary>
-    /// The GUI visibility command.
+    /// Command that determines whether this button hides other
+    /// Gui elements or restores them.
     /// </summary>
     public GuiVisibilityCommand guiVisibilityCmd;
 
@@ -57,17 +57,20 @@ public class GuiVisibilityButton : AGuiButtonBase {
     /// </summary>
     public UIPanel[] guiVisibilityExceptions;
 
-    protected override void OnButtonClick(GameObject sender) {
+    protected override void OnLeftClick() {
         switch (guiVisibilityCmd) {
-            case GuiVisibilityCommand.RestoreUIPanelsVisibility:
-            case GuiVisibilityCommand.MakeVisibleUIPanelsInvisible:
-                //Logger.Log("GuiVisibilty tPrefsValue = {0}.".Inject(guiVisibilityCmd));
-                eventMgr.Raise<GuiVisibilityChangeEvent>(new GuiVisibilityChangeEvent(this, guiVisibilityCmd, guiVisibilityExceptions));
+            case GuiVisibilityCommand.HideVisibleGuiPanels:
+                if (guiVisibilityExceptions.IsNullOrEmpty<UIPanel>()) {
+                    D.Warn("{0} has no GuiVisibilityExceptions listed.", gameObject.name);
+                }
+                break;
+            case GuiVisibilityCommand.RestoreInvisibleGuiPanels:
                 break;
             case GuiVisibilityCommand.None:
             default:
                 throw new NotImplementedException(ErrorMessages.UnanticipatedSwitchValue.Inject(guiVisibilityCmd));
         }
+        _eventMgr.Raise<GuiVisibilityChangeEvent>(new GuiVisibilityChangeEvent(this, guiVisibilityCmd, guiVisibilityExceptions));
     }
 
     public override string ToString() {

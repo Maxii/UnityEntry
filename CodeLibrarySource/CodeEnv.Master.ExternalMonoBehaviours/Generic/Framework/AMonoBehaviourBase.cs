@@ -10,6 +10,10 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
+//#define DEBUG_LOG
+#define DEBUG_WARN
+#define DEBUG_ERROR
+
 // default namespace
 
 using System;
@@ -28,9 +32,69 @@ using UnityEngine;
 /// </summary>
 public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, IChangeTracking, INotifyPropertyChanged, INotifyPropertyChanging {
 
+    protected bool _isApplicationQuiting;
+
+    #region MonoBehaviour Event Methods
+
+    protected virtual void Awake() {
+        useGUILayout = true;    // OPTIMIZE docs suggest = false for better performance
+        D.Log("{0}.Awake().", this.GetType().Name);
+    }
+
+    protected virtual void Start() {
+        D.Log("{0}.Start().", this.GetType().Name);
+    }
+
+    /// <summary>
+    /// Called when enabled set to true after the script has been loaded, including after DeSerialization.
+    /// </summary>
+    protected virtual void OnEnable() {
+        D.Log("{0}.OnEnable().", this.GetType().Name);
+    }
+
+    /// <summary>
+    /// Called when enabled set to false. It is also called immediately after OnApplicationQuit() and 
+    /// prior to OnDestroy() and when scripts are reloaded after compilation has finished.
+    /// </summary>
+    protected virtual void OnDisable() {
+        D.Log("{0}.OnDisable().", this.GetType().Name);
+    }
+
+    /// <summary>
+    /// Called when the Application is quiting, followed by OnDisable() and then OnDestroy().
+    /// </summary>
+    protected virtual void OnApplicationQuit() {
+        D.Log("{0}.OnApplicationQuit().", this.GetType().Name);
+        _isApplicationQuiting = true;
+    }
+
+    /// <summary>
+    /// Called as a result of Destroy(gameobject) and following OnDisable() which follows
+    /// OnApplicationQuit().
+    /// </summary>
+    protected virtual void OnDestroy() {
+        D.Log("{0}.OnDestroy().", this.GetType().Name);
+    }
+
+    #endregion
+
+    #region UnitySerializer Event Methods
+
+    /// <summary>
+    /// Called by UnitySerializer the same way normal Unity methods (above) are called,
+    /// it occurs after the level has been loaded but before it starts to run.
+    /// It is used to do any final initialization.
+    /// </summary>
+    protected virtual void OnDeserialized() {
+        D.Log("{0}.OnDeserialized().", this.GetType().Name);
+
+    }
+
+    #endregion
+
     #region IInstanceIdentity Members
     private static int _instanceCounter = 0;
-    public int InstanceID { get; set; }
+    public int InstanceID { get; protected set; }
 
     protected void IncrementInstanceCounter() {
         InstanceID = System.Threading.Interlocked.Increment(ref _instanceCounter);
@@ -209,6 +273,17 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
 
     #region Coroutine
     // Based on Func<IEnumerator> and Func<object, IEnumerator> Delegates that encapsulate methods with zero or one parameter that return IEnumerator, aka 'a task'.
+    //This approach has the advantage of enabling the ability to stop the specific coroutine using the task.
+    // Usage when method is on the AMonoBehaviour running the Coroutine: 
+    // Func<float, IEnumerator> delegateMethod = MethodName;  StartCoroutine(MethodName, floatValue); StopCoroutine(MethodName); or
+    // Func<float, IEnumerator> delegateMethod = MethodName;  StartCoroutine<float>(MethodName, floatValue); StopCoroutine(MethodName);
+    //
+    //When method is on another object that can't launch its own (aka it is not a MonoBehaviour), then the following usage is the only one that will work.  Initiated from a MonoBehaviour
+    // with a reference to the object with the IEnumeratorMethod, this has the advantage of allowing multiple parameters, but you must stop all coroutines on this object to stop it, unless of 
+    // course, you stop it internally by continuously testing against a boolean.
+    // Usage:
+    // StartCoroutine(objectWithIEnumeratorMethod.IEnumeratorMethod(value1, value2, etc.);
+    // StopAllCoroutines();
 
     /// <summary>
     /// Starts a Coroutine executing the method contained in task.
@@ -217,7 +292,7 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
     /// </summary>
     /// <param name="task">The method to run as a Coroutine encapsulated as a Func&lt;IEnumerator&gt; delegate. The method can have no parameters and must return IEnumerator.</param>
     /// <returns>The Coroutine started.</returns>
-    public Coroutine StartCoroutine(Func<IEnumerator> task) {
+    protected Coroutine StartCoroutine(Func<IEnumerator> task) {
         return StartCoroutine(task.Method.Name);
     }
 
@@ -226,10 +301,11 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
     /// Note: Coroutines run on the object that StartCoroutine() is called on.  So if you are starting a coroutine on a different object it makes a lot of sense to use StartCoroutine 
     /// on that object, not the one you are currently executing.
     /// </summary>
+    /// <typeparam name="T">The Type of value.</typeparam>
     /// <param name="task">The method to run as a Coroutine encapsulated as a Func&lt;IEnumerator&gt; delegate. The method must have one parameter and return IEnumerator.</param>
-    /// <param name="value">A single optional value to use as the method's parameter, if any.</param>
-    /// <returns>The Coroutine started.</returns>
-    public Coroutine StartCoroutine(Func<object, IEnumerator> task, object value) {
+    /// <param name="value">The value.</param>
+    /// <returns></returns>
+    protected Coroutine StartCoroutine<T>(Func<T, IEnumerator> task, T value) {
         return StartCoroutine(task.Method.Name, value);
     }
 
@@ -237,16 +313,26 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
     /// Stops the specific Coroutine executing the method contained in task.
     /// </summary>
     /// <param name="task">The method currently running as a Coroutine encapsulated as a Func&lt;IEnumerator&gt; delegate. The method can have no parameters and must return IEnumerator.</param>
-    public void StopCoroutine(Func<IEnumerator> task) {
+    protected void StopCoroutine(Func<IEnumerator> task) {
         StopCoroutine(task.Method.Name);
     }
     /// <summary>
     /// Stops the specific Coroutine executing the method contained in task.
     /// </summary>
     /// <param name="task">The method currently running as a Coroutine encapsulated as a Func&lt;IEnumerator&gt; delegate. The method must have one parameter and return IEnumerator.</param>
-    public void StopCoroutine(Func<IEnumerator, object> task) {
+    //public void StopCoroutine(Func<object, IEnumerator> task) {
+    //    StopCoroutine(task.Method.Name);
+    //}
+
+    /// <summary>
+    /// Stops the specific Coroutine executing the method contained in task.
+    /// </summary>
+    /// <typeparam name="T">The Type of the value original provided to the task in StartCoroutine.</typeparam>
+    /// <param name="task">The method currently running as a Coroutine encapsulated as a Func&lt;IEnumerator&gt; delegate. The method must have one parameter and return IEnumerator..</param>
+    protected void StopCoroutine<T>(Func<T, IEnumerator> task) {
         StopCoroutine(task.Method.Name);
     }
+
     #endregion
 
     #region GetComponent
@@ -300,37 +386,6 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
 
     #endregion
 
-    /// <summary>
-    /// Returns a list of all active loaded MonoBehaviour scripts that implement Interface I. It will return no inactive scripts.
-    /// Please note that this function is very slow.
-    /// </summary>
-    /// <typeparam name="I">The Type of Interface.</typeparam>
-    /// <returns></returns>
-    public static List<I> FindObjectsOfInterface<I>() where I : class {
-        MonoBehaviour[] monoBehaviours = FindObjectsOfType(typeof(MonoBehaviour)) as MonoBehaviour[];
-        List<I> list = new List<I>();
-
-        foreach (MonoBehaviour behaviour in monoBehaviours) {
-            UnityEngine.Component[] components = behaviour.GetComponents<UnityEngine.Component>();
-            var iComponents = from c in components where c is I select c;
-            foreach (var c in iComponents) {
-                list.Add(c as I);
-            }
-        }
-        return list;
-    }
-
-    /// <summary>
-    /// Returns a list of all active loaded objects of Type T. It will return no assets (meshes, textures, prefabs, ...) or inactive objects.
-    ///Please note that this function is very slow.
-    /// </summary>
-    /// <typeparam name="T">The Type of Object.</typeparam>
-    /// <returns></returns>
-    public static T[] FindObjectsOfType<T>() where T : UnityEngine.Object {
-        T[] objects = FindObjectsOfType(typeof(T)) as T[];
-        return objects;
-    }
-
     #region PropertyChangeTracking
 
     /// <summary>
@@ -347,12 +402,14 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
     /// <param name="onChanging">Optional local method to call before the property is changed. The proposed new value is provided as the parameter.</param>
     protected void SetProperty<T>(ref T backingStore, T value, string propertyName, Action onChanged = null, Action<T> onChanging = null) {
         VerifyCallerIsProperty(propertyName);
-        D.Log("SetProperty called. {0} changed to {1}.", propertyName, value);
         if (EqualityComparer<T>.Default.Equals(backingStore, value)) {
+            TryWarn<T>(backingStore, value, propertyName);
             return;
         }
+        D.Log("SetProperty called. {0} changing to {1}.", propertyName, value);
+
         if (onChanging != null) { onChanging(value); }
-        OnPropertyChanging(propertyName);
+        OnPropertyChanging(propertyName, value);
 
         backingStore = value;
 
@@ -361,10 +418,17 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
         OnPropertyChanged(propertyName);
     }
 
-    protected void OnPropertyChanging(string propertyName) {
+    [System.Diagnostics.Conditional("DEBUG")]
+    private static void TryWarn<T>(T backingStore, T value, string propertyName) {
+        if (!typeof(T).IsValueType) {
+            D.Warn("{0} BackingStore [{1}] equals [{2}]. Property not changed.", propertyName, backingStore, value);
+        }
+    }
+
+    protected void OnPropertyChanging<T>(string propertyName, T newValue) {
         var handler = PropertyChanging; // threadsafe approach
         if (handler != null) {
-            handler(this, new PropertyChangingEventArgs(propertyName));
+            handler(this, new PropertyChangingValueEventArgs<T>(propertyName, newValue));   // My custom modification to provide the newValue
         }
     }
 
@@ -411,6 +475,37 @@ public abstract class AMonoBehaviourBase : MonoBehaviour, IInstanceIdentity, ICh
     #endregion
 
     #endregion
+
+    /// <summary>
+    /// Returns a list of all active loaded MonoBehaviour scripts that implement Interface I. It will return no inactive scripts.
+    /// Please note that this function is very slow.
+    /// </summary>
+    /// <typeparam name="I">The Type of Interface.</typeparam>
+    /// <returns></returns>
+    public static List<I> FindObjectsOfInterface<I>() where I : class {
+        MonoBehaviour[] monoBehaviours = FindObjectsOfType(typeof(MonoBehaviour)) as MonoBehaviour[];
+        List<I> list = new List<I>();
+
+        foreach (MonoBehaviour behaviour in monoBehaviours) {
+            UnityEngine.Component[] components = behaviour.GetComponents<UnityEngine.Component>();
+            var iComponents = from c in components where c is I select c;
+            foreach (var c in iComponents) {
+                list.Add(c as I);
+            }
+        }
+        return list;
+    }
+
+    /// <summary>
+    /// Returns a list of all active loaded objects of Type T. It will return no assets (meshes, textures, prefabs, ...) or inactive objects.
+    ///Please note that this function is very slow.
+    /// </summary>
+    /// <typeparam name="T">The Type of Object.</typeparam>
+    /// <returns></returns>
+    public static T[] FindObjectsOfType<T>() where T : UnityEngine.Object {
+        T[] objects = FindObjectsOfType(typeof(T)) as T[];
+        return objects;
+    }
 
     // No need for IDisposable as there are no resources here to clean up
 

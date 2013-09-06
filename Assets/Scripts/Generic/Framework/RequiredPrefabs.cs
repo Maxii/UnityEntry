@@ -27,14 +27,15 @@ using UnityEngine;
 /// I think these are a real reference to the prefab in the Project view, not a separate instance
 /// clone of the Prefab in the startScene. As such, they must be Instantiated before use.
 /// </remarks>
-public class RequiredPrefabs : AMonoBehaviourBaseSingleton<RequiredPrefabs>, IInstanceIdentity {
+public class RequiredPrefabs : AMonoBehaviourBaseSingleton<RequiredPrefabs> {
 
     public SphereCollider UniverseEdgePrefab;
     public Transform CameraDummyTargetPrefab;
-    public UILabel HudLabelPrefab;
+    //public UILabel HudLabelPrefab;
     public GuiTrackingLabel GuiTrackingLabelPrefab;
 
-    void Awake() {
+    protected override void Awake() {
+        base.Awake();
         if (TryDestroyExtraCopies()) {
             return;
         }
@@ -47,7 +48,7 @@ public class RequiredPrefabs : AMonoBehaviourBaseSingleton<RequiredPrefabs>, IIn
     /// </summary>
     /// <returns><c>true</c> if this instance is going to be destroyed, <c>false</c> if not.</returns>
     private bool TryDestroyExtraCopies() {
-        if (_instance != null && _instance != this) {
+        if (_instance && _instance != this) {
             Logger.Log("{0}_{1} found as extra. Initiating destruction sequence.".Inject(this.name, InstanceID));
             Destroy(gameObject);
             return true;
@@ -57,14 +58,6 @@ public class RequiredPrefabs : AMonoBehaviourBaseSingleton<RequiredPrefabs>, IIn
             _instance = this;
             return false;
         }
-    }
-
-    void OnDestroy() {
-        Debug.Log("{0}_{1} instance is being destroyed.".Inject(this.name, InstanceID));
-    }
-
-    protected override void OnApplicationQuit() {
-        _instance = null;
     }
 
     public override string ToString() {

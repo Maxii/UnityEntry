@@ -6,11 +6,10 @@
 // </copyright> 
 // <summary> 
 // File: GuiDateReadout.cs
-// COMMENT - one line to give a brief idea of what this file does.
+// Date readout class for the Gui, based on Ngui UILabel.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
-#define DEBUG_LOG
 #define DEBUG_WARN
 #define DEBUG_ERROR
 
@@ -18,59 +17,43 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using CodeEnv.Master.Common;
-using CodeEnv.Master.Common.LocalResources;
 using CodeEnv.Master.Common.Unity;
 
 /// <summary>
-/// COMMENT 
+/// Date readout class for the Gui, based on Ngui UILabel.
 /// </summary>
 public class GuiDateReadout : AGuiLabelReadoutBase, IDisposable {
 
     private IList<IDisposable> _subscribers;
     private GameManager _gameMgr;
 
-    protected override void InitializeOnAwake() {
-        base.InitializeOnAwake();
+    protected override void Awake() {
+        base.Awake();
         _gameMgr = GameManager.Instance;
         Subscribe();
         tooltip = "The current date in the game.";
-        UpdateRate = UpdateFrequency.Continuous;
-
+        UpdateRate = UpdateFrequency.Normal;
     }
 
     private void Subscribe() {
         if (_subscribers == null) {
             _subscribers = new List<IDisposable>();
         }
-        _subscribers.Add(_gameMgr.SubscribeToPropertyChanging<GameManager, bool>(gm => gm.IsGamePaused, OnGamePauseChanging));
-    }
-
-    void Start() {
-        //RefreshDateReadout();
+        _subscribers.Add(_gameMgr.SubscribeToPropertyChanging<GameManager, bool>(gm => gm.IsPaused, OnIsPausedChanging));
     }
 
     void Update() {
-        if (ToUpdate() && !_gameMgr.IsGamePaused) {
-            RefreshDateReadout();
+        if (ToUpdate() && !_gameMgr.IsPaused) {
+            RefreshReadout(GameTime.Date.FormattedDate);
         }
     }
 
-    private void OnGamePauseChanging() {
-        bool isGamePausedPriorToChange = _gameMgr.IsGamePaused;
-        if (!isGamePausedPriorToChange) {
+    private void OnIsPausedChanging(bool isPausing) {
+        if (isPausing) {
             // we are about to pause so refresh the date in case the game pauses on load
-            RefreshDateReadout();
+            RefreshReadout(GameTime.Date.FormattedDate);
         }
-    }
-
-    private void RefreshDateReadout() {
-        readoutLabel.text = GameTime.Date.FormattedDate;
-    }
-
-    void OnDestroy() {
-        Dispose();
     }
 
     private void Unsubscribe() {
@@ -78,6 +61,14 @@ public class GuiDateReadout : AGuiLabelReadoutBase, IDisposable {
         _subscribers.Clear();
     }
 
+    protected override void OnDestroy() {
+        base.OnDestroy();
+        Dispose();
+    }
+
+    public override string ToString() {
+        return new ObjectAnalyzer().ToString(this);
+    }
 
     #region IDisposable
     [DoNotSerialize]
@@ -121,11 +112,6 @@ public class GuiDateReadout : AGuiLabelReadoutBase, IDisposable {
     //    // method content here
     //}
     #endregion
-
-
-    public override string ToString() {
-        return new ObjectAnalyzer().ToString(this);
-    }
 
 }
 

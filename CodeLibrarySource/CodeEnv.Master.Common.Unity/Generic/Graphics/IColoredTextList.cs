@@ -16,18 +16,18 @@
 
 namespace CodeEnv.Master.Common.Unity {
 
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using CodeEnv.Master.Common;
-    using CodeEnv.Master.Common.LocalResources;
 
     /// <summary>
     /// Interface for strategy objects that provide lists of Colored Text for GuiCursorHudText.
     /// </summary>
     public interface IColoredTextList {
 
-        IList<ColoredText> GetList();
+        /// <summary>
+        /// Readonly, gets the list.
+        /// </summary>
+        IList<ColoredText> List { get; }
+
     }
 }
 
