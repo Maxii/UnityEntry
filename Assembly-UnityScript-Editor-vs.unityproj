@@ -18,7 +18,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_2_0;UNITY_4_2;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;DEBUG_WARN;DEBUG_ERROR</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_2_0;UNITY_4_2;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;DEBUG_ERROR;DEBUG_WARN;DEBUG_LOG</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -47,16 +47,11 @@
      <Compile Include="Assets\AutoProjectBackup\Editor\AutoProjectBackup\AutoProjectBackup.js" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo14.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\GUI - Text Shader (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\English.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
-     <None Include="Assets\Third Party Assets\Contextual\ReadMe.txt" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Shaders\PlanetRings.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo18.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (AlphaClip).shader" />
@@ -64,14 +59,11 @@
      <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\GUI - Text Shader (AlphaClip).shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\Spanish.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font (SoftClip).shader" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\MedSans.txt" />
+     <None Include="Assets\Fonts\MedSans.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Materials\SaucerGlow.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Shaders\PlanetSelfIllum.shader" />
      <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
@@ -84,17 +76,12 @@
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored Overlay.shader" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Shaders\PlanetAtmosphere.shader" />
      <None Include="Assets\_Stevie3D\WorkGrid\Materials\Alpha-DoubleSided_Diffuse.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Other\English.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Other\French.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Header.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Shaders\Refractive.shader" />
      <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\German.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
@@ -104,17 +91,14 @@
  <Reference Include="CodeEnv.Master.Common.LocalResources">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.Common.LocalResources.dll</HintPath>
  </Reference>
- <Reference Include="CodeEnv.Master.Common.Unity">
- <HintPath>Assets\CodeLibrary\CodeEnv.Master.Common.Unity.dll</HintPath>
- </Reference>
  <Reference Include="CodeEnv.Master.ExternalMonoBehaviours">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.ExternalMonoBehaviours.dll</HintPath>
  </Reference>
- <Reference Include="CodeEnv.Master.Common.LocalResources.resources">
- <HintPath>Assets\CodeLibrary\fr-FR\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
+ <Reference Include="CodeEnv.Master.GameContent">
+ <HintPath>Assets\CodeLibrary\CodeEnv.Master.GameContent.dll</HintPath>
  </Reference>
- <Reference Include="CodeEnv.Master.GameLauncherApp.resources">
- <HintPath>Assets\CodeLibrary\en-US\CodeEnv.Master.GameLauncherApp.resources.dll</HintPath>
+ <Reference Include="CodeEnv.Master.Common.LocalResources.resources">
+ <HintPath>Assets\CodeLibrary\en-CA\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
