@@ -181,16 +181,19 @@ namespace CodeEnv.Master.Common {
 
         #region DistanceToCamera Extensions
 
+        public static float DistanceToCamera(this Vector3 point) {
+            Transform cameraTransform = Camera.main.transform;
+            Plane cameraPlane = new Plane(cameraTransform.forward, cameraTransform.position);
+            float distanceToCamera = cameraPlane.GetDistanceToPoint(point);
+            return distanceToCamera;
+        }
+
         public static float DistanceToCamera(this GameObject go) {
             return go.transform.DistanceToCamera();
         }
 
         public static float DistanceToCamera(this Transform t) {
-            Transform cameraTransform = Camera.main.transform;
-            Plane cameraPlane = new Plane(cameraTransform.forward, cameraTransform.position);
-            float distanceToCamera = cameraPlane.GetDistanceToPoint(t.position);
-            return distanceToCamera;
-            //return Vector3.Distance(Camera.main.transform.position, t.position);
+            return t.position.DistanceToCamera();
         }
 
         public static int DistanceToCameraInt(this GameObject go) {

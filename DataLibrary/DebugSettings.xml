@@ -20,7 +20,7 @@
     </Setting>
     <Setting>
       <PropertyName>MakePlayerInvincible</PropertyName>
-      <PropertyValue>true</PropertyValue>
+      <PropertyValue>false</PropertyValue>
     </Setting>
     <Setting>
       <PropertyName>DisableAllGameplay</PropertyName>
@@ -36,11 +36,15 @@
     </Setting>
     <Setting>
       <PropertyName>EnableShipVelocityRays</PropertyName>
-      <PropertyValue>false</PropertyValue>
+      <PropertyValue>true</PropertyValue>
     </Setting>
     <Setting>
       <PropertyName>EnableFleetVelocityRays</PropertyName>
       <PropertyValue>true</PropertyValue>
+    </Setting>
+    <Setting>
+      <PropertyName>ShowSectorGrid</PropertyName>
+      <PropertyValue>false</PropertyValue>
     </Setting>
 
   </Boolean>

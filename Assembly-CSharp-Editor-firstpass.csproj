@@ -91,17 +91,17 @@
  <Reference Include="CodeEnv.Master.Common.LocalResources">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.Common.LocalResources.dll</HintPath>
  </Reference>
- <Reference Include="CodeEnv.Master.ExternalMonoBehaviours">
- <HintPath>Assets\CodeLibrary\CodeEnv.Master.ExternalMonoBehaviours.dll</HintPath>
- </Reference>
  <Reference Include="CodeEnv.Master.GameContent">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.GameContent.dll</HintPath>
+ </Reference>
+ <Reference Include="CodeEnv.Master.ScriptAssembly">
+ <HintPath>Assets\CodeLibrary\CodeEnv.Master.ScriptAssembly.dll</HintPath>
  </Reference>
  <Reference Include="CodeEnv.Master.Common.LocalResources.resources">
  <HintPath>Assets\CodeLibrary\fr-FR\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
  </Reference>
  <Reference Include="Vectrosity">
- <HintPath>Assets\Plugins\Vectrosity\Vectrosity.dll</HintPath>
+ <HintPath>Assets\CodeLibrary_ThirdParty\Vectrosity.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>

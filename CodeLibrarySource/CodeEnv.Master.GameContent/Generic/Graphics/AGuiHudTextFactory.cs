@@ -149,7 +149,7 @@ namespace CodeEnv.Master.GameContent {
             public ColoredTextList_Distance(Vector3 position, string format = Constants.FormatFloat_1DpMax) {
                 // TODO calculate from Data.Position and <code>static GetSelected()<code>
                 //if(nothing selected) return empty
-                float distance = Vector3.Distance(position, Camera.main.transform.position);
+                float distance = position.DistanceToCamera();
                 _list.Add(new ColoredText(format.Inject(distance)));
             }
         }

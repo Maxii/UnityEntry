@@ -47,6 +47,7 @@
      <Compile Include="Assets\Scripts\Game\Framework\FleetCommand.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\FleetManager.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\OrbitalPlane.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\Sector.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\ShipCaptain.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\Star.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\SystemManager.cs" />
@@ -73,17 +74,20 @@
      <Compile Include="Assets\Scripts\Game\GUI\GuiSelectedReadout.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiUniverseSizePopupList.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\FleetGraphics.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\ItemGraphics.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\ShipGraphics.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarAnimator.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarGlowAnimator.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarGraphics.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\SystemGraphics.cs" />
+     <Compile Include="Assets\Scripts\Game\_Debug\DynamicObjects.cs" />
+     <Compile Include="Assets\Scripts\Game\_Debug\DynamicTrackingLabels.cs" />
+     <Compile Include="Assets\Scripts\Game\_Debug\Sectors.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\FollowableItem.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\FramesLastUpdate.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\Loader.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\MonoGameManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\RequiredPrefabs.cs" />
-     <Compile Include="Assets\Scripts\Generic\Framework\SelectionManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\StationaryItem.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\UsefulPrefabs.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiButtonBase.cs" />
@@ -102,15 +106,16 @@
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiTrackingLabelFactory.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiVisibilityButton.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\HighlightCircle.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\ItemGraphics.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\Orbit.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\OrbitMoveable.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\ScaleRelativeToCamera.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\StarFlare.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\VisibilityChangedRelay.cs" />
+     <Compile Include="Assets\Scripts\Generic\IO\AGameInputConfiguration.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\CameraControl.cs" />
-     <Compile Include="Assets\Scripts\Generic\IO\GameInputHelper.cs" />
+     <Compile Include="Assets\Scripts\Generic\IO\GameInput.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\NguiGenericEventHandler.cs" />
+     <Compile Include="Assets\Scripts\Generic\IO\PlayerViews.cs" />
      <Compile Include="Assets\Scripts\Generic\_Debug\DebugHud.cs" />
      <Compile Include="Assets\Scripts\Generic\_Debug\FpsReadout.cs" />
      <Compile Include="Assets\Scripts\Generic\_Debug\Logger.cs" />
@@ -269,17 +274,17 @@
  <Reference Include="CodeEnv.Master.Common.LocalResources">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.Common.LocalResources.dll</HintPath>
  </Reference>
- <Reference Include="CodeEnv.Master.ExternalMonoBehaviours">
- <HintPath>Assets\CodeLibrary\CodeEnv.Master.ExternalMonoBehaviours.dll</HintPath>
- </Reference>
  <Reference Include="CodeEnv.Master.GameContent">
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.GameContent.dll</HintPath>
+ </Reference>
+ <Reference Include="CodeEnv.Master.ScriptAssembly">
+ <HintPath>Assets\CodeLibrary\CodeEnv.Master.ScriptAssembly.dll</HintPath>
  </Reference>
  <Reference Include="CodeEnv.Master.Common.LocalResources.resources">
  <HintPath>Assets\CodeLibrary\fr-FR\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
  </Reference>
  <Reference Include="Vectrosity">
- <HintPath>Assets\Plugins\Vectrosity\Vectrosity.dll</HintPath>
+ <HintPath>Assets\CodeLibrary_ThirdParty\Vectrosity.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
