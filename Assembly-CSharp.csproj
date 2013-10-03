@@ -114,6 +114,7 @@
      <Compile Include="Assets\Scripts\Generic\IO\AGameInputConfiguration.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\CameraControl.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\GameInput.cs" />
+     <Compile Include="Assets\Scripts\Generic\IO\GameInputHelper.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\NguiGenericEventHandler.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\PlayerViews.cs" />
      <Compile Include="Assets\Scripts\Generic\_Debug\DebugHud.cs" />
