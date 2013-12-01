@@ -19,7 +19,7 @@ using UnityEngine;
 /// <summary>
 /// Varies a Star's flare style and intensity as a function of distance from the camera.
 /// </summary>
-public class StarFlare : AMonoBehaviourBase {
+public class StarFlare : AMonoBase {
 
     private static System.Random rng = new System.Random(); // IMPROVE convert to RandomExtensions
 
@@ -52,8 +52,10 @@ public class StarFlare : AMonoBehaviourBase {
             // there is only the primary light attached, so I need to create another for the flare
             // avoid getting the flareLight prefab with Resources.Load("Lights/FlareLight")
             _flareLight = Instantiate<Light>(UsefulPrefabs.Instance.flareLight);
-            _flareLight.transform.parent = _transform;
-            float radiusOfStar = (gameObject.GetSafeMonoBehaviourComponentInParents<Star>().collider as SphereCollider).radius;
+            //_flareLight.transform.parent = _transform;
+            UnityUtility.AttachChildToParent(_flareLight.gameObject, _transform.gameObject);
+            //float radiusOfStar = (gameObject.GetSafeMonoBehaviourComponentInParents<Star>().collider as SphereCollider).radius;
+            float radiusOfStar = (gameObject.GetSafeMonoBehaviourComponentInParents<StarView>().collider as SphereCollider).radius;
             Vector3 flareLightLocationBehindStar = Vector3.forward * (radiusOfStar + 2F);
             _flareLight.transform.localPosition = flareLightLocationBehindStar;
         }
@@ -69,11 +71,10 @@ public class StarFlare : AMonoBehaviourBase {
         _originalIntensity = _flareLight.intensity;
     }
 
-    void Update() {
-        if (ToUpdate()) {
-            if (_flareLight != null) {
-                VaryFlareIntensityByCameraDistance();
-            }
+    protected override void OccasionalUpdate() {
+        base.OccasionalUpdate();
+        if (_flareLight != null) {
+            VaryFlareIntensityByCameraDistance();
         }
     }
 

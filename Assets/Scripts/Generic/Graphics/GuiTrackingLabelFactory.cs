@@ -34,21 +34,31 @@ public class GuiTrackingLabelFactory : AGenericSingleton<GuiTrackingLabelFactory
     /// <summary>
     /// Creates a GUI tracking label centered over the target.
     /// </summary>
-    /// <param name="target">The target.</param>
+    /// <param name="target">The target to track.</param>
     /// <returns></returns>
     public GuiTrackingLabel CreateGuiTrackingLabel(Transform target) {
         return CreateGuiTrackingLabel(target, Vector3.zero, Vector3.zero);
     }
 
     /// <summary>
-    /// Creates the GUI tracking label.
+    ///  Creates a GUI tracking label centered on the pivotOffset from the target.
+    /// </summary>
+    /// <param name="target">The target to track.</param>
+    /// <param name="pivotOffset">The pivot point offset from the target in Worldspace coordinates..</param>
+    /// <returns></returns>
+    public GuiTrackingLabel CreateGuiTrackingLabel(Transform target, Vector3 pivotOffset) {
+        return CreateGuiTrackingLabel(target, pivotOffset, Vector3.zero);
+    }
+
+    /// <summary>
+    /// Creates a GUI tracking label centered on the pivotOffset from the target.
     /// </summary>
     /// <param name="target">The target to track.</param>
     /// <param name="pivotOffset">The pivot point offset from the target in Worldspace coordinates.</param>
     /// <param name="offsetFromPivot">The offset from pivot point in Viewport coordinates.</param>
     /// <returns></returns>
     public GuiTrackingLabel CreateGuiTrackingLabel(Transform target, Vector3 pivotOffset, Vector3 offsetFromPivot) {
-        GameObject guiTrackingLabelPrefab = RequiredPrefabs.Instance.GuiTrackingLabelPrefab.gameObject;
+        GameObject guiTrackingLabelPrefab = RequiredPrefabs.Instance.guiTrackingLabel.gameObject;
         if (guiTrackingLabelPrefab == null) {
             D.Error("Prefab of Type {0} is not present.".Inject(typeof(GuiTrackingLabel).Name));
             return null;

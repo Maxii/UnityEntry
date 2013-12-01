@@ -79,6 +79,9 @@ public class CtxPickHandler : MonoBehaviour
 				}
 				
 				tracking = Pick(Input.mousePosition);
+        //if(tracking != null) {
+          //Debug.Log("Picked: " + tracking.gameObject.name);
+       // }
 			}
 		}
 		else
@@ -92,6 +95,7 @@ public class CtxPickHandler : MonoBehaviour
 					CtxObject picked = Pick(Input.mousePosition);
 					if (tracking == picked)
 					{
+            //Debug.Log("ShowMenu called.");
 						tracking.ShowMenu();
 						lastTracked = tracking;
 					}
@@ -110,7 +114,7 @@ public class CtxPickHandler : MonoBehaviour
 	{
 		Camera cam = camera;
 		if (cam == null)
-			cam = Camera.mainCamera;
+			cam = Camera.main;
 		
 		Ray ray = cam.ScreenPointToRay(mousePos);
 

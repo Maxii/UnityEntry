@@ -18,6 +18,8 @@ using UnityEngine;
 
 using AnimationOrTween;
 using CodeEnv.Master.Common;
+using System.Collections.Generic;
+using CodeEnv.Master.GameContent;
 
 /// <summary>
 /// My mod to limit OnClick to the left mouse button.
@@ -73,29 +75,52 @@ public class MyNguiButtonPlayAnimation : MonoBehaviour {
     public DisableCondition disableWhenFinished = DisableCondition.DoNotDisable;
 
     /// <summary>
-    /// Event receiver to trigger the callback on when the animation finishes.
+    /// Event delegates called when the animation finishes.
     /// </summary>
 
-    public GameObject eventReceiver;
+    public List<EventDelegate> onFinished = new List<EventDelegate>();
 
-    /// <summary>
-    /// Function to call on the event receiver when the animation finishes.
-    /// </summary>
-
-    public string callWhenFinished;
-
-    /// <summary>
-    /// Delegate to call. Faster than using 'eventReceiver', and allows for multiple receivers.
-    /// </summary>
-
-    public ActiveAnimation.OnFinished onFinished;
+    // Deprecated functionality, kept for backwards compatibility
+    [HideInInspector]
+    [SerializeField]
+    GameObject eventReceiver;
+    [HideInInspector]
+    [SerializeField]
+    string callWhenFinished;
 
     bool mStarted = false;
     bool mHighlighted = false;
+    int mActive = 0;
 
-    void Start() { mStarted = true; }
+    void Awake() {
+        // Remove deprecated functionality if new one is used
+        if (eventReceiver != null && EventDelegate.IsValid(onFinished)) {
+            eventReceiver = null;
+            callWhenFinished = null;
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
+        }
+    }
 
-    void OnEnable() { if (mStarted && mHighlighted) OnHover(UICamera.IsHighlighted(gameObject)); }
+    void Start() {
+        mStarted = true;
+
+        if (target == null) {
+            target = GetComponentInChildren<Animation>();
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
+        }
+    }
+
+    void OnEnable() {
+#if UNITY_EDITOR
+        if (!Application.isPlaying) return;
+#endif
+        if (mStarted && mHighlighted)
+            OnHover(UICamera.IsHighlighted(gameObject));
+    }
 
     void OnHover(bool isOver) {
         if (enabled) {
@@ -152,29 +177,48 @@ public class MyNguiButtonPlayAnimation : MonoBehaviour {
         }
     }
 
-    void Play(bool forward) {
-        if (target == null) target = GetComponentInChildren<Animation>();
+    /// <summary>
+    /// Start playing the animation.
+    /// </summary>
 
+    public void Play(bool forward) {
         if (target != null) {
-            if (clearSelection && UICamera.selectedObject == gameObject) UICamera.selectedObject = null;
+            mActive = 0;
+
+            if (clearSelection && UICamera.selectedObject == gameObject)
+                UICamera.selectedObject = null;
 
             int pd = -(int)playDirection;
             Direction dir = forward ? playDirection : ((Direction)pd);
             ActiveAnimation anim = ActiveAnimation.Play(target, clipName, dir, ifDisabledOnPlay, disableWhenFinished);
-            if (anim == null) return;
-            if (resetOnPlay) anim.Reset();
 
-            // Set the delegate
-            anim.onFinished = onFinished;
+            if (anim != null) {
+                if (resetOnPlay) anim.Reset();
 
-            // Copy the event receiver
-            if (eventReceiver != null && !string.IsNullOrEmpty(callWhenFinished)) {
-                anim.eventReceiver = eventReceiver;
-                anim.callWhenFinished = callWhenFinished;
+                for (int i = 0; i < onFinished.Count; ++i) {
+                    ++mActive;
+                    EventDelegate.Add(anim.onFinished, OnFinished, true);
+                }
             }
-            else anim.eventReceiver = null;
         }
     }
+
+    /// <summary>
+    /// Callback triggered when each tween executed by this script finishes.
+    /// </summary>
+
+    void OnFinished() {
+        if (--mActive == 0) {
+            EventDelegate.Execute(onFinished);
+
+            // Legacy functionality
+            if (eventReceiver != null && !string.IsNullOrEmpty(callWhenFinished))
+                eventReceiver.SendMessage(callWhenFinished, SendMessageOptions.DontRequireReceiver);
+
+            eventReceiver = null;
+        }
+    }
+
 
 
     public override string ToString() {

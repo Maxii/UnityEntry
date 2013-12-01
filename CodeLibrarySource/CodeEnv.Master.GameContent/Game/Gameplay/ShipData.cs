@@ -28,11 +28,16 @@ namespace CodeEnv.Master.GameContent {
     public class ShipData : Data, IDisposable {
 
         /// <summary>
+        /// The local position of this ship within the fleet formation.
+        /// </summary>
+        public Vector3 FormationPosition { get; set; }
+
+        /// <summary>
         /// Readonly. Gets the current speed of the ship in Units per
         /// day, normalized for game speed.
         /// </summary>
         public float CurrentSpeed {
-            get { return (_gameMgr.IsPaused) ? _currentSpeedOnPause : _rigidbody.velocity.magnitude / _gameSpeedMultiplier; }
+            get { return (_gameStatus.IsPaused) ? _currentSpeedOnPause : _rigidbody.velocity.magnitude / _gameSpeedMultiplier; }
         }
 
         private float _requestedSpeed;
@@ -50,17 +55,17 @@ namespace CodeEnv.Master.GameContent {
         }
 
         /// <summary>
-        /// Readonly. The mass of the ship.
+        /// The mass of the ship.
         /// </summary>
-        public float Mass {
-            get { return _rigidbody.mass; }
-        }
+        public float Mass { get; set; }
 
+        private float _drag;
         /// <summary>
-        /// Readonly. The drag on the ship.
+        /// The drag on the ship.
         /// </summary>
         public float Drag {
-            get { return _rigidbody.drag; }
+            get { return _drag; }
+            set { SetProperty<float>(ref _drag, value, "Drag", OnDragChanged); }
         }
 
         private float _maxThrust;
@@ -72,10 +77,6 @@ namespace CodeEnv.Master.GameContent {
             set {
                 SetProperty<float>(ref _maxThrust, value, "MaxThrust", OnMaxThrustChanged);
             }
-        }
-
-        private void OnMaxThrustChanged() {
-            _maxSpeed = MaxThrust / (Mass * Drag);
         }
 
         private Vector3 _requestedHeading;
@@ -95,7 +96,7 @@ namespace CodeEnv.Master.GameContent {
         /// </summary>
         public Vector3 CurrentHeading {
             get {
-                return _transform.forward;
+                return Transform.forward;
             }
         }
 
@@ -113,7 +114,7 @@ namespace CodeEnv.Master.GameContent {
 
         private float _maxTurnRate;
         /// <summary>
-        /// Gets or sets the maximum turn rate of the ship in radians per day.
+        /// Gets or sets the maximum turn rate of the ship in degrees per day.
         /// </summary>
         public float MaxTurnRate {
             get { return _maxTurnRate; }
@@ -127,22 +128,6 @@ namespace CodeEnv.Master.GameContent {
             get { return _owner; }
             set {
                 SetProperty<IPlayer>(ref _owner, value, "Owner");
-            }
-        }
-
-        private float _health;
-        public float Health {
-            get { return _health; }
-            set {
-                SetProperty<float>(ref _health, value, "Health");
-            }
-        }
-
-        private float _maxHitPoints;
-        public float MaxHitPoints {
-            get { return _maxHitPoints; }
-            set {
-                SetProperty<float>(ref _maxHitPoints, value, "MaxHitPoints");
             }
         }
 
@@ -165,26 +150,54 @@ namespace CodeEnv.Master.GameContent {
         private float _currentSpeedOnPause;
         private Rigidbody _rigidbody;
         private IList<IDisposable> _subscribers;
-        private GameManager _gameMgr;
+        private GameStatus _gameStatus;
         private GameTime _gameTime;
         private float _gameSpeedMultiplier;
 
-        public ShipData(Transform shipTransform, string shipName)
-            : base(shipTransform, shipName) {
-            _rigidbody = shipTransform.rigidbody;
-            _gameMgr = GameManager.Instance;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShipData" /> class.
+        /// </summary>
+        /// <param name="shipName">Name of the ship.</param>
+        /// <param name="maxHitPoints">The maximum hit points.</param>
+        /// <param name="mass">The mass.</param>
+        /// <param name="drag">The drag.</param>
+        public ShipData(string shipName, float maxHitPoints, float mass, float drag)
+            : base(shipName, maxHitPoints) {
+            Mass = mass;
+            _drag = drag;   // avoid OnDragChanged as the rigidbody is not yet known
+            Initialize();
+        }
+
+        private void Initialize() {
+            _gameStatus = GameStatus.Instance;
             _gameTime = GameTime.Instance;
             _gameSpeedMultiplier = _gameTime.GameSpeed.SpeedMultiplier();
             Subscribe();
-            D.Log("ShipData constructor {0} has completed.", shipTransform.name);
+            D.Log("{0} ShipData constructor has completed.", Name);
         }
 
         private void Subscribe() {
             if (_subscribers == null) {
                 _subscribers = new List<IDisposable>();
             }
-            _subscribers.Add(_gameMgr.SubscribeToPropertyChanging<GameManager, bool>(gm => gm.IsPaused, OnIsPausedChanging));
+            _subscribers.Add(_gameStatus.SubscribeToPropertyChanging<GameStatus, bool>(gs => gs.IsPaused, OnIsPausedChanging));
             _subscribers.Add(_gameTime.SubscribeToPropertyChanged<GameTime, GameClockSpeed>(gt => gt.GameSpeed, OnGameSpeedChanged));
+        }
+
+        protected override void OnTransformChanged() {
+            base.OnTransformChanged();
+            _rigidbody = Transform.rigidbody;
+            _rigidbody.mass = Mass;
+            _rigidbody.drag = Drag;
+        }
+
+        private void OnDragChanged() {
+            _rigidbody.drag = Drag;
+            _maxSpeed = MaxThrust / (Mass * Drag);
+        }
+
+        private void OnMaxThrustChanged() {
+            _maxSpeed = MaxThrust / (Mass * Drag);
         }
 
         private void OnIsPausedChanging(bool isPausing) {

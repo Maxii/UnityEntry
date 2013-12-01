@@ -21,14 +21,14 @@ using UnityEngine;
 /// Class that catches all Ngui events independant of whether they are consumed
 /// by other Gui and Game elements.
 /// </summary>
-public class NguiGenericEventHandler : AMonoBehaviourBaseSingleton<NguiGenericEventHandler> {
+public class NguiGenericEventHandler : AMonoBaseSingleton<NguiGenericEventHandler> {
 
     // Note: Bug - UICamera.isDragging returns false on OnPress(false) when the drag started and ended over the same object.
 
     public bool LogEvents = false;
 
     private GameInput _gameInput;
-    private PlayerViews _playerViews;
+    //private PlayerViews _playerViews;
 
     protected override void Awake() {
         base.Awake();
@@ -38,7 +38,7 @@ public class NguiGenericEventHandler : AMonoBehaviourBaseSingleton<NguiGenericEv
             return;
         }
         _gameInput = GameInput.Instance;
-        _playerViews = PlayerViews.Instance;
+        //_playerViews = PlayerViews.Instance;
         AssignEventHandler();
     }
 
@@ -77,6 +77,10 @@ public class NguiGenericEventHandler : AMonoBehaviourBaseSingleton<NguiGenericEv
             // Deletes any GameInput drag values accumulated from drags that haven't been used by the camera (wrong button, etc.)
             _gameInput.NotifyDragEnded();
         }
+        if (UICamera.hoveredObject == gameObject) {
+            _gameInput.RecordUnconsumedPress(isDown);
+        }
+
     }
 
     void OnSelect(bool selected) {
@@ -91,8 +95,8 @@ public class NguiGenericEventHandler : AMonoBehaviourBaseSingleton<NguiGenericEv
             return;
         }
         WriteMessage();
-        if (UICamera.hoveredObject == this) {
-            _gameInput.OnClickOnNothing();
+        if (UICamera.hoveredObject == gameObject) {
+            _gameInput.RecordUnconsumedClick();
         }
     }
 

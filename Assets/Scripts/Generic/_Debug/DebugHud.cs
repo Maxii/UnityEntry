@@ -35,25 +35,27 @@ public class DebugHud : AHud<DebugHud>, IDebugHud, IDisposable {
         if (_subscribers == null) {
             _subscribers = new List<IDisposable>();
         }
-        _subscribers.Add(GameManager.Instance.SubscribeToPropertyChanged<GameManager, bool>(gm => gm.IsGameRunning, OnIsGameRunningChanged));
-
+        _subscribers.Add(GameManager.Instance.SubscribeToPropertyChanged<GameManager, GameState>(gm => gm.CurrentState, OnGameStateChanged));
         _subscribers.Add(GameManager.Instance.SubscribeToPropertyChanged<GameManager, PauseState>(gm => gm.PauseState, OnPauseStateChanged));
         _subscribers.Add(PlayerPrefsManager.Instance.SubscribeToPropertyChanged<PlayerPrefsManager, int>(ppm => ppm.QualitySetting, OnQualitySettingChanged));
         if (Application.loadedLevel == (int)SceneLevel.GameScene) {
-            _subscribers.Add(CameraControl.Instance.SubscribeToPropertyChanged<CameraControl, CameraControl.CameraState>(cc => cc.State, OnCameraStateChanged));
+            _subscribers.Add(CameraControl.Instance.SubscribeToPropertyChanged<CameraControl, CameraControl.CameraState>(cc => cc.CurrentState, OnCameraStateChanged));
             _subscribers.Add(PlayerViews.Instance.SubscribeToPropertyChanged<PlayerViews, PlayerViewMode>(pv => pv.ViewMode, OnPlayerViewModeChanged));
+            _subscribers.Add(CameraControl.Instance.SubscribeToPropertyChanged<CameraControl, Index3D>(cc => cc.SectorIndex, OnCameraSectorIndexChanged));
         }
     }
 
     #region DebugHud Subscriptions
+
     // pulling value changes rather than having them pushed here avoids null reference issues when changing scenes
-    private void OnIsGameRunningChanged() {
+    private void OnGameStateChanged() {
         // initialization
-        if (GameManager.Instance.IsGameRunning) {
+        if (GameManager.Instance.CurrentState == GameState.Running) {
             OnPauseStateChanged();
             OnPlayerViewModeChanged();
             OnCameraStateChanged();
             OnQualitySettingChanged();
+            OnCameraSectorIndexChanged();
         }
     }
 
@@ -66,12 +68,19 @@ public class DebugHud : AHud<DebugHud>, IDebugHud, IDisposable {
     }
 
     private void OnCameraStateChanged() {
-        Publish(DebugHudLineKeys.CameraMode, CameraControl.Instance.State.GetName());
+        Publish(DebugHudLineKeys.CameraMode, CameraControl.Instance.CurrentState.GetName());
     }
 
     private void OnQualitySettingChanged() {
         string forceFpsToTarget = DebugSettings.Instance.ForceFpsToTarget ? ", FpsForcedToTarget" : string.Empty;
         Publish(DebugHudLineKeys.GraphicsQuality, QualitySettings.names[PlayerPrefsManager.Instance.QualitySetting] + forceFpsToTarget);
+    }
+
+    private void OnCameraSectorIndexChanged() {
+        Index3D index = CameraControl.Instance.SectorIndex;
+        Sector unused;
+        string text = SectorGrid.TryGetSector(index, out unused) ? index.ToString() : "None";
+        Publish(DebugHudLineKeys.SectorIndex, text);
     }
 
     #endregion

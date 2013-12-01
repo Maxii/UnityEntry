@@ -10,7 +10,7 @@
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
 
-#define DEBUG_LOG
+//#define DEBUG_LOG
 #define DEBUG_WARN
 #define DEBUG_ERROR
 
@@ -91,7 +91,7 @@ namespace CodeEnv.Master.Common {
         /// <param name="sourceSequence">The Sequence of Type T calling the extension.</param>
         /// <param name="actionToExecute">The work to perform on the sequence, usually expressed in lambda form.</param>
         public static void ForAll<T>(this IEnumerable<T> sourceSequence, Action<T> actionToExecute) {
-            foreach (T item in sourceSequence) {
+            foreach (T item in sourceSequence.ToList<T>()) {   // ToList avoids exceptions when the sequence is modified by the action
                 actionToExecute(item);
             }
         }
@@ -192,6 +192,37 @@ namespace CodeEnv.Master.Common {
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Shuffles the specified source.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">The source.</param>
+        /// <returns></returns>
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) {
+            return RandomExtended<T>.Shuffle(source.ToArray());
+        }
+
+        /// <summary>
+        /// Returns true if targetValue is within a reasonable tolerance of the value of source.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static bool ApproxEquals(this float source, float value) {
+            return Mathfx.Approx(source, value, .001F);
+        }
+
+        /// <summary>
+        /// Populates the source array with the provided value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array">The array.</param>
+        /// <param name="value">The value.</param>
+        public static void Populate<T>(this T[] array, T value) {
+            for (int i = 0; i < array.Length; i++) {
+                array[i] = value;
+            }
+        }
 
         #region Generic INotifyPropertyChanged, INotifyPropertyChanging Extensions
 
@@ -266,8 +297,12 @@ namespace CodeEnv.Master.Common {
                 throw new ArgumentException("Must be a member accessor", "propertySelector");
             }
             var propertyInfo = memberExpr.Member as PropertyInfo;
-            if (propertyInfo == null || propertyInfo.DeclaringType != typeof(TSource)) {
-                throw new ArgumentException("Must yield a single property on the given object", "propertySelector");
+            if (propertyInfo == null) {
+                throw new ArgumentException("No property named {0} of type {1} present on Type {2}.".Inject(memberExpr.Member.Name, typeof(TProp), typeof(TSource)));
+            }
+            if (propertyInfo.DeclaringType != typeof(TSource) && !typeof(TSource).IsSubclassOf(propertyInfo.DeclaringType)) {
+                // my modification that allows a base class to hold the Property rather than just the derived class
+                D.Error("TSource Type [{0}] not equal to or derived from  Property DeclaringType {1}.", typeof(TSource).Name, propertyInfo.DeclaringType.Name);
             }
             return propertyInfo.Name;
         }

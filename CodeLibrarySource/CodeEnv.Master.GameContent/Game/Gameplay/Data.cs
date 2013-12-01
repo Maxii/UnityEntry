@@ -49,12 +49,47 @@ namespace CodeEnv.Master.GameContent {
         /// </summary>
         public Vector3 Position {
             get {
-                return _transform.position;
+                return Transform.position;
+            }
+        }
+
+        private float _maxHitPoints;
+        public float MaxHitPoints {
+            get { return _maxHitPoints; }
+            set {
+                value = Mathf.Clamp(value, Constants.ZeroF, Mathf.Infinity);
+                SetProperty<float>(ref _maxHitPoints, value, "MaxHitPoints", OnMaxHitPointsChanged, OnMaxHitPointsChanging);
+            }
+        }
+
+        private float _currentHitPoints;
+        /// <summary>
+        /// Gets or sets the current hit points of this item. 
+        /// </summary>
+        public float CurrentHitPoints {
+            get { return _currentHitPoints; }
+            set {
+                value = Mathf.Clamp(value, Constants.ZeroF, MaxHitPoints);
+                SetProperty<float>(ref _currentHitPoints, value, "CurrentHitPoints", OnCurrentHitPointsChanged);
+            }
+        }
+
+        private float _health;
+        /// <summary>
+        /// Readonly. Indicates the health of the item, a value between 0 and 1.
+        /// </summary>
+        public float Health {
+            get {
+                //D.Log("Health {0}, CurrentHitPoints {1}, MaxHitPoints {2}.", _health, _currentHitPoints, _maxHitPoints);
+                return _health;
+            }
+            private set {
+                value = Mathf.Clamp01(value);
+                SetProperty<float>(ref _health, value, "Health");
             }
         }
 
         private GameDate _lastHumanPlayerIntelDate;
-
         /// <summary>
         /// Gets or sets the date the human player last had 
         /// intel on this location. Used only when IntelState is
@@ -69,17 +104,49 @@ namespace CodeEnv.Master.GameContent {
             }
         }
 
-        protected Transform _transform;
+        private Transform _transform;
+        public Transform Transform {
+            protected get { return _transform; }
+            set { SetProperty<Transform>(ref _transform, value, "Transform", OnTransformChanged); }
+        }
 
-        public Data(Transform t, string name, string optionalParentName = "") {
-            _transform = t;
-            Name = name;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Data" /> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="maxHitPoints">The maximum hit points.</param>
+        /// <param name="optionalParentName">Name of the optional parent.</param>
+        public Data(string name, float maxHitPoints, string optionalParentName = "") {
+            _name = name;
+            _maxHitPoints = maxHitPoints;
+            CurrentHitPoints = maxHitPoints;
             OptionalParentName = optionalParentName;
         }
 
-        protected virtual void OnNameChanged() {
-            _transform.name = Name;
+        protected virtual void OnTransformChanged() {
+            Transform.name = Name;
         }
+
+        protected virtual void OnNameChanged() {
+            Transform.name = Name;
+        }
+
+        private void OnMaxHitPointsChanging(float newMaxHitPoints) {
+            if (newMaxHitPoints < MaxHitPoints) {
+                // reduction in max hit points so reduce current hit points to match
+                CurrentHitPoints = Mathf.Clamp(CurrentHitPoints, Constants.ZeroF, newMaxHitPoints);
+                // FIXME changing CurrentHitPoints here sends out a temporary erroneous health change event. The accurate health change event follows shortly
+            }
+        }
+
+        private void OnMaxHitPointsChanged() {
+            Health = MaxHitPoints > Constants.ZeroF ? CurrentHitPoints / MaxHitPoints : Constants.ZeroF;
+        }
+
+        private void OnCurrentHitPointsChanged() {
+            Health = MaxHitPoints > Constants.ZeroF ? CurrentHitPoints / MaxHitPoints : Constants.ZeroF;
+        }
+
     }
 }
 

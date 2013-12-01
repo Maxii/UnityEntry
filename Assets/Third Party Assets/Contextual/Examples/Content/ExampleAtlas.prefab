@@ -5,7 +5,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -35,608 +35,470 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0c51bb0b6e93049af5e88f93826e3b, type: 1}
+  m_Script: {fileID: 11500000, guid: 4d0c51bb0b6e93049af5e88f93826e3b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 095a8cdc5b9e1db42a0bc6a46005004d, type: 2}
-  sprites:
-  - name: Checkmark
-    outer:
-      serializedVersion: 2
-      x: 150
-      y: 10
-      width: 17
-      height: 16
-    inner:
-      serializedVersion: 2
-      x: 150
-      y: 10
-      width: 17
-      height: 16
-    paddingLeft: .0588235296
-    paddingRight: .117647059
-    paddingTop: .125
-    paddingBottom: .125
-  - name: MenuSeparatorHorizontal
-    outer:
-      serializedVersion: 2
-      x: 430
-      y: 171
-      width: 2
-      height: 20
-    inner:
-      serializedVersion: 2
-      x: 430
-      y: 173
-      width: 2
-      height: 16
-    paddingLeft: .5
-    paddingRight: .5
-    paddingTop: 0
-    paddingBottom: 0
-  - name: MenuBackground1
-    outer:
-      serializedVersion: 2
-      x: 256
-      y: 130
-      width: 126
-      height: 126
-    inner:
-      serializedVersion: 2
-      x: 260
-      y: 134
-      width: 118
-      height: 118
-    paddingLeft: .00793650839
-    paddingRight: .00793650839
-    paddingTop: .00793650839
-    paddingBottom: .00793650839
-  - name: MenuHighlight
-    outer:
-      serializedVersion: 2
-      x: 321
-      y: 97
-      width: 128
-      height: 32
-    inner:
-      serializedVersion: 2
-      x: 322
-      y: 98
-      width: 126
-      height: 30
-    paddingLeft: 0
-    paddingRight: 0
-    paddingTop: 0
-    paddingBottom: 0
-  - name: MenuSeparatorVertical
-    outer:
-      serializedVersion: 2
-      x: 90
-      y: 4
-      width: 20
-      height: 2
-    inner:
-      serializedVersion: 2
-      x: 92
-      y: 4
-      width: 16
-      height: 2
-    paddingLeft: 0
-    paddingRight: 0
-    paddingTop: .5
-    paddingBottom: .5
-  - name: MedSans
-    outer:
-      serializedVersion: 2
-      x: 0
-      y: 154
-      width: 255
-      height: 102
-    inner:
-      serializedVersion: 2
-      x: 0
-      y: 154
-      width: 255
-      height: 102
-    paddingLeft: 0
-    paddingRight: .00392156886
-    paddingTop: 0
-    paddingBottom: .254901975
-  - name: Icon01
-    outer:
-      serializedVersion: 2
-      x: 481
-      y: 162
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 481
-      y: 162
-      width: 30
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: Icon02
-    outer:
-      serializedVersion: 2
-      x: 481
-      y: 195
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 481
-      y: 195
-      width: 30
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: Icon03
-    outer:
-      serializedVersion: 2
-      x: 287
-      y: 3
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 287
-      y: 3
-      width: 30
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: Icon05
-    outer:
-      serializedVersion: 2
-      x: 256
-      y: 34
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 256
-      y: 34
-      width: 30
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: Icon04
-    outer:
-      serializedVersion: 2
-      x: 481
-      y: 131
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 481
-      y: 131
-      width: 30
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: PieBG
-    outer:
-      serializedVersion: 2
-      x: 383
-      y: 145
-      width: 46
-      height: 46
-    inner:
-      serializedVersion: 2
-      x: 383
-      y: 145
-      width: 46
-      height: 46
-    paddingLeft: .0217391308
-    paddingRight: .0217391308
-    paddingTop: .0217391308
-    paddingBottom: .0217391308
-  - name: Down
-    outer:
-      serializedVersion: 2
-      x: 383
-      y: 131
-      width: 13
-      height: 13
-    inner:
-      serializedVersion: 2
-      x: 383
-      y: 131
-      width: 13
-      height: 13
-    paddingLeft: .0769230798
-    paddingRight: .0769230798
-    paddingTop: .0769230798
-    paddingBottom: .0769230798
-  - name: Button
-    outer:
-      serializedVersion: 2
-      x: 448
-      y: 226
-      width: 62
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 460
-      y: 226
-      width: 38
-      height: 30
-    paddingLeft: .0161290318
-    paddingRight: .0161290318
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: Left
-    outer:
-      serializedVersion: 2
-      x: 239
-      y: 13
-      width: 13
-      height: 13
-    inner:
-      serializedVersion: 2
-      x: 239
-      y: 13
-      width: 13
-      height: 13
-    paddingLeft: .0769230798
-    paddingRight: .0769230798
-    paddingTop: .0769230798
-    paddingBottom: .0769230798
-  - name: Up
-    outer:
-      serializedVersion: 2
-      x: 225
-      y: 13
-      width: 13
-      height: 13
-    inner:
-      serializedVersion: 2
-      x: 225
-      y: 13
-      width: 13
-      height: 13
-    paddingLeft: .0769230798
-    paddingRight: .0769230798
-    paddingTop: .0769230798
-    paddingBottom: .0769230798
-  - name: Right
-    outer:
-      serializedVersion: 2
-      x: 211
-      y: 13
-      width: 13
-      height: 13
-    inner:
-      serializedVersion: 2
-      x: 211
-      y: 13
-      width: 13
-      height: 13
-    paddingLeft: .0769230798
-    paddingRight: .0769230798
-    paddingTop: .0769230798
-    paddingBottom: .0769230798
-  - name: FR
-    outer:
-      serializedVersion: 2
-      x: 129
-      y: 9
-      width: 20
-      height: 17
-    inner:
-      serializedVersion: 2
-      x: 129
-      y: 9
-      width: 20
-      height: 17
-    paddingLeft: .300000012
-    paddingRight: .300000012
-    paddingTop: .411764711
-    paddingBottom: .470588237
-  - name: End
-    outer:
-      serializedVersion: 2
-      x: 181
-      y: 9
-      width: 14
-      height: 17
-    inner:
-      serializedVersion: 2
-      x: 181
-      y: 9
-      width: 14
-      height: 17
-    paddingLeft: .571428597
-    paddingRight: .714285731
-    paddingTop: .411764711
-    paddingBottom: .470588237
+  mSprites:
   - name: Beg
-    outer:
-      serializedVersion: 2
-      x: 196
-      y: 9
-      width: 14
-      height: 17
-    inner:
-      serializedVersion: 2
-      x: 196
-      y: 9
-      width: 14
-      height: 17
-    paddingLeft: .642857134
-    paddingRight: .642857134
-    paddingTop: .411764711
-    paddingBottom: .470588237
-  - name: FF
-    outer:
-      serializedVersion: 2
-      x: 90
-      y: 7
-      width: 20
-      height: 17
-    inner:
-      serializedVersion: 2
-      x: 90
-      y: 7
-      width: 20
-      height: 17
-    paddingLeft: .349999994
-    paddingRight: .25
-    paddingTop: .411764711
-    paddingBottom: .470588237
-  - name: Stop
-    outer:
-      serializedVersion: 2
-      x: 111
-      y: 7
-      width: 17
-      height: 17
-    inner:
-      serializedVersion: 2
-      x: 111
-      y: 7
-      width: 17
-      height: 17
-    paddingLeft: .411764711
-    paddingRight: .470588237
-    paddingTop: .411764711
-    paddingBottom: .470588237
-  - name: MenuBar
-    outer:
-      serializedVersion: 2
-      x: 448
-      y: 160
-      width: 32
-      height: 32
-    inner:
-      serializedVersion: 2
-      x: 450
-      y: 160
-      width: 28
-      height: 32
+    x: 181
+    y: 9
+    width: 14
+    height: 17
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: Button
+    x: 448
+    y: 226
+    width: 62
+    height: 30
+    borderLeft: 12
+    borderRight: 12
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: ButtonHalfLeft
+    x: 287
+    y: 34
+    width: 30
+    height: 30
+    borderLeft: 9
+    borderRight: 1
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: ButtonHalfRight
+    x: 287
+    y: 3
+    width: 30
+    height: 30
+    borderLeft: 1
+    borderRight: 9
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Checkmark
+    x: 150
+    y: 10
+    width: 17
+    height: 16
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 2
+    paddingTop: 2
+    paddingBottom: 2
+  - name: CircleShadow
+    x: 383
+    y: 192
+    width: 64
+    height: 64
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
   - name: Disk
-    outer:
-      serializedVersion: 2
-      x: 0
-      y: 1
-      width: 22
-      height: 23
-    inner:
-      serializedVersion: 2
-      x: 0
-      y: 1
-      width: 22
-      height: 23
-    paddingLeft: .0454545468
-    paddingRight: .0454545468
-    paddingTop: .0434782617
+    x: 24
+    y: 1
+    width: 22
+    height: 23
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
     paddingBottom: 0
-  - name: Help
-    outer:
-      serializedVersion: 2
-      x: 168
-      y: 4
-      width: 12
-      height: 22
-    inner:
-      serializedVersion: 2
-      x: 168
-      y: 4
-      width: 12
-      height: 22
-    paddingLeft: .5
-    paddingRight: .5
-    paddingTop: .0454545468
-    paddingBottom: .0454545468
-  - name: Star
-    outer:
-      serializedVersion: 2
-      x: 23
-      y: 2
-      width: 23
-      height: 22
-    inner:
-      serializedVersion: 2
-      x: 23
-      y: 2
-      width: 23
-      height: 22
-    paddingLeft: .0434782617
-    paddingRight: 0
-    paddingTop: .0454545468
-    paddingBottom: .0454545468
-  - name: MenuBarVertical
-    outer:
-      serializedVersion: 2
-      x: 448
-      y: 193
-      width: 32
-      height: 32
-    inner:
-      serializedVersion: 2
-      x: 448
-      y: 194
-      width: 32
-      height: 30
+  - name: Down
+    x: 383
+    y: 131
+    width: 13
+    height: 13
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: End
+    x: 196
+    y: 9
+    width: 14
+    height: 17
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
-  - name: Zoom
-    outer:
-      serializedVersion: 2
-      x: 47
-      y: 2
-      width: 22
-      height: 22
-    inner:
-      serializedVersion: 2
-      x: 47
-      y: 2
-      width: 22
-      height: 22
-    paddingLeft: .0454545468
-    paddingRight: .0454545468
-    paddingTop: .0454545468
-    paddingBottom: .0454545468
-  - name: Play
-    outer:
-      serializedVersion: 2
-      x: 70
-      y: 5
-      width: 19
-      height: 19
-    inner:
-      serializedVersion: 2
-      x: 70
-      y: 5
-      width: 19
-      height: 19
-    paddingLeft: .368421048
-    paddingRight: .315789461
-    paddingTop: .315789461
-    paddingBottom: .368421048
-  - name: ButtonHalfLeft
-    outer:
-      serializedVersion: 2
-      x: 256
-      y: 3
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 265
-      y: 3
-      width: 20
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: ButtonHalfRight
-    outer:
-      serializedVersion: 2
-      x: 287
-      y: 34
-      width: 30
-      height: 30
-    inner:
-      serializedVersion: 2
-      x: 288
-      y: 34
-      width: 20
-      height: 30
-    paddingLeft: .0333333351
-    paddingRight: .0333333351
-    paddingTop: .0333333351
-    paddingBottom: .0333333351
-  - name: SoftGrid
-    outer:
-      serializedVersion: 2
-      x: 256
-      y: 65
-      width: 64
-      height: 64
-    inner:
-      serializedVersion: 2
-      x: 256
-      y: 65
-      width: 64
-      height: 64
+  - name: FF
+    x: 129
+    y: 9
+    width: 20
+    height: 17
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: FR
+    x: 90
+    y: 7
+    width: 20
+    height: 17
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: Help
+    x: 168
+    y: 4
+    width: 12
+    height: 22
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 6
+    paddingRight: 6
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Icon01
+    x: 481
+    y: 195
+    width: 30
+    height: 30
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Icon02
+    x: 481
+    y: 162
+    width: 30
+    height: 30
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Icon03
+    x: 481
+    y: 131
+    width: 30
+    height: 30
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Icon04
+    x: 256
+    y: 3
+    width: 30
+    height: 30
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Icon05
+    x: 256
+    y: 34
+    width: 30
+    height: 30
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Left
+    x: 239
+    y: 13
+    width: 13
+    height: 13
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: MedSans
+    x: 0
+    y: 154
+    width: 255
+    height: 102
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 1
+    paddingTop: 0
+    paddingBottom: 26
+  - name: MenuBackground1
+    x: 256
+    y: 130
+    width: 126
+    height: 126
+    borderLeft: 4
+    borderRight: 4
+    borderTop: 4
+    borderBottom: 4
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: MenuBar
+    x: 448
+    y: 160
+    width: 32
+    height: 32
+    borderLeft: 2
+    borderRight: 2
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: MenuBarVertical
+    x: 448
+    y: 193
+    width: 32
+    height: 32
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 1
+    borderBottom: 1
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
   - name: MenuBrushedMetal
-    outer:
-      serializedVersion: 2
-      x: 129
-      y: 27
-      width: 126
-      height: 126
-    inner:
-      serializedVersion: 2
-      x: 131
-      y: 29
-      width: 122
-      height: 122
-    paddingLeft: .00793650839
-    paddingRight: .00793650839
-    paddingTop: .00793650839
-    paddingBottom: .00793650839
+    x: 129
+    y: 27
+    width: 126
+    height: 126
+    borderLeft: 2
+    borderRight: 2
+    borderTop: 2
+    borderBottom: 2
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: MenuHighlight
+    x: 321
+    y: 97
+    width: 128
+    height: 32
+    borderLeft: 1
+    borderRight: 1
+    borderTop: 1
+    borderBottom: 1
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: MenuSeparatorHorizontal
+    x: 430
+    y: 171
+    width: 2
+    height: 20
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 2
+    borderBottom: 2
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 0
+    paddingBottom: 0
+  - name: MenuSeparatorVertical
+    x: 90
+    y: 4
+    width: 20
+    height: 2
+    borderLeft: 2
+    borderRight: 2
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 1
+    paddingBottom: 1
   - name: MenuShadow
-    outer:
-      serializedVersion: 2
-      x: 0
-      y: 25
-      width: 128
-      height: 128
-    inner:
-      serializedVersion: 2
-      x: 12
-      y: 37
-      width: 104
-      height: 104
+    x: 0
+    y: 25
+    width: 128
+    height: 128
+    borderLeft: 12
+    borderRight: 12
+    borderTop: 12
+    borderBottom: 12
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
-  - name: CircleShadow
-    outer:
-      serializedVersion: 2
-      x: 383
-      y: 192
-      width: 64
-      height: 64
-    inner:
-      serializedVersion: 2
-      x: 383
-      y: 192
-      width: 64
-      height: 64
+  - name: PieBG
+    x: 383
+    y: 145
+    width: 46
+    height: 46
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Play
+    x: 70
+    y: 5
+    width: 19
+    height: 19
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
     paddingLeft: 0
     paddingRight: 0
     paddingTop: 0
     paddingBottom: 0
-  mCoordinates: 0
+  - name: Right
+    x: 211
+    y: 13
+    width: 13
+    height: 13
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: SoftGrid
+    x: 256
+    y: 65
+    width: 64
+    height: 64
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: Star
+    x: 0
+    y: 2
+    width: 23
+    height: 22
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 0
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Stop
+    x: 111
+    y: 7
+    width: 17
+    height: 17
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 0
+    paddingRight: 0
+    paddingTop: 0
+    paddingBottom: 0
+  - name: Up
+    x: 225
+    y: 13
+    width: 13
+    height: 13
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
+  - name: Zoom
+    x: 47
+    y: 2
+    width: 22
+    height: 22
+    borderLeft: 0
+    borderRight: 0
+    borderTop: 0
+    borderBottom: 0
+    paddingLeft: 1
+    paddingRight: 1
+    paddingTop: 1
+    paddingBottom: 1
   mPixelSize: 1
   mReplacement: {fileID: 0}
+  mCoordinates: 0
+  sprites: []
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

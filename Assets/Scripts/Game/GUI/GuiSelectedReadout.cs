@@ -43,18 +43,18 @@ public class GuiSelectedReadout : AGuiLabelReadoutBase, IDisposable {
         if (_subscribers == null) {
             _subscribers = new List<IDisposable>();
         }
-        _subscribers.Add(_selectionMgr.SubscribeToPropertyChanged<SelectionManager, ISelectable>(sm => sm.CurrentSelection, OnSelectionChanged));
+        _subscribers.Add(_selectionMgr.SubscribeToPropertyChanged<SelectionManager, ISelectable>(sm => sm.CurrentSelection, OnCurrentSelectionChanged));
     }
 
-    private void OnSelectionChanged() {
+    private void OnCurrentSelectionChanged() {
         string selectionName = string.Empty;
         ISelectable newSelection = _selectionMgr.CurrentSelection;
         if (newSelection != null) {
-            selectionName = newSelection.GetData().Name;
+            //selectionName = (newSelection as IHasData).GetData().Name;  // IMPROVE ISelectable perviously inherited from IHasData
+            selectionName = (newSelection as Component).gameObject.GetSafeMonoBehaviourComponent<AItem>().Data.Name;
         }
         RefreshReadout(selectionName);
     }
-
 
     protected override void OnDestroy() {
         base.OnDestroy();

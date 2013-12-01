@@ -26,13 +26,14 @@ using CodeEnv.Master.GameContent;
 public class GuiDateReadout : AGuiLabelReadoutBase, IDisposable {
 
     private IList<IDisposable> _subscribers;
-    private GameManager _gameMgr;
+    private GameStatus _gameStatus;
 
     protected override void Awake() {
         base.Awake();
-        _gameMgr = GameManager.Instance;
+        _gameStatus = GameStatus.Instance;
         Subscribe();
         UpdateRate = FrameUpdateFrequency.Normal;
+        enabled = false;
     }
 
     protected override void InitializeTooltip() {
@@ -43,13 +44,18 @@ public class GuiDateReadout : AGuiLabelReadoutBase, IDisposable {
         if (_subscribers == null) {
             _subscribers = new List<IDisposable>();
         }
-        _subscribers.Add(_gameMgr.SubscribeToPropertyChanging<GameManager, bool>(gm => gm.IsPaused, OnIsPausedChanging));
+        _subscribers.Add(_gameStatus.SubscribeToPropertyChanging<GameStatus, bool>(gs => gs.IsPaused, OnIsPausedChanging));
+        _subscribers.Add(_gameStatus.SubscribeToPropertyChanged<GameStatus, bool>(gs => gs.IsPaused, OnIsPausedChanged));
+        _subscribers.Add(_gameStatus.SubscribeToPropertyChanged<GameStatus, bool>(gs => gs.IsRunning, OnIsRunningChanged));
     }
 
-    void Update() {
-        if (ToUpdate() && !_gameMgr.IsPaused) {
-            RefreshReadout(GameTime.Date.FormattedDate);
-        }
+    protected override void OccasionalUpdate() {
+        base.OccasionalUpdate();
+        RefreshReadout(GameTime.Date.FormattedDate);
+    }
+
+    private void OnIsRunningChanged() {
+        AssessEnabled();
     }
 
     private void OnIsPausedChanging(bool isPausing) {
@@ -57,6 +63,14 @@ public class GuiDateReadout : AGuiLabelReadoutBase, IDisposable {
             // we are about to pause so refresh the date in case the game pauses on load
             RefreshReadout(GameTime.Date.FormattedDate);
         }
+    }
+
+    private void OnIsPausedChanged() {
+        AssessEnabled();
+    }
+
+    private void AssessEnabled() {
+        enabled = _gameStatus.IsRunning && !_gameStatus.IsPaused;
     }
 
     private void Cleanup() {

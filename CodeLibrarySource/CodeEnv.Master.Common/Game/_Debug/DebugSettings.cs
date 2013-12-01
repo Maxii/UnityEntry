@@ -146,16 +146,28 @@ namespace CodeEnv.Master.Common {
             private set { _enableFleetVelocityRays = value; }
         }
 
-        private bool _showSectorGrid;
-        public bool ShowSectorGrid {
+        private bool _stopShipMovement;
+        public bool StopShipMovement {
             get {
                 if (!isPropertyValuesInitialized) {
                     InitializePropertyValues();
                 }
-                return _showSectorGrid;
+                return _stopShipMovement;
             }
-            private set { _showSectorGrid = value; }
+            private set { _stopShipMovement = value; }
         }
+
+        private bool _allowEnemyOrders;
+        public bool AllowEnemyOrders {
+            get {
+                if (!isPropertyValuesInitialized) {
+                    InitializePropertyValues();
+                }
+                return _allowEnemyOrders;
+            }
+            private set { _allowEnemyOrders = value; }
+        }
+
 
 
 

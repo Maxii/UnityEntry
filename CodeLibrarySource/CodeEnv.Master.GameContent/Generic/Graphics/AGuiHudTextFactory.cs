@@ -33,16 +33,23 @@ namespace CodeEnv.Master.GameContent {
         where ClassType : class
         where DataType : Data {
 
-
         private static IDictionary<IntelLevel, IList<GuiHudLineKeys>> _hudLineKeyLookup = new Dictionary<IntelLevel, IList<GuiHudLineKeys>> {
+
+        {IntelLevel.Nil, new List<GuiHudLineKeys> { GuiHudLineKeys.Name,
+                                                                       GuiHudLineKeys.ParentName,
+                                                                       GuiHudLineKeys.Type,
+                                                                       GuiHudLineKeys.IntelState,
+                                                                       GuiHudLineKeys.Distance }},
 
         {IntelLevel.Unknown, new List<GuiHudLineKeys> { GuiHudLineKeys.Name,
                                                                        GuiHudLineKeys.ParentName,
+                                                                       GuiHudLineKeys.Type,
                                                                        GuiHudLineKeys.IntelState,
                                                                        GuiHudLineKeys.Distance }},
 
         {IntelLevel.OutOfDate, new List<GuiHudLineKeys> {   GuiHudLineKeys.Name,
                                                                        GuiHudLineKeys.ParentName,
+                                                                       GuiHudLineKeys.Type,
                                                                        GuiHudLineKeys.IntelState,
                                                                        GuiHudLineKeys.Capacity,
                                                                        GuiHudLineKeys.Resources,
@@ -51,20 +58,20 @@ namespace CodeEnv.Master.GameContent {
 
         {IntelLevel.LongRangeSensors, new List<GuiHudLineKeys> { GuiHudLineKeys.Name,
                                                                         GuiHudLineKeys.ParentName,
+                                                                       GuiHudLineKeys.Type,
                                                                        GuiHudLineKeys.IntelState,
                                                                             GuiHudLineKeys.Capacity,
                                                                           GuiHudLineKeys.Resources,
                                                                        GuiHudLineKeys.Specials,
-                                                                       GuiHudLineKeys.SettlementSize,
                                                                             GuiHudLineKeys.Owner,
                                                                            GuiHudLineKeys.CombatStrength,
                                                                            GuiHudLineKeys.Composition,
                                                                            GuiHudLineKeys.Speed,
-                                                                           GuiHudLineKeys.ShipSize,
                                                                            GuiHudLineKeys.Distance }},
 
          {IntelLevel.ShortRangeSensors, new List<GuiHudLineKeys> { GuiHudLineKeys.Name,
                                                                         GuiHudLineKeys.ParentName,
+                                                                       GuiHudLineKeys.Type,
                                                                        GuiHudLineKeys.IntelState,
                                                                             GuiHudLineKeys.Capacity,
                                                                           GuiHudLineKeys.Resources,
@@ -80,6 +87,7 @@ namespace CodeEnv.Master.GameContent {
 
        {IntelLevel.Complete, new List<GuiHudLineKeys> { GuiHudLineKeys.Name,
                                                                         GuiHudLineKeys.ParentName,
+                                                                       GuiHudLineKeys.Type,
                                                                        GuiHudLineKeys.IntelState,
                                                                             GuiHudLineKeys.Capacity,
                                                                           GuiHudLineKeys.Resources,
@@ -142,7 +150,7 @@ namespace CodeEnv.Master.GameContent {
 
         #region IColoredTextList Strategy Classes
 
-        // Note: ColoredTextListBase, ColoredTextList<T> and ColoredTextList_String all in separate class files under Common.Unity
+        // Note: ColoredTextListBase, ColoredTextList<T> and ColoredTextList_String all in separate class files under Common
 
         public class ColoredTextList_Distance : ColoredTextListBase {
 
@@ -204,6 +212,7 @@ namespace CodeEnv.Master.GameContent {
             private string ConstructIntelText(IntelLevel intelLevel, GameTimePeriod intelAge) {
                 string intelMsg = intelLevel.GetName();
                 switch (intelLevel) {
+                    case IntelLevel.Nil:
                     case IntelLevel.Unknown:
                     case IntelLevel.LongRangeSensors:
                     case IntelLevel.ShortRangeSensors:
@@ -232,10 +241,9 @@ namespace CodeEnv.Master.GameContent {
         public class ColoredTextList_Health : ColoredTextListBase {
 
             public ColoredTextList_Health(float health, float maxHp, string format = Constants.FormatFloat_1DpMax) {
-                float healthRatio = health / maxHp;
-                GameColor healthColor = (healthRatio > GeneralSettings.Instance.InjuredHealthThreshold) ? GameColor.Green :
-                            ((healthRatio > GeneralSettings.Instance.CriticalHealthThreshold) ? GameColor.Yellow : GameColor.Red);
-                string health_formatted = format.Inject(health);
+                GameColor healthColor = (health > GeneralSettings.Instance.InjuredHealthThreshold) ? GameColor.Green :
+                            ((health > GeneralSettings.Instance.CriticalHealthThreshold) ? GameColor.Yellow : GameColor.Red);
+                string health_formatted = format.Inject(health * 100);
                 string maxHp_formatted = format.Inject(maxHp);
                 _list.Add(new ColoredText(health_formatted, healthColor));
                 _list.Add(new ColoredText(maxHp_formatted, GameColor.Green));

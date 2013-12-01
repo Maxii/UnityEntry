@@ -43,9 +43,15 @@
       <PropertyValue>true</PropertyValue>
     </Setting>
     <Setting>
-      <PropertyName>ShowSectorGrid</PropertyName>
+      <PropertyName>StopShipMovement</PropertyName>
       <PropertyValue>false</PropertyValue>
     </Setting>
+    <Setting>
+      <PropertyName>AllowEnemyOrders</PropertyName>
+      <PropertyValue>true</PropertyValue>
+    </Setting>
+
+
 
   </Boolean>
   

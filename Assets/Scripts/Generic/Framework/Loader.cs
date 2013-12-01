@@ -24,7 +24,7 @@ using Vectrosity;
 /// <summary>
 /// Manages the initial sequencing of scene startups.
 /// </summary>
-public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisposable {
+public class Loader : AMonoBaseSingleton<Loader>, IDisposable {
 
     //public UsefulPrefabs usefulPrefabsPrefab;
 
@@ -47,7 +47,6 @@ public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisp
         if (TryDestroyExtraCopies()) {
             return;
         }
-        UpdateRate = FrameUpdateFrequency.Continuous;
         _eventMgr = GameEventManager.Instance;
         _gameMgr = GameManager.Instance;
         _playerPrefsMgr = PlayerPrefsManager.Instance;
@@ -55,6 +54,7 @@ public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisp
         InitializeVectrosity();
         _unreadyElements = new List<MonoBehaviour>();
         Subscribe();
+        UpdateRate = FrameUpdateFrequency.Infrequent;
     }
 
     /// <summary>
@@ -83,6 +83,7 @@ public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisp
         _subscribers.Add(_playerPrefsMgr.SubscribeToPropertyChanged<PlayerPrefsManager, int>(ppm => ppm.QualitySetting, OnQualitySettingChanged));
         _eventMgr.AddListener<ElementReadyEvent>(this, OnElementReady);
     }
+
 
     private void InitializeQualitySettings() {
         // the initial QualitySettingChanged event occurs earlier than we can subscribe so do it manually
@@ -115,13 +116,7 @@ public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisp
         MonoBehaviour source = e.Source as MonoBehaviour;
         if (!e.IsReady) {
             D.Assert(!_unreadyElements.Contains(source), "UnreadyElements already has {0} registered!".Inject(source.name));
-            bool isFirstUnReady = _unreadyElements.Count == 0f;
-            // register as unready
             _unreadyElements.Add(source);
-            if (isFirstUnReady) {
-                // first unready element to register so start checking for conditions needed to run
-                StartCoroutine(WaitUntilReadyThenRun);
-            }
             D.Log("{0} has registered with Loader as unready.".Inject(source.name));
         }
         else {
@@ -129,6 +124,21 @@ public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisp
             _unreadyElements.Remove(source);
             D.Log("{0} is now ready to Run.".Inject(source.name));
         }
+    }
+
+    private void AssessReadinessToProgressGameState() {
+        if (_gameMgr.CurrentState == GameState.Waiting && _unreadyElements.Count == 0) {
+            enabled = false;    // stops update
+            _gameMgr.OnLoaderReady();
+        }
+    }
+
+    // Important to use Update to assess readiness to progress the game state beyond waiting as
+    // it makes sure all Awake and Start methods have been called before the first assessment. Most
+    // element readiness reporting needs both of these methods to register and then clear their readiness
+    protected override void OccasionalUpdate() {
+        base.OccasionalUpdate();
+        AssessReadinessToProgressGameState();
     }
 
     //private void CheckForPrefabs() {
@@ -142,12 +152,7 @@ public class Loader : AMonoBehaviourBaseSingletonInstanceIdentity<Loader>, IDisp
     //    usefulPrefabs.transform.parent = Instance.transform.parent;
     //}
 
-    private IEnumerator WaitUntilReadyThenRun() {
-        while (_gameMgr.GameState != GameState.Waiting || _unreadyElements.Count > 0) {
-            yield return null;
-        }
-        _gameMgr.BeginCountdownToRunning();
-    }
+
 
     protected override void OnDestroy() {
         base.OnDestroy();
