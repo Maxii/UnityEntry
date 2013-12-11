@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_0;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;DEBUG_ERROR;DEBUG_WARN;DEBUG_LOG</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_1;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;DEBUG_ERROR;DEBUG_WARN;DEBUG_LOG</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -39,10 +39,10 @@
 	<Reference Include="System.Core" />
 	<Reference Include="System.Xml.Linq" />
 	<Reference Include="UnityEngine">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -198,24 +198,6 @@
      <Compile Include="Assets\Third Party Assets\AstarPathfindingProject\Utilities\SizeProfiler.cs" />
      <Compile Include="Assets\Third Party Assets\AstarPathfindingProject\Utilities\UnityReferenceHelper.cs" />
      <Compile Include="Assets\Third Party Assets\AstarPathfindingProject\changelog.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\AbductorHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\ButtonHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\DelegateSphereHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\DynamicSphereHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\EnforcerHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\ForwardHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\InitializedSphereHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\LocalizeDemo.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\MenuHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\SaucerBaseHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\SaucerHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\SaucerScene.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\ScoutHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\ScriptedMenuHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\SphereHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\SpritePositioner.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\SpyHandler.cs" />
-     <Compile Include="Assets\Third Party Assets\Contextual\Examples\Scripts\TransportHandler.cs" />
      <Compile Include="Assets\Third Party Assets\Contextual\Scripts\CtxHelper.cs" />
      <Compile Include="Assets\Third Party Assets\Contextual\Scripts\CtxMenu.cs" />
      <Compile Include="Assets\Third Party Assets\Contextual\Scripts\CtxMenuButton.cs" />
@@ -225,66 +207,36 @@
      <Compile Include="Assets\Third Party Assets\Grid Framework\Debug\GridDebugger.cs" />
      <Compile Include="Assets\Third Party Assets\Grid Framework\Debug\HexConversionDebugger.cs" />
      <Compile Include="Assets\Third Party Assets\Grid Framework\Debug\PolarConversionDebugger.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipItems.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\EquipRandomItem.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\UICursor.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\UIEquipmentSlot.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\UIItemSlot.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\UIItemStorage.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\Game\UIStorageSlot.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\System\InvAttachmentPoint.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\System\InvBaseItem.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\System\InvDatabase.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\System\InvEquipment.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\System\InvGameItem.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\InventorySystem\System\InvStat.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\ChatInput.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\DownloadTexture.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\DragDropContainer.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\DragDropItem.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\DragDropRoot.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\DragDropSurface.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\LagPosition.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\LagRotation.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\LoadLevelOnClick.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\LookAtTarget.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\PanWithMouse.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\PlayIdleAnimations.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\SetColorOnSelection.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\ShaderQuality.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\Spin.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\SpinWithMouse.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\TypewriterEffect.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\UISliderColors.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\UpdateManager.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\WindowAutoYaw.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Examples\Scripts\Other\WindowDragTilt.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\LanguageSelection.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButton.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonActivate.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonColor.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonKeyBinding.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonKeys.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonMessage.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonOffset.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonRotation.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIButtonScale.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UICenterOnChild.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UICenterOnClick.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragCamera.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragDropContainer.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragDropItem.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragDropRoot.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragObject.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragPanelContents.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDragScrollView.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDraggableCamera.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIDraggablePanel.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIForwardEvents.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIGrid.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIImageButton.cs" />
-     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIInputValidator.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIKeyBinding.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIPlayAnimation.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIPlaySound.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIPlayTween.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIPopupList.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIProgressBar.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UISavedOption.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIScrollBar.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UIScrollView.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UISlider.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UISoundVolume.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Interaction\UITable.cs" />
@@ -303,6 +255,7 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\Localization.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\NGUIDebug.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\NGUIMath.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\NGUIText.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\NGUITools.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\RealTime.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Internal\SpringPanel.cs" />
@@ -325,6 +278,7 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\TweenVolume.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\TweenWidth.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\Tweening\UITweener.cs" />
+     <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UI2DSprite.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UIAnchor.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UIAtlas.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UICamera.cs" />
@@ -343,77 +297,55 @@
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UITexture.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\Third Party Assets\NGUI\Scripts\UI\UIViewport.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\Scripts\SU_SpaceParticles.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_CameraFollow.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserImpact.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_LaserShot.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Spaceship.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_BackgroundShipCamera\_Demo\Scrips\SU_Thruster.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_IntroBackground\Scripts\SU_SpaceSceneCamera.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Scripts\SU_Asteroid.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Scripts\SU_AsteroidField.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Scripts\SU_SpaceSceneSwitcher.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\_Demo\Scrips\SU_SpaceSceneSwitcherDemoGUI.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Scripts\SU_Moon.cs" />
-     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Scripts\SU_Planet.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_Background\Scripts\SU_SpaceSceneCamera.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\Spaceship\Scrips\SU_Explosion.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\Spaceship\Scrips\SU_LaserImpact.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\Spaceship\Scrips\SU_LaserShot.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\Spaceship\Scrips\SU_Spaceship.cs" />
+     <Compile Include="Assets\Third Party Assets\SpaceUnity\Spaceship\Scrips\SU_Thruster.cs" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Editor\EditorAssets\Materials\Navmesh2.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo14.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\GUI - Text Shader (SoftClip).shader" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\English.txt" />
+     <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Text (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Masked Colored.shader" />
-     <None Include="Assets\Third Party Assets\Contextual\ReadMe.txt" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Shaders\PlanetRings.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Wooden\Arimo18.txt" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Plugins\DotNetZip\License.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (AlphaClip) .shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Header.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (AlphaClip).shader" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\Italian.txt" />
-     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (AlphaClip).shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\GUI - Text Shader (AlphaClip).shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Fantasy\Fantasy Font - Normal.txt" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\Spanish.txt" />
+     <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Text (AlphaClip).shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Editor\EditorAssets\Materials\Navmesh.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Plugins\dependencies.txt" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\Grid Framework\Changelog.txt" />
      <None Include="Assets\Fonts\MedSans.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed) (SoftClip).shader" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Materials\SaucerGlow.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored (SoftClip).shader" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_MorePlanets\Shaders\PlanetSelfIllum.shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Readme_upgrading.txt" />
      <None Include="Assets\Plugins\whydoidoit.com\license.txt" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\French.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Dynamic Font.shader" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Shaders\PlanetStandard.shader" />
-     <None Include="Assets\Third Party Assets\NGUI\ReadMe - 3.0.2.txt" />
+     <None Include="Assets\Third Party Assets\NGUI\ReadMe - 3.0.6 f7.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
      <None Include="Assets\Third Party Assets\SpaceUnity\SpaceUnity_PlanetMoon\Shaders\PlanetAtmosphere.shader" />
      <None Include="Assets\_Stevie3D\WorkGrid\Materials\Alpha-DoubleSided_Diffuse.shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Readme.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Other\English.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Other\French.txt" />
+     <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Text.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (Packed).shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Plugins\JsonFx\License.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Additive Colored.shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\Plugins\JsonFx\Readme.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\Refractive\Refractive Font - Header.txt" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Shaders\Refractive.shader" />
-     <None Include="Assets\Third Party Assets\Contextual\Examples\Content\Text\German.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Depth.shader" />
      <None Include="Assets\Third Party Assets\NGUI\Examples\Atlases\SciFi\SciFi Font - Normal.txt" />
      <None Include="Assets\Third Party Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored (SoftClip).shader" />
-     <None Include="Assets\Third Party Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
      <None Include="Assets\Third Party Assets\AstarPathfindingProject\link.xml" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
@@ -431,7 +363,7 @@
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.ScriptAssembly.dll</HintPath>
  </Reference>
  <Reference Include="CodeEnv.Master.Common.LocalResources.resources">
- <HintPath>Assets\CodeLibrary\fr-FR\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
+ <HintPath>Assets\CodeLibrary\en-CA\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
  </Reference>
  <Reference Include="Vectrosity">
  <HintPath>Assets\CodeLibrary_ThirdParty\Vectrosity.dll</HintPath>
