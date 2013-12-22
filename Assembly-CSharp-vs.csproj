@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_1;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;DEBUG_ERROR;DEBUG_WARN;DEBUG_LOG</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_WIN;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_1;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_WIN;DEBUG_ERROR;DEBUG_WARN</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -48,13 +48,15 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Game\Framework\AStarPathManager.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\FleetItem.cs" />
-     <Compile Include="Assets\Scripts\Game\Framework\Item.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\FleetNavigator.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\PlanetoidItem.cs" />
-     <Compile Include="Assets\Scripts\Game\Framework\Sector.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\SectorItem.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\SettlementItem.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\ShipItem.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\StarBaseItem.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\StarItem.cs" />
      <Compile Include="Assets\Scripts\Game\Framework\SystemItem.cs" />
+     <Compile Include="Assets\Scripts\Game\Framework\UniverseCenterItem.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiCheckbox.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiDateReadout.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiExitButton.cs" />
@@ -76,29 +78,33 @@
      <Compile Include="Assets\Scripts\Game\GUI\GuiSavedGamesPopupList.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiSelectedReadout.cs" />
      <Compile Include="Assets\Scripts\Game\GUI\GuiUniverseSizePopupList.cs" />
-     <Compile Include="Assets\Scripts\Game\Gameplay\FleetNavigator.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\FleetPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\FleetView.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\PlanetoidPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\PlanetoidView.cs" />
-     <Compile Include="Assets\Scripts\Game\Graphics\SectorViewer.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\SectorExaminer.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\SectorPresenter.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\SectorView.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\SettlementPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\SettlementView.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\ShipPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\ShipView.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarAnimator.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\StarBasePresenter.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\StarBaseView.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarGlowAnimator.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\StarView.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\SystemPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\SystemView.cs" />
+     <Compile Include="Assets\Scripts\Game\Graphics\UniverseCenterPresenter.cs" />
      <Compile Include="Assets\Scripts\Game\Graphics\UniverseCenterView.cs" />
      <Compile Include="Assets\Scripts\Game\_Debug\DynamicObjects.cs" />
      <Compile Include="Assets\Scripts\Game\_Debug\DynamicTrackingLabels.cs" />
      <Compile Include="Assets\Scripts\Game\_Debug\Sectors.cs" />
      <Compile Include="Assets\Scripts\Game\_Debug\Universe.cs" />
-     <Compile Include="Assets\Scripts\Generic\Framework\AItem.cs" />
-     <Compile Include="Assets\Scripts\Generic\Framework\AItemStateMachine.cs" />
+     <Compile Include="Assets\Scripts\Generic\Framework\AMortalItem.cs" />
+     <Compile Include="Assets\Scripts\Generic\Framework\AMortalItemStateMachine.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\FleetCreator.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\GameManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\Loader.cs" />
@@ -107,6 +113,9 @@
      <Compile Include="Assets\Scripts\Generic\Framework\SelectionManager.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\SystemCreator.cs" />
      <Compile Include="Assets\Scripts\Generic\Framework\UsefulPrefabs.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\AFocusablePresenter.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\AFocusableView.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\AFollowableView.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiButtonBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiEnumPopupListBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiEnumSliderBase.cs" />
@@ -114,6 +123,8 @@
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiMenuAcceptButtonBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AGuiPopupListBase.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\AHud.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\AMortalFocusablePresenter.cs" />
+     <Compile Include="Assets\Scripts\Generic\Graphics\APresenter.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\Billboard.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\CameraLOSChangedRelay.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiCursorHud.cs" />
@@ -123,13 +134,10 @@
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiTrackingLabel.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiTrackingLabelFactory.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\GuiVisibilityButton.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\MovingView.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\Orbit.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\OrbitMoveable.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\Presenter.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\ScaleRelativeToCamera.cs" />
      <Compile Include="Assets\Scripts\Generic\Graphics\StarFlare.cs" />
-     <Compile Include="Assets\Scripts\Generic\Graphics\View.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\CameraControl.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\GameInput.cs" />
      <Compile Include="Assets\Scripts\Generic\IO\GameInputHelper.cs" />
@@ -363,7 +371,7 @@
  <HintPath>Assets\CodeLibrary\CodeEnv.Master.ScriptAssembly.dll</HintPath>
  </Reference>
  <Reference Include="CodeEnv.Master.Common.LocalResources.resources">
- <HintPath>Assets\CodeLibrary\en-CA\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
+ <HintPath>Assets\CodeLibrary\fr-FR\CodeEnv.Master.Common.LocalResources.resources.dll</HintPath>
  </Reference>
  <Reference Include="Vectrosity">
  <HintPath>Assets\CodeLibrary_ThirdParty\Vectrosity.dll</HintPath>

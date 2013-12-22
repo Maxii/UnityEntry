@@ -23,11 +23,11 @@ using UnityEngine;
 /// <summary>
 /// An MVPresenter associated with a StarView.
 /// </summary>
-public class StarPresenter : Presenter {
+public class StarPresenter : AFocusablePresenter {
 
-    protected new StarItem Item {
+    public new StarItem Item {
         get { return base.Item as StarItem; }
-        set { base.Item = value; }
+        protected set { base.Item = value; }
     }
 
     private ISystemViewable _systemView;
@@ -37,13 +37,12 @@ public class StarPresenter : Presenter {
         _systemView = _viewGameObject.GetSafeInterfaceInParents<ISystemViewable>();
     }
 
-    protected override void InitilizeItemLinkage() {
-        Item = UnityUtility.ValidateMonoBehaviourPresence<StarItem>(_viewGameObject);
+    protected override AItem InitilizeItemLinkage() {
+        return UnityUtility.ValidateMonoBehaviourPresence<StarItem>(_viewGameObject);
     }
 
-    protected override void InitializeHudPublisher() {
-        var hudPublisher = new GuiHudPublisher<StarData>(Item.Data);
-        View.HudPublisher = hudPublisher;
+    protected override IGuiHudPublisher InitializeHudPublisher() {
+        return new GuiHudPublisher<StarData>(Item.Data);
     }
 
     public void OnHover(bool isOver) {
@@ -52,18 +51,6 @@ public class StarPresenter : Presenter {
 
     public void OnLeftClick() {
         (_systemView as ISelectable).IsSelected = true;
-    }
-
-    protected override void OnItemDeath(ItemDeathEvent e) {
-        if ((e.Source as StarItem) == Item) {
-            CleanupOnDeath();
-        }
-    }
-
-    protected override void CleanupOnDeath() {
-        base.CleanupOnDeath();
-        // TODO initiate death of a star which kills the 
-        // planets, any settlement and the system
     }
 
     public override string ToString() {

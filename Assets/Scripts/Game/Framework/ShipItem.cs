@@ -26,7 +26,7 @@ using UnityEngine;
 /// <summary>
 /// The data-holding class for all ships in the game. Includes a state machine.
 /// </summary>
-public class ShipItem : AItemStateMachine<ShipState>, ITarget {
+public class ShipItem : AMortalItemStateMachine<ShipState>, ITarget {
 
     public bool IsFlagship { get; set; }
 
@@ -132,7 +132,6 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
     #region Idling
 
     void Idling_EnterState() {
-        D.Log("{0} Idling_EnterState", Data.Name);
         //CurrentOrder = null;
         //ChangeSpeed(Constants.ZeroF);
         // TODO register as available
@@ -160,9 +159,9 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
     private bool _isNewOrderWaiting;
 
     void ProcessOrders_Update() {
-        // I got to this state one of two ways:
-        // 1. there has been a new order issued, or
-        // 2. the last new order (_orderBeingExecuted) has been completed
+        // I got to this state only one way - there was a new order issued.
+        // This switch should never use Call(state) as there is no 'state' to
+        // return to in ProcessOrders to resume. It is a transition state.
         _isNewOrderWaiting = _orderBeingExecuted != CurrentOrder;
         if (_isNewOrderWaiting) {
             ShipOrders order = CurrentOrder.Order;
@@ -175,6 +174,7 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
                     CurrentState = ShipState.GoAttack;
                     break;
                 case ShipOrders.StopAttack:
+                    // issued when peace declared while attacking
                     CurrentState = ShipState.Idling;
                     break;
                 case ShipOrders.Disband:
@@ -246,8 +246,7 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
 
     void MovingTo_ExitState() {
         Navigator.Disengage();
-        ChangeSpeed(Constants.ZeroF);
-        // TODO ship retains its current speed and heading
+        // ship retains its current speed and heading
     }
 
     #endregion
@@ -365,7 +364,6 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
     }
 
     #endregion
-
 
     #region TakingDamage
 
@@ -566,7 +564,6 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
     }
 
     void OnHit(float damage) {
-        Call(ShipState.TakingDamage);
         RelayToCurrentState(damage);    // IMPROVE add Action delegate to RelayToCurrentState
     }
 
@@ -579,7 +576,7 @@ public class ShipItem : AItemStateMachine<ShipState>, ITarget {
 
     void OnDestinationReached() {
         D.Log("{0} reached Destination {1}.", Data.Name, Navigator.Target.Name);
-        RelayToCurrentState();  // TODO
+        RelayToCurrentState();
     }
 
     void OnCourseTrackingError() { RelayToCurrentState(); }

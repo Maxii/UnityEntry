@@ -5,10 +5,14 @@
 // Email: jim@strategicforge.com
 // </copyright> 
 // <summary> 
-// File: View.cs
-// An instantiable class managing the UI for its object. 
+// File: AFocusableView.cs
+// Abstract class managing the UI View for a focusable object.
 // </summary> 
 // -------------------------------------------------------------------------------------------------------------------- 
+
+#define DEBUG_LOG
+#define DEBUG_WARN
+#define DEBUG_ERROR
 
 // default namespace
 
@@ -20,19 +24,48 @@ using CodeEnv.Master.GameContent;
 using UnityEngine;
 
 /// <summary>
-///An instantiable class managing the UI for its object. 
+/// Abstract class managing the UI View for a focusable object.
 /// </summary>
-public class View : AView, ICameraFocusable {
+public abstract class AFocusableView : AView, ICameraFocusable {
 
-    protected Presenter Presenter { get; set; }
+    public enum Highlights {
+
+        None = -1,
+        /// <summary>
+        /// The item is the focus.
+        /// </summary>
+        Focused = 0,
+        /// <summary>
+        /// The item is selected..
+        /// </summary>
+        Selected = 1,
+        /// <summary>
+        /// The item is highlighted for other reasons. This is
+        /// typically used on a fleet's ships when the fleet is selected.
+        /// </summary>
+        General = 2,
+        /// <summary>
+        /// The item is both selected and the focus.
+        /// </summary>
+        SelectedAndFocus = 3,
+        /// <summary>
+        /// The item is both the focus and generally highlighted.
+        /// </summary>
+        FocusAndGeneral = 4
+
+    }
+
+    public AFocusablePresenter Presenter { get; protected set; }
 
     public float circleScaleFactor = 3.0F;
     protected bool _isCirclesRadiusDynamic = true;
     private HighlightCircle _circles;
 
+    protected Collider _collider;
+
     protected override void Awake() {
         base.Awake();
-        maxAnimateDistance = Mathf.RoundToInt(AnimationSettings.Instance.MaxCelestialObjectAnimateDistanceFactor * Radius);
+        _collider = UnityUtility.ValidateComponentPresence<Collider>(gameObject);
     }
 
     protected override void Start() {
@@ -40,13 +73,18 @@ public class View : AView, ICameraFocusable {
         InitializePresenter();  // moved from Awake as some Presenters need immediate access to this Behaviour's parent which may not yet be assigned if Instantiated at runtime
     }
 
-    protected virtual void InitializePresenter() {
-        Presenter = new Presenter(this);
+    protected abstract void InitializePresenter();
+
+    protected virtual void OnHover(bool isOver) {
+        if (DisplayMode != ViewDisplayMode.Hide) {
+            ShowHud(isOver);
+        }
     }
 
-    protected override void RegisterComponentsToDisable() {
-        // disable the Animation in the item's mesh, but no other animations
-        disableComponentOnCameraDistance = gameObject.GetComponentsInChildren<Animation>().Where(a => a.transform.parent == _transform).ToArray();
+    protected override void OnDisplayModeChanged() {
+        base.OnDisplayModeChanged();
+        //D.Log("{0} ViewDisplayMode now {1}.", Presenter.Item.Data.Name, DisplayMode.GetName());
+        AssessHighlighting();
     }
 
     protected virtual void OnClick() {
@@ -56,7 +94,9 @@ public class View : AView, ICameraFocusable {
     }
 
     protected virtual void OnMiddleClick() {
-        IsFocus = true;
+        if (DisplayMode != ViewDisplayMode.Hide) {
+            IsFocus = true;
+        }
     }
 
     protected virtual void OnIsFocusChanged() {
@@ -66,8 +106,8 @@ public class View : AView, ICameraFocusable {
         AssessHighlighting();
     }
 
-    public override void AssessHighlighting() {
-        if (!InCameraLOS) {
+    public virtual void AssessHighlighting() {
+        if (DisplayMode == ViewDisplayMode.Hide) {
             Highlight(Highlights.None);
             return;
         }
@@ -119,12 +159,36 @@ public class View : AView, ICameraFocusable {
     protected override void Cleanup() {
         base.Cleanup();
         if (_circles != null) { _circles.Dispose(); }
-        if (Presenter != null) { Presenter.Dispose(); } // avoid NRE if stopped quickly
     }
 
-    public override string ToString() {
-        return new ObjectAnalyzer().ToString(this);
+    #region ICameraTargetable Members
+
+    public virtual bool IsEligible {
+        get { return true; }
     }
+
+    [SerializeField]
+    protected float minimumCameraViewingDistanceMultiplier = 4.0F;
+
+    private float _minimumCameraViewingDistance;
+    public float MinimumCameraViewingDistance {
+        get {
+            if (_minimumCameraViewingDistance == Constants.ZeroF) {
+                _minimumCameraViewingDistance = CalcMinimumCameraViewingDistance();
+            }
+            return _minimumCameraViewingDistance;
+        }
+    }
+
+    /// <summary>
+    /// One time calculation of the minimum camera viewing distance.
+    /// </summary>
+    /// <returns></returns>
+    protected virtual float CalcMinimumCameraViewingDistance() {
+        return Radius * minimumCameraViewingDistanceMultiplier;
+    }
+
+    #endregion
 
     #region ICameraFocusable Members
 
@@ -155,6 +219,27 @@ public class View : AView, ICameraFocusable {
     public virtual bool IsFocus {
         get { return _isFocus; }
         set { SetProperty<bool>(ref _isFocus, value, "IsFocus", OnIsFocusChanged); }
+    }
+
+    #endregion
+
+    #region IViewable Members
+
+    protected float _radius;
+    /// <summary>
+    /// The [float] radius of this object in units measured as the distance from the 
+    ///center to the min or max extent. As bounds is a bounding box it is the longest 
+    /// diagonal from the center to a corner of the box. Most of the time, the collider can be
+    /// used to calculate this size, assuming it doesn't change size dynmaically. 
+    /// Alternatively, a mesh can be used.
+    /// </summary>
+    public override float Radius {
+        get {
+            if (_radius == Constants.ZeroF) {
+                _radius = _collider.bounds.extents.magnitude;
+            }
+            return _radius;
+        }
     }
 
     #endregion
