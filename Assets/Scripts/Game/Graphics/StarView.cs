@@ -56,7 +56,7 @@ public class StarView : AFocusableView {
 
     protected override void Start() {
         base.Start();
-        _starLight.range = GameManager.Settings.UniverseSize.Radius();
+        InitializeStarSettings();
     }
 
     protected override void OnHover(bool isOver) {
@@ -134,6 +134,11 @@ public class StarView : AFocusableView {
 
     private void Show2DIcon(bool toShow) {
         // TODO need icon 
+    }
+
+    private void InitializeStarSettings() {
+        _starLight.range = GameManager.Settings.UniverseSize.Radius();
+        _starLight.intensity = 0.5F;
     }
 
     public override string ToString() {
