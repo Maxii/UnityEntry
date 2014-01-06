@@ -19,7 +19,11 @@
 #!Library/unity default resources
 #!Library/unity editor resources
 #!Library/metadata/
- 
+
+#Consider adding these per http://stackoverflow.com/questions/18225126/how-to-use-git-for-unity3d-source-control
+*.csproj
+*.unityproj
+*.sln 
 
 #ignoring pidb, they are just code completion caching data according to:
 # http://stackoverflow.com/questions/1022111/what-are-monodevelops-pidb-files
@@ -35,3 +39,5 @@
 #lost because the code files aren't there. Interestingly, the links are 
 #retained when the files are cleaned and rebuilt during a BuildServer build.
 #Assets/[Cc]ode[Ll]ibrary/	- not used for now
+
+Assets/[Cc]ode[Ll]ibrary/
