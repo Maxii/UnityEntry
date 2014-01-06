@@ -40,6 +40,6 @@
 #retained when the files are cleaned and rebuilt during a BuildServer build.
 #Assets/[Cc]ode[Ll]ibrary/	- not used for now
 
-Assets/[Cc]ode[Ll]ibrary/
-Assets/[Cc]ode[Ll]ibrary/fr-FR/
-Assets/[Cc]ode[Ll]ibrary/en-CA/
+#Assets/[Cc]ode[Ll]ibrary/
+#Assets/[Cc]ode[Ll]ibrary/fr-FR/
+#Assets/[Cc]ode[Ll]ibrary/en-CA/
