@@ -20,7 +20,7 @@
 #!Library/unity editor resources
 #!Library/metadata/
 
-#Consider adding these per http://stackoverflow.com/questions/18225126/how-to-use-git-for-unity3d-source-control
+#Added these per http://stackoverflow.com/questions/18225126/how-to-use-git-for-unity3d-source-control
 *.csproj
 *.unityproj
 *.sln 
@@ -34,12 +34,11 @@
 *.orig
 .DS_Store
 
-#For now, I need the code files (.dll, etc.) in CodeLibrary in the
+#I need the code files (.dll, .mdb) in CodeLibrary in the
 #repository. Without them, all manual drag and drop links to GameObjects are
 #lost because the code files aren't there. Interestingly, the links are 
 #retained when the files are cleaned and rebuilt during a BuildServer build.
-#Assets/[Cc]ode[Ll]ibrary/	- not used for now
-
+# Not used
 #Assets/[Cc]ode[Ll]ibrary/
 #Assets/[Cc]ode[Ll]ibrary/fr-FR/
 #Assets/[Cc]ode[Ll]ibrary/en-CA/

@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 135: {fileID: 13500000}
-  - 114: {fileID: 11400006}
   - 114: {fileID: 11400004}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
@@ -32,7 +31,8 @@ GameObject:
   - 23: {fileID: 2300000}
   - 111: {fileID: 11100000}
   - 114: {fileID: 11400008}
-  m_Layer: 1
+  - 114: {fileID: 11400018}
+  m_Layer: 17
   m_Name: StarMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,8 +82,8 @@ GameObject:
   - 4: {fileID: 400008}
   - 33: {fileID: 3300002}
   - 23: {fileID: 2300002}
-  - 114: {fileID: 11400014}
-  m_Layer: 1
+  - 114: {fileID: 11400006}
+  m_Layer: 17
   m_Name: Edge Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,8 +100,8 @@ GameObject:
   - 4: {fileID: 400010}
   - 33: {fileID: 3300004}
   - 23: {fileID: 2300004}
-  - 114: {fileID: 11400016}
-  m_Layer: 1
+  - 114: {fileID: 11400014}
+  m_Layer: 17
   m_Name: Edge Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -320,7 +320,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3
+    m_Bits: 245763
   m_Lightmapping: 1
   m_ShadowSamples: 1
   m_ShadowRadius: 0
@@ -340,7 +340,7 @@ Animation:
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_CullingType: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -378,25 +378,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDeserializing: 0
-  _id: 983f6767-7cde-4b51-86ce-e4c49b50d5c7
+  _id: f5776612-e334-465b-91c7-ca10f2790eec
   classId: 3ccd0b9f-3cef-427e-8422-53bd2e70dd1c
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 100008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 243036baee4474f4e89f0242efdaba4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 28e1dd075db24244eb7a2a83e4647b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  primaryMaterialAnimator:
-    xScrollSpeed: .0149999997
-    yScrollSpeed: .0149999997
-  optionalSecondMaterialAnimator:
-    xScrollSpeed: -.0149999997
-    yScrollSpeed: -.0149999997
+  axisOfRotation: {x: 0, y: 1, z: 0}
+  relativeRotationSpeed: -.0500000007
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -444,25 +440,27 @@ MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100008}
+  m_GameObject: {fileID: 100010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f607f70da56c3064fb92c5082437dcb8, type: 3}
+  m_Script: {fileID: 11500000, guid: 28e1dd075db24244eb7a2a83e4647b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeedAndDirection: 2
---- !u!114 &11400016
+  axisOfRotation: {x: 0, y: 1, z: 0}
+  relativeRotationSpeed: .0500000007
+--- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100010}
+  m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f607f70da56c3064fb92c5082437dcb8, type: 3}
+  m_Script: {fileID: 11500000, guid: 28e1dd075db24244eb7a2a83e4647b29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeedAndDirection: -2
+  axisOfRotation: {x: 0, y: 1, z: 0}
+  relativeRotationSpeed: .0399999991
 --- !u!135 &13500000
 SphereCollider:
   m_ObjectHideFlags: 1
